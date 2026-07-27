@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>世界観適性とフォーマットの集中調査</title>
+<style>
+  :root{
+    --surface:#FFFFFF;
+    --bg:#FFFFFF;
+    --border:#E2E8F0;
+    --text:#0F172A;
+    --text-muted:#475569;
+    --text-subtle:#64748B;
+    --engine:#2563EB;
+    --danger:#DC2626;
+    --amber:#F59E0B;
+    --amber-bg:#FFFBEB;
+    --amber-border:#FDE68A;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    width:100%;
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans",system-ui,sans-serif;
+    line-height:1.75;
+  }
+  p,li,td,th,.lead-item,.callout,.compare-col,.ci-body,.panel-empty{
+    overflow-wrap:anywhere;
+  }
+  main{
+    max-width:880px;
+    margin:0 auto;
+    padding:0 20px 96px;
+  }
+  .hero{
+    background:linear-gradient(180deg,#F8FAFC 0%,#FFFFFF 100%);
+    border-bottom:1px solid var(--border);
+    padding:52px 20px 34px;
+    text-align:center;
+  }
+  .hero h1{
+    font-size:26px;
+    margin:0 0 10px;
+    letter-spacing:0.01em;
+  }
+  .hero .meta{
+    font-size:13px;
+    color:var(--text-subtle);
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .pill{
+    display:inline-block;
+    border-radius:999px;
+    padding:3px 12px;
+    font-weight:600;
+    font-size:12px;
+  }
+  .pill.date{ background:#EEF2FF; color:#4338CA; }
+  .pill.review{ background:#FEF3C7; color:#92400E; }
+  .pill.status{ background:#DCFCE7; color:#166534; }
+
+  section{ margin-top:52px; }
+  h2{
+    font-size:20px;
+    border-left:5px solid var(--engine);
+    padding-left:12px;
+    margin:0 0 18px;
+  }
+  h3{
+    font-size:16px;
+    margin:28px 0 10px;
+    color:var(--text);
+  }
+  h3 .num{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:22px;height:22px;
+    border-radius:999px;
+    background:var(--engine);
+    color:#fff;
+    font-size:12px;
+    margin-right:8px;
+  }
+
+  /* ---- lead ---- */
+  .lead-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:grid;
+    gap:12px;
+  }
+  .lead-item{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    background:#F8FAFC;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:14px 16px;
+    font-size:14.5px;
+  }
+  .lead-item .badge{
+    flex:0 0 auto;
+    width:26px;height:26px;
+    border-radius:999px;
+    background:var(--engine);
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* ---- figure wrapper (comment target) ---- */
+  .figure{ position:relative; margin:18px 0; }
+  .figure-caption{
+    font-size:12.5px;
+    color:var(--text-subtle);
+    margin:8px 2px 0;
+  }
+  .figure[data-has-comment]{
+    outline:2px solid #FCD34D;
+    outline-offset:6px;
+    border-radius:16px;
+  }
+  .figure-comment-btn{
+    position:absolute;
+    top:-14px;
+    right:6px;
+    z-index:20;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    background:rgba(15,23,42,0.86);
+    color:#fff;
+    border:none;
+    border-radius:999px;
+    padding:6px 11px;
+    font-size:11.5px;
+    font-weight:600;
+    font-family:inherit;
+    cursor:pointer;
+    opacity:0;
+    transition:opacity .15s;
+    box-shadow:0 4px 14px rgba(15,23,42,.25);
+  }
+  .figure:hover .figure-comment-btn,
+  .figure-comment-btn:focus-visible{ opacity:1; }
+  @media (hover:none){
+    .figure-comment-btn{ opacity:1; position:static; margin-bottom:8px; }
+  }
+
+  /* ---- compare (before/after) ---- */
+  .compare{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  .compare-col h4{
+    margin:0 0 6px;
+    font-size:13px;
+  }
+  .compare-col.before h4{ color:var(--danger); }
+  .compare-col.after h4{ color:#166534; }
+  pre{
+    background:#0F172A;
+    color:#E2E8F0;
+    border-radius:10px;
+    padding:14px 16px;
+    font-size:12.5px;
+    line-height:1.7;
+    white-space:pre;
+    overflow-x:auto;
+    margin:0;
+  }
+  pre .anchor{ color:#F59E0B; }
+  pre .ctrl{ color:#93C5FD; }
+  pre .head{ color:#86EFAC; }
+
+  /* ---- callouts ---- */
+  .callout{
+    border-left:5px solid var(--amber);
+    background:var(--amber-bg);
+    border:1px solid var(--amber-border);
+    border-left-width:5px;
+    border-radius:10px;
+    padding:16px 18px;
+    font-size:14px;
+  }
+  .callout h4{
+    margin:0 0 10px;
+    font-size:14.5px;
+    color:#92400E;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .callout.plain{
+    border-left-color:#94A3B8;
+    background:#F8FAFC;
+    border-color:var(--border);
+  }
+  .callout.plain h4{ color:var(--text); }
+  .callout ul{ margin:6px 0; padding-left:20px; }
+  .callout li{ margin:4px 0; }
+
+  /* ---- alignment diagram ---- */
+  .align-diagram{
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    background:#FAFAFA;
+  }
+  .align-head{
+    display:grid;
+    grid-template-columns:1fr 140px 1fr;
+    background:#F1F5F9;
+    font-size:12px;
+    font-weight:700;
+    color:var(--text-muted);
+    padding:8px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  .align-sync{
+    background:#EFF6FF;
+    color:#1D4ED8;
+    font-size:12.5px;
+    font-weight:600;
+    padding:8px 14px;
+    border-top:1px dashed #93C5FD;
+    border-bottom:1px dashed #93C5FD;
+  }
+  .align-row{
+    display:grid;
+    grid-template-columns:1fr 140px 1fr;
+    gap:8px;
+    align-items:center;
+    padding:8px 12px;
+    border-bottom:1px solid #EEF1F5;
+    font-size:12.5px;
+  }
+  .align-cell{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:6px 8px;
+    min-height:16px;
+  }
+  .align-cell.empty{ background:#F8FAFC; border-style:dashed; color:var(--text-subtle); }
+  .align-tag{
+    text-align:center;
+    font-size:11px;
+    font-weight:700;
+    border-radius:999px;
+    padding:4px 6px;
+  }
+  .align-row.match .align-tag{ background:#DCFCE7; color:#166534; }
+  .align-row.update .align-tag{ background:#FEF3C7; color:#92400E; }
+  .align-row.insert .align-tag{ background:#DBEAFE; color:#1D4ED8; }
+  .align-row.delete .align-tag{ background:#FEE2E2; color:#B91C1C; }
+  .align-note{
+    font-size:12px;
+    color:var(--text-subtle);
+    padding:10px 14px;
+    background:#F8FAFC;
+  }
+
+  /* ---- table ---- */
+  .table-wrap{ overflow-x:auto; border:1px solid var(--border); border-radius:12px; }
+  table{ border-collapse:collapse; width:100%; font-size:13px; min-width:560px; }
+  th,td{ text-align:left; padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+  thead th{ background:#F1F5F9; font-size:12.5px; color:var(--text-muted); }
+  tbody tr:last-child td{ border-bottom:none; }
+  td code, li code, p code{
+    background:#F1F5F9;
+    border-radius:5px;
+    padding:1px 6px;
+    font-size:12px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  .kind-tag{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    border-radius:999px;
+    padding:2px 8px;
+  }
+  .kind-tag.new{ background:#DBEAFE; color:#1D4ED8; }
+  .kind-tag.mod{ background:#FEF3C7; color:#92400E; }
+  .kind-tag.keep{ background:#F1F5F9; color:var(--text-muted); }
+
+  ul.plain{ padding-left:22px; margin:8px 0; }
+  ul.plain li{ margin:6px 0; font-size:14px; }
+
+  .ref-list{ list-style:none; padding:0; margin:0; display:grid; gap:6px; }
+  .ref-list li{ font-size:13px; }
+  .ref-list code{ background:#F1F5F9; border-radius:5px; padding:2px 6px; }
+
+  footer{
+    text-align:center;
+    font-size:12px;
+    color:var(--text-subtle);
+    padding:40px 20px 120px;
+  }
+
+  @media (max-width:640px){
+    main{ padding:0 14px 96px; }
+    .hero{ padding:40px 14px 26px; }
+    .hero h1{ font-size:21px; }
+    .compare{ grid-template-columns:1fr; }
+    .align-head,.align-row{ grid-template-columns:1fr; gap:4px; }
+    .align-tag{ justify-self:start; }
+    section{ margin-top:40px; }
+  }
+
+  /* ================= comment feature ================= */
+  ::highlight(review-comment){ background-color:#FEF08A; color:#0F172A; }
+
+  .comment-fab{
+    position:absolute; z-index:9000;
+    display:flex; align-items:center; gap:6px;
+    background:#0F172A; color:#fff; border:none;
+    border-radius:999px; padding:8px 14px;
+    font-size:12.5px; font-weight:600; font-family:inherit;
+    cursor:pointer; box-shadow:0 6px 20px rgba(15,23,42,.28);
+  }
+  .comment-fab:hover{ background:#1E293B; }
+  .comment-fab[hidden]{ display:none; }
+
+  .comment-composer{
+    position:absolute; z-index:9000;
+    width:320px; background:var(--surface);
+    border:1px solid var(--border); border-radius:12px;
+    padding:14px; box-shadow:0 12px 32px rgba(15,23,42,.22);
+  }
+  .comment-composer[hidden]{ display:none; }
+  .composer-quote{
+    font-size:12px; color:var(--text-subtle); line-height:1.6;
+    margin-bottom:9px; max-height:56px; overflow:hidden;
+    border-left:3px solid #FCD34D; padding-left:8px;
+  }
+  .composer-input{
+    width:100%; min-height:76px; resize:vertical;
+    border:1px solid var(--border); border-radius:8px;
+    padding:9px 10px; font-size:13px; font-family:inherit;
+    line-height:1.6; color:var(--text);
+  }
+  .composer-input:focus{ outline:2px solid #BFDBFE; border-color:var(--engine); }
+  .composer-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:10px; }
+
+  .btn-primary,.btn-ghost{
+    font-family:inherit; font-size:12.5px; font-weight:600;
+    border-radius:8px; padding:7px 14px; cursor:pointer; border:1px solid transparent;
+  }
+  .btn-primary{ background:var(--engine); color:#fff; }
+  .btn-primary:hover{ background:#1D4ED8; }
+  .btn-primary:disabled{ background:#CBD5E1; cursor:not-allowed; }
+  .btn-primary.wide{ width:100%; padding:10px; font-size:13px; }
+  .btn-ghost{ background:var(--surface); color:var(--text-muted); border-color:var(--border); }
+  .btn-ghost:hover{ background:#F1F5F9; }
+
+  .comment-panel{
+    position:fixed; left:22px; bottom:22px; z-index:8500;
+    display:flex; flex-direction:column;
+  }
+  .comment-panel.open{ width:350px; }
+  .panel-toggle{
+    display:flex; align-items:center; gap:7px; margin-right:auto;
+    background:#0F172A; color:#fff; border:none; border-radius:999px;
+    padding:11px 17px; font-size:13px; font-weight:600; font-family:inherit;
+    cursor:pointer; box-shadow:0 8px 24px rgba(15,23,42,.26);
+  }
+  .panel-toggle:hover{ background:#1E293B; }
+  .panel-count{
+    background:var(--engine); color:#fff; font-size:11px; font-weight:700;
+    border-radius:999px; min-width:19px; height:19px;
+    display:inline-flex; align-items:center; justify-content:center; padding:0 5px;
+  }
+  .panel-caret{ font-size:11px; opacity:.8; }
+  .panel-body{
+    margin-bottom:10px; background:var(--surface); border:1px solid var(--border);
+    border-radius:14px; box-shadow:0 16px 40px rgba(15,23,42,.18); overflow:hidden;
+  }
+  .panel-body[hidden]{ display:none; }
+  .panel-empty{ font-size:13px; line-height:1.75; color:var(--text-muted); padding:18px 16px; margin:0; }
+  .comment-list{ list-style:none; margin:0; padding:8px; max-height:46vh; overflow-y:auto; }
+  .comment-item{
+    border:1px solid var(--border); border-radius:10px; padding:10px 11px; margin:6px 0;
+    background:#FCFCFD; cursor:pointer; transition:border-color .12s, background .12s;
+  }
+  .comment-item:hover{ border-color:#93C5FD; background:#F8FAFF; }
+  .ci-head{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .ci-num{ font-size:11px; font-weight:700; color:var(--engine); }
+  .ci-act{
+    display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:700;
+    font-family:inherit; background:var(--engine); color:#fff; border:none;
+    border-radius:6px; padding:4px 10px; cursor:pointer;
+  }
+  .ci-act:hover{ background:#1D4ED8; }
+  .ci-del{
+    margin-left:auto; font-size:14px; line-height:1; background:none; border:none;
+    color:var(--text-subtle); cursor:pointer; padding:2px 6px; border-radius:6px;
+  }
+  .ci-del:hover{ background:#FEE2E2; color:var(--danger); }
+  .ci-quote{
+    font-size:11.5px; color:var(--text-subtle); line-height:1.55;
+    border-left:3px solid #FCD34D; padding-left:7px; margin-bottom:6px;
+  }
+  .ci-body{ font-size:13px; line-height:1.65; color:var(--text); white-space:pre-wrap; }
+  .ci-edit{ margin-bottom:0; }
+  .ci-edit-label{ font-size:11px; font-weight:700; color:var(--engine); margin:2px 0 6px; }
+  .panel-foot{ border-top:1px solid var(--border); padding:10px; background:#F8FAFC; }
+
+  .kind-pill{ display:inline-block; font-size:10px; font-weight:700; border-radius:999px; padding:2px 7px; letter-spacing:.02em; }
+  .kind-pill.fig{ background:#EDE9FE; color:#6D28D9; }
+  .kind-pill.txt{ background:#DBEAFE; color:#1D4ED8; }
+  .composer-quote .kind-pill{ margin-right:6px; }
+
+  @media (hover:none){
+    .comment-composer{
+      position:fixed; left:50% !important; top:12px !important;
+      transform:translateX(-50%) !important; width:min(92vw,360px); max-width:92vw;
+    }
+    .composer-input{ font-size:16px; }
+  }
+  @media (max-width:640px){
+    .comment-panel{ left:12px; right:12px; bottom:calc(18px + env(safe-area-inset-bottom,0px)); }
+    .comment-panel.open{ width:auto; }
+    .panel-body{ display:flex; flex-direction:column; max-height:70vh; }
+    .comment-list{ flex:1 1 auto; min-height:0; max-height:none; }
+    .panel-foot{ flex:0 0 auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>世界観適性とフォーマットの集中調査</h1>
+  <div class="meta">
+    <span class="pill date">調査日 2026-07-27</span>
+    <span class="pill review">AI動画IP創出研究</span>
+  </div>
+</header>
+
+<main>
+
+  <p><a href="../">まとめトップに戻る</a></p>
+
+  <p>本調査は、観察メモが残した2つの問い――「知識×ドラマの世界観適性（よりもい○/ごちうさ△/転スラ×という直感は正しいか）」と「単話でも完結し、一貫した世界観を保ちつつ、ストーリーが少しずつ進行するフォーマットは存在するか」――に答えるため、業務委託によるAI動画IP創出研究の一環としてSonnet4本並列調査（長編IPの世界観マッピング／動画ネイティブ事例／フォーマット類型学／知識領域の選定）を実施した。</p>
+  <p>統合結論は、世界観適性の真の軸は「知識の現実転写可能性」であり架空世界そのものは失格要因ではないこと、フォーマットは存在するが進行を「ストーリーの因果」ではなく「世界のカタログ的拡張＋キャラ関係の微変化」で表現する修正版が縦型ショートに適すること、知識領域は「職業もの・業界もの」が最有力というの3点に整理できる。ただし世界観×知識×ストーリー進行を高い教養密度で三立させた実例はほぼ空白であり、未検証のハイリスク・ハイリターンな挑戦であることも合わせて明らかになった。</p>
+
+  <section id="sec0">
+    <h2><span class="num">0</span>統合結論</h2>
+    <ol class="lead-list" style="list-style:none;">
+      <li class="lead-item"><span class="badge">1</span><span>「転スラは無理」の直感は正しいが、理由はメモの想定（現実接地性の欠如）より一段深い。真の軸は「知識の現実転写可能性」――作中の知識ロジックが現実の法則の翻案になっているか。ダンジョン飯（架空世界×現実の調理科学・生物学）と天地創造デザイン部（架空の神様設定×現実の進化生物学）が成立している以上、世界観が架空であること自体は失格要因ではない。転スラが知識ものとして機能しないのは、スキル・魔法体系が作者のオリジナルルールで、視聴者が「学べた」ものを現実に持ち帰れないから。</span></li>
+      <li class="lead-item"><span class="badge">2</span><span>これは新規IP設計にとって朗報。差別化しやすい架空世界を採用してよい。条件は、内部ロジックに現実の科学法則を最低1つアンカーとして通すこと（ダンジョン飯ライセンス）。</span></li>
+      <li class="lead-item"><span class="badge">3</span><span>「そんなフォーマットはあるのか」への回答: ある。ただしショート縦型に最適な実装は、前回調査の二層構造（単話量産＋ご褒美ストーリー回）そのままではなく、その修正版。進行を「ストーリーの因果」ではなく「世界のカタログ的拡張（新キャラ・新要素の追加）＋キャラ関係の点描的な不可逆微変化」で表現する。X-Files型の「神話回への隔離」は一気見前提の設計で、刹那消費のフィードとは相性が落ちる。ストーリーアーク解禁はSUMIDe式に「ファンダム形成後のマイルストーンイベント」として温存する。</span></li>
+      <li class="lead-item"><span class="badge">4</span><span>動画ネイティブ側の重要な負の発見: 知識系で最大規模のチャンネル（Kurzgesagt 2,300万、ケビンズ、无穷小亮）はいずれも「知識×パーソナリティ/ブランド」であって「知識×ドラマ」ではない。世界観＋知識＋ストーリー進行の三立を高い教養密度でやっている実例はほぼ空白。＝メモの狙いは未占有だが、実証も未了（ハイリスク・ハイリターン）。</span></li>
+      <li class="lead-item"><span class="badge">5</span><span>知識領域は「職業もの・業界もの」がメタ領域として最有力。舞台＝知識装置になり、二層構造と1話1知識を自然に満たし、業界別に見れば飽和が薄い。医療・金融はYMYLリスクで立ち上げ期は回避。</span></li>
+    </ol>
+  </section>
+
+  <section id="sec1">
+    <h2><span class="num">1</span>世界観適性 — 修正された3軸</h2>
+    <div class="figure" data-label="現実転写可能性・物語推進力・1話1知識分解性という3軸のうち、現実転写可能性が旧「現実接地性」を置換し世界観が架空でも成立を認める軸になったことを示す表">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>軸</th><th>定義</th><th>メモからの変更</th></tr></thead>
+          <tbody>
+            <tr><td>①知識の現実転写可能性</td><td>作中の知識ロジックが現実の法則（生物・化学・物理・進化論等）の翻案か。視聴者が現実に持ち帰れるか</td><td>旧「現実接地性」を置換。世界が架空でもよい</td></tr>
+            <tr><td>②知識の物語推進力</td><td>知識が背景トリビアでなく、謎解き・生存・対立解決の直接手段か</td><td>維持</td></tr>
+            <tr><td>③1話1知識の分解可能性</td><td>単話1トピックで完結し、全体ストーリーが並走できる粒度か</td><td>維持</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="figure" data-label="旧軸「現実接地性」（世界観そのものが現実か架空か）から、新軸「知識の現実転写可能性」（知識ロジックが現実法則の翻案かどうか）へ置き換わったことで、ダンジョン飯や天地創造デザイン部のような架空世界の成功例を説明できるようになったという対比">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="compare">
+        <div class="compare-col before">
+          <h4>Before（メモの旧軸）</h4>
+          <pre>現実接地性
+世界観そのものが現実か架空かを基準にする
+
+→ 世界が架空（異世界・ファンタジー）だと
+   知識ものとして原理的に不向き、と想定
+   （転スラ×という直感の根拠）</pre>
+        </div>
+        <div class="compare-col after">
+          <h4>After（修正後の軸）</h4>
+          <pre>知識の現実転写可能性
+世界観の現実/架空を問わず、
+作中の知識ロジックが現実の法則
+（生物学・化学・物理・進化論等）の
+翻案になっているかを基準にする
+
+→ ダンジョン飯・天地創造デザイン部のような
+   架空世界の成功例を説明できる
+→ 転スラは「世界が架空だから」ではなく
+   「知識ロジックがオリジナルルールで
+   現実法則の翻訳でないから」不向き</pre>
+        </div>
+      </div>
+    </div>
+
+    <p>検証17作品のマッピングは付録1参照。要点: Dr.STONE／チ。／JIN=3軸すべて極高で成功。ダンジョン飯・はたらく細胞・天地創造デザイン部=架空世界だが①が高く成功。ごちうさ=①②が低く「知識もの」としてはギリギリ（雰囲気で成立）。転スラ=①が低く知識ものとして弱い（既存IPの世界観解説番組なら可、というメモの区別も正しい）。</p>
+    <p>フリーレンは境界例として別枠: オリジナル魔法体系だが主題が「喪失・時間」という人文テーマ。知識×ドラマの成功基準で評価しない（企画時にこの中間ジャンルと混同しないこと）。</p>
+  </section>
+
+  <section id="sec2">
+    <h2><span class="num">2</span>フォーマット類型 — 8型と縦型ショートへの翻訳可否</h2>
+    <div class="figure" data-label="微進行型とカタログ拡張型が縦型ショートに最適(◎)で、モード分離型と学年進行型は不適(×)という8類型の翻訳可否一覧">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>類型</th><th>代表</th><th>進行の仕掛け</th><th>縦型可否</th></tr></thead>
+          <tbody>
+            <tr><td>②微進行型</td><td>こち亀・サザエさん時空</td><td>キャラ不変、進行は時代背景に負わせる</td><td>◎ 最有力</td></tr>
+            <tr><td>⑤カタログ拡張型</td><td>SCP・Backrooms</td><td>進行=新項目の追加（図鑑的拡張、因果なし）</td><td>◎ 最有力</td></tr>
+            <tr><td>⑥無言サーガ型</td><td>Skibidi Toilet</td><td>絵だけで勢力・技術の不可逆拡大を示す</td><td>○</td></tr>
+            <tr><td>⑧連作短編型</td><td>ホームズ</td><td>関係性の点描的変化のみ、世界は静止</td><td>○</td></tr>
+            <tr><td>①MOTW+神話回</td><td>X-Files(62:38)・House</td><td>進行をご褒美回に隔離</td><td>△ 一気見前提</td></tr>
+            <tr><td>⑦UGCロア型</td><td>ホロライブ</td><td>進行の解釈権をコミュニティに委譲</td><td>△ ファンダム形成後</td></tr>
+            <tr><td>③モード分離型</td><td>銀魂</td><td>ギャグ単話とシリアス長編を別モード並存</td><td>× フィードのブランド一貫性が崩れる</td></tr>
+            <tr><td>④学年進行型</td><td>けいおん・ごちうさ</td><td>超低速の不可逆時間軸+卒業で回収</td><td>× 半年以上の継続コミット前提</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="figure" data-label="微進行型をベースに、カタログ拡張型で毎N話新要素を追加し、連作短編型でキャラ関係だけ超低速かつ不可逆に変化させるという推奨配合。トーンは常に一定に保ち一気見前提の山場は作らない">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="callout">
+        <h4>推奨配合</h4>
+        <p>ベース②（世界観・キャラ完全固定、知識トピックのみ回転）＋⑤（毎N話ごとに新キャラ・新要素を1つ追加=「世界が育ってる感」を因果なしで演出）＋⑧（キャラ関係だけ不可逆かつ超低速に変化）。トーンは常に一定。神話回・卒業回のような一気見前提の山場は作らない。</p>
+      </div>
+    </div>
+
+    <p>この配合の最大の利点は「難易度爆上がり」問題の直接解決: 毎話ストーリーを進める脚本力が不要になり、進行は追加的な世界拡張が担う。①知識の物語推進力が弱い題材でも②＋⑤の力で補える。さらにカタログ拡張=定期的な新アセット1個の追加であり、3D制作パイプライン（セット・キャラの資産再利用）と経済的に完全に噛み合う。</p>
+    <p>前回調査の二層構造との整合: テイペン/カレコレ/SUMIDeの「ご褒美ストーリー回」はYouTube中心（登録・通知が効く環境）の実装。純フィード消費のTikTokではカタログ拡張を主、ストーリーアークはSUMIDe式のマイルストーン解禁（例:「後半は40万人達成後」）として運用するのが整合的。</p>
+  </section>
+
+  <section id="sec3">
+    <h2><span class="num">3</span>動画ネイティブの実装6型</h2>
+    <div class="figure" data-label="素キャラ掛け合い解説型からキャラ主導ドラマ型まで6つの動画ネイティブ実装型を、制作コストと再現性で比較する表">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>型</th><th>定義</th><th>代表例</th><th>制作コスト</th><th>再現性</th></tr></thead>
+          <tbody>
+            <tr><td>①素キャラ掛け合い解説型</td><td>実写/簡易キャラの本人が役割を演じ分けて解説。世界観なし</td><td>Kevin's English Room、ゆっくり解説</td><td>低</td><td>高（台本のみで量産可）</td></tr>
+            <tr><td>②本人実演型</td><td>専門家本人が現物・実演で知識を見せる</td><td>无穷小亮</td><td>中（専門性が壁）</td><td>低（属人性が高い）</td></tr>
+            <tr><td>③個人ペルソナ寸劇型</td><td>一人がワンアイデアのキャラを短時間演じる</td><td>TikTok歴史寸劇、Sam O'Nellaの先生役</td><td>低〜中</td><td>中（アイデア枯渇が早い）</td></tr>
+            <tr><td>④世界観ブランド型</td><td>フィクション世界観なしだが、ビジュアル/マスコットが「教材のブランド」化</td><td>Kurzgesagtの鳥、OverSimplifiedの丸キャラ・再登場人物</td><td>高（初期投資大、アニメーション精度必要）</td><td>中（ブランドが確立すれば量産効率化）</td></tr>
+            <tr><td>⑤あるある寸劇+雑学埋込型</td><td>職場等の「あるある」コントの中に雑学を混ぜる。世界観は緩やかで話数間の連続性は薄い</td><td>テイコウペンギン</td><td>中</td><td>高（あるあるネタは無限に見つかる）</td></tr>
+            <tr><td>⑥キャラ主導ドラマ型＋メタ知識</td><td>フィクション主人公のドラマそのものが主軸、知識はテーマ装置として機能。単話ギャグ+関係性の進行が両立</td><td>全力回避フラグちゃん</td><td>高（脚本・キャラ設計・声優等総合力が必要）</td><td>低（成立要因が世界観適性に強く依存、量産の型化が難しい）</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p>判定: 新規ショートアニメIPは⑤を量産エンジンに⑥のキャラ関係緩進行を薄く重ねるハイブリッド。ただしフラグちゃん・テイペンとも「知識」は舞台装置であって教養密度は低い点が要注意――教養密度を上げた三立の実例は空白であり、狙う場合は①軸（現実転写可能性）の高い題材選定で難易度を下げるべき。</p>
+  </section>
+
+  <section id="sec4">
+    <h2><span class="num">4</span>知識領域の選定</h2>
+    <p>メタ領域として職業もの・業界ものが最有力: 舞台=知識装置、あるある単話+キャリア/謎の通底ストーリーの二層を自然に持て、業界単位では未開拓が無数（テイペン=ブラック企業一般職、SUMIDe=クラブ、アパレる=アパレルが既占有）。</p>
+    <p>回避: 医療・金融（YMYL、監修コスト極大）。雑学・語学（最飽和、知識が飾りになる）。</p>
+
+    <div class="figure" data-label="特殊清掃・損保事故調査員・動物園水族館飼育員・気象防災・司法通訳という、既存の職業ものIPが未占有の候補トップ5とその推測ベースの選定理由を示す表">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>順位</th><th>領域</th><th>選定理由（推測）</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>特殊清掃・孤独死現場整理</td><td>1件＝1エピソードの完結性が極めて高く、法医学的知識（死後経過時間の推定等）が自然に物語推進力を持つ。既存は実録系ドキュメンタリーYouTubeが中心でショートアニメIPは未占有</td></tr>
+            <tr><td>2</td><td>損害保険調査員（事故鑑定）</td><td>「1話1事故」＝ミステリー的謎解き構造にでき、保険・法律知識が謎解きの鍵になる（知識の物語推進力が高い）。金融ほどYMYL規制が強くない</td></tr>
+            <tr><td>3</td><td>動物園・水族館の飼育員</td><td>生物知識が1話1種で分解可能、家族層に強く炎上リスクが低い。「宇宙よりも遠い場所」型の観察・探究ドラマと相性良好</td></tr>
+            <tr><td>4</td><td>気象予報士・防災現場</td><td>科学知識＋災害という時事性の高いドラマ推進力を両立。宇宙より現実接地性が高く、社会的意義も訴求できる</td></tr>
+            <tr><td>5</td><td>通訳・翻訳（同時通訳/司法通訳）</td><td>語学という飽和ジャンルを「現場の緊張感」でドラマ化し直す切り口。言語知識が謎解き・誤解ドラマの核になる</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="figure-caption">反例として、物流・倉庫業は経済合理性の知識はあるが「1話完結の事件性」に乏しく、寸劇化難易度が高いため上位から除外した（推測）。</p>
+    </div>
+
+    <p>選定基準:</p>
+    <ul class="plain">
+      <li>二層構造の再現性: 単話（あるある寸劇/1事案）で笑い・驚きを完結させつつ、キャリア成長や謎の連続性で通底ストーリーを持てるか</li>
+      <li>知識の物語推進力: 知識そのものが謎解き・意思決定・葛藤の核になっているか（雑学・語学は知識が飾りになりやすく弱い）</li>
+      <li>1話1知識の分解可能性: 専門作業や事案が自然に独立した単位に切れるか</li>
+      <li>監修コスト対飽和度: 飽和度が高い領域（雑学・料理・語学）ほど差別化コストが上がる一方、専門性ゆえに未参入の職業ものは監修コストは中程度でも競合が薄い</li>
+      <li>YMYLリスクの回避: 医療・金融は需要が高くても誤情報の実害リスクが致命的であり、新規IPの立ち上げ期には避け、法律・保険のような「専門知識はあるがYMYL規制ほど厳格でない」周辺領域を優先すべき</li>
+    </ul>
+  </section>
+
+  <section id="sec5">
+    <h2><span class="num">5</span>新規IP設計レシピ（統合）</h2>
+    <div class="figure" data-label="架空世界に現実法則を1つアンカーし、単話は知識1つで完結させ、進行はカタログ拡張と関係性の微変化に限定し、ストーリーアークはファンダム形成後まで温存するという新規IP設計レシピ5ステップ">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="callout plain">
+        <h4>設計レシピ</h4>
+        <ol style="margin:6px 0; padding-left:20px;">
+          <li>世界観: 架空でよい。ただし現実法則のアンカーを最低1つ通す（ダンジョン飯ライセンス）。「舞台=業界・専門領域」にすると知識装置とセット経済性を同時に得る</li>
+          <li>単話: あるある寸劇 or 1事案解決 + 1知識で完結（②型）。知識は謎解き・解決の手段に置く（背景トリビア禁止）</li>
+          <li>進行: 毎N話の新キャラ・新要素追加（⑤型カタログ拡張）+ キャラ関係の超低速不可逆変化（⑧型）。トーン一定</li>
+          <li>ストーリーアーク: ファンダム形成後にマイルストーン解禁（SUMIDe式）。立ち上げ期には作らない</li>
+          <li>3D資産との整合: 固定セット+固定キャラ+定期的な新アセット1個、はセルルック3Dパイプラインの資産再利用と構造的に一致</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="sec6">
+    <h2><span class="num">6</span>本調査の限界</h2>
+    <div class="figure" data-label="Sonnet中心の軽量パスであり、Sam O'Nellaの規模等一部数値は未確認、未占有領域ランキングは推測ベースにとどまるという本調査の限界">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="callout plain">
+        <h4>限界</h4>
+        <ul>
+          <li>Sonnet中心の軽量パス。Sam O'Nellaの規模等一部数値は未確認、未占有領域ランキングは推測ベース</li>
+          <li>「教養密度の高い三立IP」の空白は「未開拓の機会」とも「需要が存在しない」とも読める。Phase 0的なネタ検証（低コスト単話で題材別の維持率を測る）で判定するのが先</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="appendix">
+    <h2>付録: 各調査の全文（要点抜粋）</h2>
+
+    <h3>付録1: 長編IPの世界観マッピング</h3>
+    <div class="figure" data-label="Dr.STONEやチ。JINは3軸すべて極高で成功し、ダンジョン飯や天地創造デザイン部は架空世界でも現実転写可能性が高く成功、転スラは現実転写可能性が低く知識ものとしては弱いという17作品の検証マッピング表">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>作品</th><th>知識領域</th><th>世界観</th><th>現実転写可能性</th><th>知識の物語推進力</th><th>成否</th></tr></thead>
+          <tbody>
+            <tr><td>Dr.STONE</td><td>化学・物理・科学史</td><td>現実(文明ゼロから再建)</td><td>極高(現実科学そのもの)</td><td>極高(発明=生存の鍵)</td><td>成功</td></tr>
+            <tr><td>はたらく細胞</td><td>免疫学</td><td>架空(擬人化ミクロ世界)</td><td>高(細胞機能は科学的事実の翻案)</td><td>高(病原体=敵として機能)</td><td>成功</td></tr>
+            <tr><td>ダンジョン飯</td><td>料理科学・生物学</td><td>架空(ファンタジー)</td><td>高(調理の論理=現実の生物・化学法則)</td><td>高(下処理知識=生存戦略)</td><td>成功(最重要反例)</td></tr>
+            <tr><td>チ。</td><td>天文学・科学史</td><td>半架空(史実弾圧をモデル化)</td><td>極高(地動説の論証構造そのもの)</td><td>極高(知識探求=命題)</td><td>成功</td></tr>
+            <tr><td>ゴールデンカムイ</td><td>民俗学・サバイバル術</td><td>現実(明治期史実)</td><td>極高</td><td>高</td><td>成功</td></tr>
+            <tr><td>もやしもん</td><td>微生物学</td><td>現実+擬人化菌</td><td>高</td><td>中</td><td>成功(ニッチ安定)</td></tr>
+            <tr><td>銀の匙</td><td>農業・畜産</td><td>現実</td><td>極高</td><td>中</td><td>成功</td></tr>
+            <tr><td>宇宙兄弟</td><td>宇宙工学</td><td>現実</td><td>極高</td><td>高</td><td>成功</td></tr>
+            <tr><td>JIN-仁-</td><td>医学史</td><td>現実(タイムスリップ)</td><td>極高</td><td>極高</td><td>成功</td></tr>
+            <tr><td>美味しんぼ</td><td>料理</td><td>現実</td><td>極高</td><td>高</td><td>成功(長寿・近年論争あり)</td></tr>
+            <tr><td>天地創造デザイン部</td><td>進化生物学</td><td>架空(神の設計部)</td><td>高(進化的制約=現実物理法則)</td><td>高(お題解決=進化ロジック)</td><td>成功(重要反例)</td></tr>
+            <tr><td>映像研には手を出すな!</td><td>アニメ制作・メカ設定</td><td>現実+空想メカ</td><td>高</td><td>高</td><td>成功</td></tr>
+            <tr><td>宇宙よりも遠い場所</td><td>南極観測</td><td>現実</td><td>極高</td><td>中</td><td>成功(メモの基準例)</td></tr>
+            <tr><td>ちはやふる</td><td>競技かるた・和歌</td><td>現実</td><td>極高</td><td>高</td><td>成功</td></tr>
+            <tr><td>ごちうさ</td><td>喫茶・日常</td><td>現実(空気系)</td><td>低〜中</td><td>低</td><td>ギリギリ成立(知識より雰囲気)</td></tr>
+            <tr><td>フリーレン</td><td>魔法体系・時間論</td><td>架空</td><td>低〜中(オリジナル体系だが人文テーマが中心)</td><td>中(知識より喪失の物語)</td><td>成功だが「知識もの」としては境界例</td></tr>
+            <tr><td>転スラ</td><td>スキル・魔物生態・国家運営</td><td>架空(異世界)</td><td>低(作者オリジナルルール、現実法則の翻訳でない)</td><td>中(ゲーム的パワーアップが主)</td><td>知識ものとしては弱い(世界観解説番組としてなら可)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p>新規IP世界観設計への含意:</p>
+    <ul class="plain">
+      <li>架空世界を選んでもよいが、内部ロジックに現実の科学法則を最低1つ「アンカー」として組み込むこと（料理科学・進化論・物理法則など）。これがないと転スラ型の失敗（ゲーム的パワーアップに閉じる）に陥る</li>
+      <li>スキル・魔法などの完全オリジナル体系「だけ」で知識コンテンツを名乗らない。オリジナル体系の「解説」自体はコンテンツになり得るが、それは教養ドラマではなく世界観解説番組である</li>
+      <li>知識は謎解き・生存・対立解決の直接手段として設計し、背景トリビアで終わらせない（ダンジョン飯型）</li>
+      <li>単話完結の知識ユニット＋不定期の長期ストーリー層という二層構造を維持しつつ、単話の知識ユニットは「現実転写可能性」でスクリーニングする</li>
+      <li>フリーレン型（人文テーマ＋部分的知識考証）は知識ものとは別ジャンルとして企画し、「知識×ドラマ」の成功基準では評価しない</li>
+    </ul>
+
+    <h3>付録2: 動画ネイティブ事例</h3>
+    <div class="figure" data-label="Kevin's English Roomや无穷小亮など知識×パーソナリティ型は規模が大きくても世界観・ストーリー進行を持たず、フラグちゃんとテイコウペンギンが世界観とストーリー進行を併せ持つ数少ない事例であることを示す10事例の比較表">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>事例</th><th>知識粒度</th><th>キャラ/世界観の厚み</th><th>単話完結性</th><th>ストーリー進行</th><th>規模</th></tr></thead>
+          <tbody>
+            <tr><td>Kevin's English Room（日）</td><td>英語表現・異文化ネタ、断片的</td><td>薄い。3人の素キャラ（ケビン/やま/かけ）が固定役割を演じるのみ、フィクション世界観なし</td><td>高（1本完結）</td><td>なし（キャラ関係の変化のみ）</td><td>登録者200万+</td></tr>
+            <tr><td>全力回避フラグちゃん（日/Plott）</td><td>「フラグ」概念の反復学習、雑学は薄い</td><td>厚い。死神No.269×モブ男の恋愛ラノベ的世界観、ラノベ・漫画・アプリまで展開</td><td>中（1話でギャグは完結、関係性は積み上がる）</td><td>あり（ラブコメとして進行）</td><td>ラノベ7巻・アプリ化まで拡大</td></tr>
+            <tr><td>テイコウペンギン（日/Plott）</td><td>「ブラック企業あるある」雑学、初期は軽め</td><td>中〜厚。ペンギン/パンダ職場ユニバース。後期はSF〜鬱回まで拡張</td><td>高（1話完結が基本）</td><td>緩やか（ユニバース設定は固定、話数間の連続ストーリーは薄い）</td><td>登録者196万（2025/11時点）</td></tr>
+            <tr><td>ゆっくり解説（日）</td><td>知識ジャンル自由（歴史/経済/オカルト等）、粒度は動画依存</td><td>薄い。霊夢=素直な聞き役／魔理沙=物知り役という役割の記号のみ流用、東方の世界観自体は使わない</td><td>高（1本完結が原則）</td><td>なし</td><td>個人〜中堅規模が乱立、業界全体としては巨大クラスタ</td></tr>
+            <tr><td>Sam O'Nella Academy（英）</td><td>歴史・雑学トリビア、粒度は濃いめ（皮肉混じり）</td><td>中。スティックフィギュアの「先生」キャラ一人が狂言回し、固有世界観は薄い</td><td>高（1本完結）</td><td>なし</td><td>情報不十分（既存知識では登録者500万規模）</td></tr>
+            <tr><td>OverSimplified（英）</td><td>歴史（戦争史）、1本に長い時系列を圧縮</td><td>厚い。ナレーターの丸キャラ＋ナポレオン等「OverSimplifiedユニバース」の再登場人物</td><td>高（テーマ単位で完結、Part分割あり）</td><td>部分的（同一人物が別動画に再登場、世界観の連続性はあるが話をまたぐプロットはない）</td><td>登録者950万+</td></tr>
+            <tr><td>Kurzgesagt（独/英）</td><td>科学・哲学、粒度は深い（1テーマ精密解説）</td><td>世界観＝ビジュアルブランドそのもの。バードキャラが解説補助、固有ストーリーはなし</td><td>高（1本完結）</td><td>なし</td><td>登録者2300万+、チーム70人</td></tr>
+            <tr><td>TikTok歴史寸劇型（英, 例: Gen Z Teaches History / Brooke Pavek）</td><td>歴史トリビア、15秒〜1分の短粒度</td><td>中。「未来から来たGen Z教師」等ワンアイデアのペルソナ、深い世界観はなし</td><td>高（1本完結）</td><td>なし</td><td>3000万再生規模（Cella）、7.8万フォロワー（Pavek）</td></tr>
+            <tr><td>无穷小亮的科普日常（中/B站）</td><td>生物同定・鑑定、粒度は濃い実演型</td><td>薄〜中。本人キャラ（「狐主任」ミーム化）が実演するのみ、フィクション世界観なし</td><td>高（1本完結）</td><td>なし</td><td>B站650万+フォロワー</td></tr>
+            <tr><td>B站知識区（半佛仙人/巫师财经等, 中）</td><td>財経・社会論評、粒度は濃い評論型</td><td>薄い。個人の語り口・キャラクター性はあるがフィクション世界観は持たない</td><td>高（1本完結）</td><td>なし</td><td>百大UP主クラス（数百万フォロワー規模）</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="figure-caption">反例: ケビンズイングリッシュルーム・无穷小亮・B站知識区・Sam O'Nella はいずれも「本人（実写/簡易キャラ）が知識を語る」だけで、フィクション世界観・ストーリー進行は持たない。これらは規模が大きくても「知識×ドラマ」ではなく「知識×パーソナリティ」型であり、依頼主の問い（世界観×知識×ストーリー進行の三立）には該当しない、という反証データ。</p>
+    </div>
+    <p>④世界観ブランド型（Kurzgesagt/OverSimplified）は教養密度・世界観の厚みは高いが、フィクションのキャラドラマ・ストーリー進行が原理的に存在しない＝依頼の要件を満たさない。純粋な「転スラ的異世界教養もの」は④型の厚い世界観コストと⑥型の物語コストが両方乗るため、最もハイリスク。</p>
+
+    <h3>付録3: フォーマット類型学</h3>
+    <div class="figure" data-label="MOTW+神話回からUGCロア型まで8類型を、進行を壊さない仕掛け・進行速度・途中参入コストの観点で整理した類型表">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>類型</th><th>代表作</th><th>進行を壊さない仕掛け</th><th>進行速度</th><th>途中参入コスト</th></tr></thead>
+          <tbody>
+            <tr><td>①MOTW+神話回</td><td>X-Files(62:38)、Buffy、House</td><td>進行を「ご褒美回」に隔離。通常回はキャラ固定・謎が話内完結</td><td>遅い（神話回のみ）</td><td>低（通常回）/高（神話回）</td></tr>
+            <tr><td>②微進行型</td><td>こち亀、サザエさん時空</td><td>進行を時代背景に負わせ、キャラは不変のまま社会・技術だけ動く</td><td>極小</td><td>最低</td></tr>
+            <tr><td>③モード分離型</td><td>銀魂</td><td>ギャグ単話とシリアス長編を完全に別モードとして並存させ混ぜない</td><td>長編時のみ速いが頻度低</td><td>長編は要文脈</td></tr>
+            <tr><td>④学年進行型</td><td>けいおん、ごちうさ</td><td>日常回の連続の下に学年という不可逆だが超低速の時間軸を敷き、卒業で一度だけ回収</td><td>学期単位・極めて遅い</td><td>低</td></tr>
+            <tr><td>⑤カタログ拡張型</td><td>SCP Foundation、Backrooms</td><td>進行＝新項目の追加（時系列でなく空間的・図鑑的拡張）。各項目は独立完結</td><td>追加ごとに蓄積、直線的でない</td><td>最低（どこからでも読める）</td></tr>
+            <tr><td>⑥無言サーガ型</td><td>Skibidi Toilet(80話・26season)</td><td>セリフなしで勢力・技術の不可逆な拡大を絵だけで示す。1話は小競合として完結</td><td>話ごとは小さいが蓄積が速い</td><td>中（大筋は絵で分かるが深層は蓄積依存）</td></tr>
+            <tr><td>⑦UGCロア型</td><td>Hololive等VTuber</td><td>進行の権限を運営でなくコミュニティ解釈に委譲。公式は正史を固定しない</td><td>不定形</td><td>低（単発配信は独立可）</td></tr>
+            <tr><td>⑧連作短編型</td><td>Sherlock Holmes</td><td>各編は独立事件で完結。進行は探偵と宿敵の関係の点描的変化のみ、世界観は静止</td><td>極小</td><td>最低</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="figure-caption">縦型60秒への翻訳可否は本編2章にまとめている（②⑤が最有力、③④は不向き）。</p>
+    </div>
+
+    <h3>付録4: 知識領域の選定</h3>
+    <div class="figure" data-label="職業もの（業界あるある）がAI slop飽和度は低く二層構造・1話1知識分解性を自然に満たす一方、医療・金融はYMYLリスクが高いという知識領域別評価表">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>領域</th><th>需要規模（事実）</th><th>AI slop飽和度</th><th>ドラマ適性（寸劇化/1話1知識）</th><th>監修コスト</th><th>YMYLリスク</th></tr></thead>
+          <tbody>
+            <tr><td>料理</td><td>高。個人TikTokerで数十万フォロワー規模が複数存在（例: イマケン♪ズボラ飯 約42.2万人〔2022時点〕）</td><td>中〜高（作れる系は量産しやすくAI生成も氾濫）</td><td>◎。1話1レシピに自然分解可、寸劇との相性も良い</td><td>低</td><td>低（アレルギー表示程度）</td></tr>
+            <tr><td>歴史</td><td>高。TikTok/YouTubeで解説系が定番ジャンルとして定着</td><td>高（AI音声+スライドの量産型が飽和）</td><td>○。1話1事件/人物に分解可だが「面白いストーリー」は史実に引っ張られ難易度中</td><td>中（史実監修）</td><td>低〜中（歴史修正主義批判リスク）</td></tr>
+            <tr><td>雑学</td><td>高。ジャンル横断で最も量産しやすいカテゴリ</td><td>最高（型が完全に確立済み、差別化困難）</td><td>◎分解容易だが「ドラマ」化は弱く単話止まりになりやすい</td><td>低</td><td>低</td></tr>
+            <tr><td>心理学</td><td>中〜高（自己啓発系との親和性が高い）</td><td>高</td><td>○。対人関係の寸劇に落としやすい</td><td>中</td><td>中（疑似科学化しやすい）</td></tr>
+            <tr><td>医療</td><td>高（健康不安ニーズは恒常的）</td><td>中</td><td>△。誤情報が生命に関わり誇張しにくい</td><td>高（医師監修必須）</td><td>高（Google定義のYMYL中核領域、E-E-A-T必須）</td></tr>
+            <tr><td>宇宙</td><td>中（コアなファン層は厚いがマス訴求は限定的）</td><td>中</td><td>△。1話1知識は可能だがストーリー推進力が弱い（知識の物語推進力軸で低評価）</td><td>中</td><td>低</td></tr>
+            <tr><td>生物</td><td>中。動物系は再生されやすい定番</td><td>中</td><td>○。生態=キャラの行動原理にでき「宇宙よりも遠い場所」型の探検要素と親和</td><td>中</td><td>低</td></tr>
+            <tr><td>金融</td><td>高（資産形成ニーズの高まり）</td><td>中〜高</td><td>△。数字が中心でドラマ化しにくい、誤解が実損に直結</td><td>高（金商法・断定表現規制）</td><td>高（YMYL）</td></tr>
+            <tr><td>法律</td><td>中。トラブル解決系は需要あり</td><td>低〜中（専門性が壁になり量産が進んでいない＝飽和が薄い）</td><td>○。「相談→解決」の型が寸劇と相性良く1話1条文に分解可</td><td>高（弁護士監修）</td><td>中（個別事案の誤指南リスク）</td></tr>
+            <tr><td>語学</td><td>高（英会話系は定番）</td><td>高</td><td>○だが差別化困難（レッドオーシャン）</td><td>低</td><td>低</td></tr>
+            <tr><td>職業もの（業界あるある）</td><td>実証済み高需要（テイコウペンギンYouTube登録者65万人超〔ブラック企業〕、アパレる〔アパレル業界〕など）</td><td>低（業界別に見れば個々の業界は無数に未開拓）</td><td>◎。「舞台＝業界」自体が知識装置になり、単話（あるある寸劇）＋通底ストーリー（キャリア成長）の二層構造を自然に持てる＝二層構造と1話1知識分解性の双方を満たす</td><td>業界による（現場取材中心、専門資格監修は不要な業界も多い）</td><td>業界依存（一般事務系は低、医療/金融系業界ものは高）</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="figure-caption">事実の出典: AI slop密度「Science and Education」カテゴリ35.0%（※サブジャンル別内訳データは検索で確認できず、推測不可として明記）。反例: 法律・生物・宇宙は雑学ほど量産されておらず「教育カテゴリ35%」を一律適用すべきでない。</p>
+    </div>
+  </section>
+
+  <section id="references">
+    <h2>References</h2>
+    <ul class="ref-list">
+      <li><code>tiktok/report-2026-07-27-worldview-format.md</code>（本文ソース）</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>世界観適性とフォーマットの集中調査 / 調査日 2026-07-27 / レビュー用ペライチ</footer>
+
+<!-- ============== comment feature (vanilla JS port) ============== -->
+<div id="comment-ui-root" data-comment-ui>
+  <button id="comment-fab" class="comment-fab" hidden>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.5A8 8 0 1 1 21 12Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+    コメントを追加
+  </button>
+
+  <div id="comment-composer" class="comment-composer" hidden>
+    <div class="composer-quote" id="composer-quote"></div>
+    <textarea id="composer-textarea" class="composer-input" placeholder="この範囲へのコメントを入力…（Cmd/Ctrl + Enter で保存）"></textarea>
+    <div class="composer-actions">
+      <button class="btn-ghost" id="composer-cancel">キャンセル</button>
+      <button class="btn-primary" id="composer-save" disabled>保存</button>
+    </div>
+  </div>
+
+  <div class="comment-panel" id="comment-panel">
+    <div class="panel-body" id="panel-body" hidden>
+      <div id="panel-list-wrap"></div>
+      <div class="panel-foot">
+        <button class="btn-primary wide" id="copy-all-btn" disabled>すべてコピー（0件）</button>
+      </div>
+    </div>
+    <button class="panel-toggle" id="panel-toggle">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.5A8 8 0 1 1 21 12Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      コメント
+      <span class="panel-count" id="panel-count">0</span>
+      <span class="panel-caret" id="panel-caret">&#9652;</span>
+    </button>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===== 設定 / このページ固有の値 =====
+  var STORAGE_KEY = 'ig-tiktok-worldview-format-comments';
+  var COPY_TITLE = '世界観適性とフォーマット調査 レビューコメント';
+  var HIGHLIGHT_NAME = 'review-comment';
+
+  // ---- state ----
+  var comments = loadComments();
+  var rangeMap = new Map(); // id -> Range（テキストコメントのみ・セッション内限定）
+  var draftRange = null;
+  var pending = null; // {anchor:{x,y}, place, quote, kind, figureKey}
+  var composerOpen = false;
+  var editingId = null;
+  var editBody = '';
+
+  // ---- DOM refs ----
+  var fab = document.getElementById('comment-fab');
+  var composer = document.getElementById('comment-composer');
+  var quoteEl = document.getElementById('composer-quote');
+  var textarea = document.getElementById('composer-textarea');
+  var saveBtn = document.getElementById('composer-save');
+  var cancelBtn = document.getElementById('composer-cancel');
+  var panel = document.getElementById('comment-panel');
+  var panelBody = document.getElementById('panel-body');
+  var panelToggle = document.getElementById('panel-toggle');
+  var panelCount = document.getElementById('panel-count');
+  var panelCaret = document.getElementById('panel-caret');
+  var listWrap = document.getElementById('panel-list-wrap');
+  var copyAllBtn = document.getElementById('copy-all-btn');
+  var panelOpen = false;
+  var copiedTimer = null;
+
+  function loadComments() {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    try {
+      var parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function persist() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(comments));
+  }
+
+  function refreshHighlights() {
+    if (!window.CSS || !CSS.highlights || typeof Highlight === 'undefined') return;
+    var hl = new Highlight();
+    rangeMap.forEach(function (r) { hl.add(r); });
+    CSS.highlights.set(HIGHLIGHT_NAME, hl);
+  }
+
+  function markFigureComments() {
+    var keyed = {};
+    comments.forEach(function (c) { if (c.kind === 'figure') keyed[c.figureKey] = true; });
+    document.querySelectorAll('[data-figure-key]').forEach(function (el) {
+      var key = el.getAttribute('data-figure-key');
+      if (keyed[key]) el.setAttribute('data-has-comment', '');
+      else el.removeAttribute('data-has-comment');
+    });
+  }
+
+  // ===== figure 初期化: .figure[data-label] に figureKey を付与し、既存ボタンへ配線 =====
+  document.querySelectorAll('.figure[data-label]').forEach(function (fig) {
+    var label = fig.getAttribute('data-label');
+    fig.setAttribute('data-figure-key', label);
+    var btn = fig.querySelector('.figure-comment-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var rect = fig.getBoundingClientRect();
+      draftRange = null;
+      pending = {
+        anchor: { x: rect.left + window.scrollX + rect.width / 2, y: rect.top + window.scrollY + 44 },
+        place: 'below',
+        quote: label,
+        kind: 'figure',
+        figureKey: label
+      };
+      hideFab();
+      openComposer();
+    });
+  });
+
+  // ===== テキスト選択監視（selectionchange をデバウンス。mouseup 非依存） =====
+  var isTouch = window.matchMedia('(hover: none)').matches;
+  var selTimer = null;
+
+  document.addEventListener('selectionchange', function () {
+    if (composerOpen) return;
+    window.clearTimeout(selTimer);
+    selTimer = window.setTimeout(function () {
+      var sel = window.getSelection();
+      var text = sel ? sel.toString().trim() : '';
+      if (!sel || sel.isCollapsed || !text) {
+        hideFab();
+        return;
+      }
+      var node = sel.anchorNode;
+      var host = node instanceof Element ? node : (node ? node.parentElement : null);
+      if (host && host.closest('[data-comment-ui]')) return;
+
+      var range = sel.getRangeAt(0);
+      var rect = range.getBoundingClientRect();
+      draftRange = range.cloneRange();
+      pending = {
+        anchor: { x: rect.left + window.scrollX + rect.width / 2, y: rect.top + window.scrollY },
+        place: 'above',
+        quote: text,
+        kind: 'text'
+      };
+      if (isTouch) {
+        openComposer();
+      } else {
+        showFab();
+      }
+    }, 350);
+  });
+
+  function applyAnchor(el) {
+    el.style.left = pending.anchor.x + 'px';
+    el.style.top = pending.anchor.y + 'px';
+    el.style.transform = pending.place === 'below'
+      ? 'translate(-50%, 10px)'
+      : 'translate(-50%, calc(-100% - 9px))';
+  }
+
+  function showFab() {
+    if (!pending) return;
+    applyAnchor(fab);
+    fab.hidden = false;
+  }
+  function hideFab() { fab.hidden = true; }
+
+  fab.addEventListener('mousedown', function (e) { e.preventDefault(); });
+  fab.addEventListener('click', function () {
+    hideFab();
+    openComposer();
+  });
+
+  function openComposer() {
+    if (!pending) return;
+    composerOpen = true;
+    quoteEl.innerHTML = (pending.kind === 'figure' ? '<span class="kind-pill fig">図</span>' : '')
+      + '「' + escapeHtml(pending.quote) + '」';
+    textarea.value = '';
+    saveBtn.disabled = true;
+    applyAnchor(composer);
+    composer.hidden = false;
+    window.setTimeout(function () { textarea.focus(); }, 0);
+  }
+
+  function closeComposer() {
+    pending = null;
+    composerOpen = false;
+    composer.hidden = true;
+    textarea.value = '';
+  }
+
+  textarea.addEventListener('input', function () {
+    saveBtn.disabled = textarea.value.trim().length === 0;
+  });
+  textarea.addEventListener('keydown', function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); saveComment(); }
+    if (e.key === 'Escape') closeComposer();
+  });
+  cancelBtn.addEventListener('click', closeComposer);
+  saveBtn.addEventListener('click', saveComment);
+  composer.addEventListener('mousedown', function (e) { e.stopPropagation(); });
+
+  function genId() {
+    return 'c-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+  }
+
+  function saveComment() {
+    var body = textarea.value.trim();
+    if (!pending || !body) return;
+    var id = genId();
+    if (pending.kind === 'text' && draftRange) {
+      rangeMap.set(id, draftRange);
+      refreshHighlights();
+    }
+    comments.push({
+      id: id,
+      kind: pending.kind,
+      quote: pending.quote,
+      body: body,
+      createdAt: Date.now(),
+      figureKey: pending.figureKey
+    });
+    persist();
+    renderPanel();
+    markFigureComments();
+    closeComposer();
+    var s = window.getSelection();
+    if (s) s.removeAllRanges();
+  }
+
+  function deleteComment(id) {
+    rangeMap.delete(id);
+    refreshHighlights();
+    comments = comments.filter(function (c) { return c.id !== id; });
+    persist();
+    if (editingId === id) editingId = null;
+    renderPanel();
+    markFigureComments();
+  }
+
+  function startEdit(id, body) {
+    editingId = id;
+    editBody = body;
+    renderPanel();
+  }
+
+  function saveEdit() {
+    if (!editingId) return;
+    var body = editBody.trim();
+    if (body) {
+      comments = comments.map(function (c) {
+        return c.id === editingId ? Object.assign({}, c, { body: body }) : c;
+      });
+      persist();
+    }
+    editingId = null;
+    editBody = '';
+    renderPanel();
+  }
+
+  function jumpTo(c) {
+    if (c.kind === 'figure' && c.figureKey) {
+      var target = null;
+      document.querySelectorAll('[data-figure-key]').forEach(function (el) {
+        if (el.getAttribute('data-figure-key') === c.figureKey) target = el;
+      });
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    var r = rangeMap.get(c.id);
+    var el = r ? r.startContainer.parentElement : null;
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (ch) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+    });
+  }
+
+  function renderPanel() {
+    panelCount.textContent = comments.length;
+    copyAllBtn.disabled = comments.length === 0;
+    if (!copiedTimer) copyAllBtn.textContent = 'すべてコピー（' + comments.length + '件）';
+
+    if (comments.length === 0) {
+      listWrap.innerHTML = '<p class="panel-empty">本文中のテキストを選択すると「コメントを追加」ボタンが出ます。図は右上の「コメント」ボタンから。書いたコメントはここに集まります。</p>';
+      return;
+    }
+
+    var html = '<ul class="comment-list">';
+    comments.forEach(function (c, i) {
+      var isEditing = editingId === c.id;
+      html += '<li class="comment-item" data-id="' + c.id + '" data-idx="' + i + '">';
+      html += '<div class="ci-head">';
+      html += '<span class="ci-num">#' + (i + 1) + '</span>';
+      html += '<span class="kind-pill ' + (c.kind === 'figure' ? 'fig' : 'txt') + '">' + (c.kind === 'figure' ? '図' : '本文') + '</span>';
+      if (!isEditing) {
+        html += '<button class="ci-act" data-act="edit" data-id="' + c.id + '">編集</button>';
+      }
+      html += '<button class="ci-del" data-act="del" data-id="' + c.id + '">&times;</button>';
+      html += '</div>';
+      html += '<div class="ci-quote">「' + escapeHtml(c.quote) + '」</div>';
+      if (isEditing) {
+        html += '<div class="ci-edit-box" data-noselect>';
+        html += '<div class="ci-edit-label">コメントを編集</div>';
+        html += '<textarea class="composer-input ci-edit" data-act="edit-input">' + escapeHtml(editBody) + '</textarea>';
+        html += '<div class="composer-actions">';
+        html += '<button class="btn-ghost" data-act="edit-cancel">キャンセル</button>';
+        html += '<button class="btn-primary" data-act="edit-save"' + (editBody.trim() ? '' : ' disabled') + '>更新</button>';
+        html += '</div></div>';
+      } else {
+        html += '<div class="ci-body">' + escapeHtml(c.body) + '</div>';
+      }
+      html += '</li>';
+    });
+    html += '</ul>';
+    listWrap.innerHTML = html;
+
+    // イベント配線（再描画のたびに張り直す）
+    listWrap.querySelectorAll('.comment-item').forEach(function (li) {
+      var id = li.getAttribute('data-id');
+      li.addEventListener('click', function (e) {
+        if (editingId === id) return;
+        if (e.target.closest('[data-act]')) return;
+        var c = comments.find(function (x) { return x.id === id; });
+        if (c) jumpTo(c);
+      });
+    });
+    listWrap.querySelectorAll('[data-act="edit"]').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var id = btn.getAttribute('data-id');
+        var c = comments.find(function (x) { return x.id === id; });
+        if (c) startEdit(id, c.body);
+      });
+    });
+    listWrap.querySelectorAll('[data-act="del"]').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        deleteComment(btn.getAttribute('data-id'));
+      });
+    });
+    var editInput = listWrap.querySelector('[data-act="edit-input"]');
+    if (editInput) {
+      editInput.addEventListener('click', function (e) { e.stopPropagation(); });
+      editInput.addEventListener('input', function () {
+        editBody = editInput.value;
+        var saveBtnEl = listWrap.querySelector('[data-act="edit-save"]');
+        if (saveBtnEl) saveBtnEl.disabled = editBody.trim().length === 0;
+      });
+      editInput.addEventListener('keydown', function (e) {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); saveEdit(); }
+        if (e.key === 'Escape') { editingId = null; renderPanel(); }
+      });
+    }
+    var editCancel = listWrap.querySelector('[data-act="edit-cancel"]');
+    if (editCancel) editCancel.addEventListener('click', function (e) {
+      e.stopPropagation();
+      editingId = null;
+      renderPanel();
+    });
+    var editSave = listWrap.querySelector('[data-act="edit-save"]');
+    if (editSave) editSave.addEventListener('click', function (e) {
+      e.stopPropagation();
+      saveEdit();
+    });
+  }
+
+  panelToggle.addEventListener('click', function () {
+    panelOpen = !panelOpen;
+    panel.classList.toggle('open', panelOpen);
+    panelBody.hidden = !panelOpen;
+    panelCaret.innerHTML = panelOpen ? '&#9662;' : '&#9652;';
+  });
+
+  function fallbackCopy(text, done) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    done();
+  }
+
+  copyAllBtn.addEventListener('click', function () {
+    if (comments.length === 0) return;
+    var lines = ['# ' + COPY_TITLE + '（' + comments.length + '件）', ''];
+    comments.forEach(function (c, i) {
+      lines.push('## コメント ' + (i + 1) + '（' + (c.kind === 'figure' ? '図' : '本文') + '）');
+      lines.push('> ' + c.quote.replace(/\n+/g, ' '));
+      lines.push('');
+      lines.push(c.body);
+      lines.push('');
+    });
+    var text = lines.join('\n');
+
+    function done() {
+      window.clearTimeout(copiedTimer);
+      copyAllBtn.textContent = 'コピーしました';
+      copiedTimer = window.setTimeout(function () {
+        copiedTimer = null;
+        copyAllBtn.textContent = 'すべてコピー（' + comments.length + '件）';
+      }, 2000);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text, done); });
+    } else {
+      fallbackCopy(text, done);
+    }
+  });
+
+  // ---- 初期描画 ----
+  markFigureComments();
+  renderPanel();
+})();
+</script>
+
+</body>
+</html>
