@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>徹底検証レビュー: 観察メモ + AI vs 3Dレポート</title>
+<style>
+  :root{
+    --surface:#FFFFFF;
+    --bg:#FFFFFF;
+    --border:#E2E8F0;
+    --text:#0F172A;
+    --text-muted:#475569;
+    --text-subtle:#64748B;
+    --engine:#2563EB;
+    --danger:#DC2626;
+    --amber:#F59E0B;
+    --amber-bg:#FFFBEB;
+    --amber-border:#FDE68A;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    width:100%;
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans",system-ui,sans-serif;
+    line-height:1.75;
+  }
+  p,li,td,th,.lead-item,.callout,.compare-col,.ci-body,.panel-empty{
+    overflow-wrap:anywhere;
+  }
+  main{
+    max-width:880px;
+    margin:0 auto;
+    padding:0 20px 96px;
+  }
+  .hero{
+    background:linear-gradient(180deg,#F8FAFC 0%,#FFFFFF 100%);
+    border-bottom:1px solid var(--border);
+    padding:52px 20px 34px;
+    text-align:center;
+  }
+  .hero h1{
+    font-size:26px;
+    margin:0 0 10px;
+    letter-spacing:0.01em;
+  }
+  .hero .meta{
+    font-size:13px;
+    color:var(--text-subtle);
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .pill{
+    display:inline-block;
+    border-radius:999px;
+    padding:3px 12px;
+    font-weight:600;
+    font-size:12px;
+  }
+  .pill.date{ background:#EEF2FF; color:#4338CA; }
+  .pill.review{ background:#FEF3C7; color:#92400E; }
+  .pill.status{ background:#DCFCE7; color:#166534; }
+
+  section{ margin-top:52px; }
+  h2{
+    font-size:20px;
+    border-left:5px solid var(--engine);
+    padding-left:12px;
+    margin:0 0 18px;
+  }
+  h3{
+    font-size:16px;
+    margin:28px 0 10px;
+    color:var(--text);
+  }
+  h3 .num{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:22px;height:22px;
+    border-radius:999px;
+    background:var(--engine);
+    color:#fff;
+    font-size:12px;
+    margin-right:8px;
+  }
+
+  /* ---- lead ---- */
+  .lead-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:grid;
+    gap:12px;
+  }
+  .lead-item{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    background:#F8FAFC;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:14px 16px;
+    font-size:14.5px;
+  }
+  .lead-item .badge{
+    flex:0 0 auto;
+    width:26px;height:26px;
+    border-radius:999px;
+    background:var(--engine);
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* ---- figure wrapper (comment target) ---- */
+  .figure{ position:relative; margin:18px 0; }
+  .figure-caption{
+    font-size:12.5px;
+    color:var(--text-subtle);
+    margin:8px 2px 0;
+  }
+  .figure[data-has-comment]{
+    outline:2px solid #FCD34D;
+    outline-offset:6px;
+    border-radius:16px;
+  }
+  .figure-comment-btn{
+    position:absolute;
+    top:-14px;
+    right:6px;
+    z-index:20;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    background:rgba(15,23,42,0.86);
+    color:#fff;
+    border:none;
+    border-radius:999px;
+    padding:6px 11px;
+    font-size:11.5px;
+    font-weight:600;
+    font-family:inherit;
+    cursor:pointer;
+    opacity:0;
+    transition:opacity .15s;
+    box-shadow:0 4px 14px rgba(15,23,42,.25);
+  }
+  .figure:hover .figure-comment-btn,
+  .figure-comment-btn:focus-visible{ opacity:1; }
+  @media (hover:none){
+    .figure-comment-btn{ opacity:1; position:static; margin-bottom:8px; }
+  }
+
+  /* ---- compare (before/after) ---- */
+  .compare{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  .compare-col h4{
+    margin:0 0 6px;
+    font-size:13px;
+  }
+  .compare-col.before h4{ color:var(--danger); }
+  .compare-col.after h4{ color:#166534; }
+  pre{
+    background:#0F172A;
+    color:#E2E8F0;
+    border-radius:10px;
+    padding:14px 16px;
+    font-size:12.5px;
+    line-height:1.7;
+    white-space:pre;
+    overflow-x:auto;
+    margin:0;
+  }
+  pre .anchor{ color:#F59E0B; }
+  pre .ctrl{ color:#93C5FD; }
+  pre .head{ color:#86EFAC; }
+
+  /* ---- callouts ---- */
+  .callout{
+    border-left:5px solid var(--amber);
+    background:var(--amber-bg);
+    border:1px solid var(--amber-border);
+    border-left-width:5px;
+    border-radius:10px;
+    padding:16px 18px;
+    font-size:14px;
+  }
+  .callout h4{
+    margin:0 0 10px;
+    font-size:14.5px;
+    color:#92400E;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .callout.plain{
+    border-left-color:#94A3B8;
+    background:#F8FAFC;
+    border-color:var(--border);
+  }
+  .callout.plain h4{ color:var(--text); }
+  .callout ul{ margin:6px 0; padding-left:20px; }
+  .callout li{ margin:4px 0; }
+
+  /* ---- alignment diagram ---- */
+  .align-diagram{
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    background:#FAFAFA;
+  }
+  .align-head{
+    display:grid;
+    grid-template-columns:1fr 140px 1fr;
+    background:#F1F5F9;
+    font-size:12px;
+    font-weight:700;
+    color:var(--text-muted);
+    padding:8px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  .align-sync{
+    background:#EFF6FF;
+    color:#1D4ED8;
+    font-size:12.5px;
+    font-weight:600;
+    padding:8px 14px;
+    border-top:1px dashed #93C5FD;
+    border-bottom:1px dashed #93C5FD;
+  }
+  .align-row{
+    display:grid;
+    grid-template-columns:1fr 140px 1fr;
+    gap:8px;
+    align-items:center;
+    padding:8px 12px;
+    border-bottom:1px solid #EEF1F5;
+    font-size:12.5px;
+  }
+  .align-cell{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:6px 8px;
+    min-height:16px;
+  }
+  .align-cell.empty{ background:#F8FAFC; border-style:dashed; color:var(--text-subtle); }
+  .align-tag{
+    text-align:center;
+    font-size:11px;
+    font-weight:700;
+    border-radius:999px;
+    padding:4px 6px;
+  }
+  .align-row.match .align-tag{ background:#DCFCE7; color:#166534; }
+  .align-row.update .align-tag{ background:#FEF3C7; color:#92400E; }
+  .align-row.insert .align-tag{ background:#DBEAFE; color:#1D4ED8; }
+  .align-row.delete .align-tag{ background:#FEE2E2; color:#B91C1C; }
+  .align-note{
+    font-size:12px;
+    color:var(--text-subtle);
+    padding:10px 14px;
+    background:#F8FAFC;
+  }
+
+  /* ---- table ---- */
+  .table-wrap{ overflow-x:auto; border:1px solid var(--border); border-radius:12px; }
+  table{ border-collapse:collapse; width:100%; font-size:13px; min-width:560px; }
+  th,td{ text-align:left; padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+  thead th{ background:#F1F5F9; font-size:12.5px; color:var(--text-muted); }
+  tbody tr:last-child td{ border-bottom:none; }
+  td code, li code, p code{
+    background:#F1F5F9;
+    border-radius:5px;
+    padding:1px 6px;
+    font-size:12px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  .kind-tag{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    border-radius:999px;
+    padding:2px 8px;
+  }
+  .kind-tag.new{ background:#DBEAFE; color:#1D4ED8; }
+  .kind-tag.mod{ background:#FEF3C7; color:#92400E; }
+  .kind-tag.keep{ background:#F1F5F9; color:var(--text-muted); }
+
+  ul.plain{ padding-left:22px; margin:8px 0; }
+  ul.plain li{ margin:6px 0; font-size:14px; }
+
+  .ref-list{ list-style:none; padding:0; margin:0; display:grid; gap:6px; }
+  .ref-list li{ font-size:13px; }
+  .ref-list code{ background:#F1F5F9; border-radius:5px; padding:2px 6px; }
+
+  footer{
+    text-align:center;
+    font-size:12px;
+    color:var(--text-subtle);
+    padding:40px 20px 120px;
+  }
+
+  @media (max-width:640px){
+    main{ padding:0 14px 96px; }
+    .hero{ padding:40px 14px 26px; }
+    .hero h1{ font-size:21px; }
+    .compare{ grid-template-columns:1fr; }
+    .align-head,.align-row{ grid-template-columns:1fr; gap:4px; }
+    .align-tag{ justify-self:start; }
+    section{ margin-top:40px; }
+  }
+
+  /* ================= comment feature ================= */
+  ::highlight(review-comment){ background-color:#FEF08A; color:#0F172A; }
+
+  .comment-fab{
+    position:absolute; z-index:9000;
+    display:flex; align-items:center; gap:6px;
+    background:#0F172A; color:#fff; border:none;
+    border-radius:999px; padding:8px 14px;
+    font-size:12.5px; font-weight:600; font-family:inherit;
+    cursor:pointer; box-shadow:0 6px 20px rgba(15,23,42,.28);
+  }
+  .comment-fab:hover{ background:#1E293B; }
+  .comment-fab[hidden]{ display:none; }
+
+  .comment-composer{
+    position:absolute; z-index:9000;
+    width:320px; background:var(--surface);
+    border:1px solid var(--border); border-radius:12px;
+    padding:14px; box-shadow:0 12px 32px rgba(15,23,42,.22);
+  }
+  .comment-composer[hidden]{ display:none; }
+  .composer-quote{
+    font-size:12px; color:var(--text-subtle); line-height:1.6;
+    margin-bottom:9px; max-height:56px; overflow:hidden;
+    border-left:3px solid #FCD34D; padding-left:8px;
+  }
+  .composer-input{
+    width:100%; min-height:76px; resize:vertical;
+    border:1px solid var(--border); border-radius:8px;
+    padding:9px 10px; font-size:13px; font-family:inherit;
+    line-height:1.6; color:var(--text);
+  }
+  .composer-input:focus{ outline:2px solid #BFDBFE; border-color:var(--engine); }
+  .composer-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:10px; }
+
+  .btn-primary,.btn-ghost{
+    font-family:inherit; font-size:12.5px; font-weight:600;
+    border-radius:8px; padding:7px 14px; cursor:pointer; border:1px solid transparent;
+  }
+  .btn-primary{ background:var(--engine); color:#fff; }
+  .btn-primary:hover{ background:#1D4ED8; }
+  .btn-primary:disabled{ background:#CBD5E1; cursor:not-allowed; }
+  .btn-primary.wide{ width:100%; padding:10px; font-size:13px; }
+  .btn-ghost{ background:var(--surface); color:var(--text-muted); border-color:var(--border); }
+  .btn-ghost:hover{ background:#F1F5F9; }
+
+  .comment-panel{
+    position:fixed; left:22px; bottom:22px; z-index:8500;
+    display:flex; flex-direction:column;
+  }
+  .comment-panel.open{ width:350px; }
+  .panel-toggle{
+    display:flex; align-items:center; gap:7px; margin-right:auto;
+    background:#0F172A; color:#fff; border:none; border-radius:999px;
+    padding:11px 17px; font-size:13px; font-weight:600; font-family:inherit;
+    cursor:pointer; box-shadow:0 8px 24px rgba(15,23,42,.26);
+  }
+  .panel-toggle:hover{ background:#1E293B; }
+  .panel-count{
+    background:var(--engine); color:#fff; font-size:11px; font-weight:700;
+    border-radius:999px; min-width:19px; height:19px;
+    display:inline-flex; align-items:center; justify-content:center; padding:0 5px;
+  }
+  .panel-caret{ font-size:11px; opacity:.8; }
+  .panel-body{
+    margin-bottom:10px; background:var(--surface); border:1px solid var(--border);
+    border-radius:14px; box-shadow:0 16px 40px rgba(15,23,42,.18); overflow:hidden;
+  }
+  .panel-body[hidden]{ display:none; }
+  .panel-empty{ font-size:13px; line-height:1.75; color:var(--text-muted); padding:18px 16px; margin:0; }
+  .comment-list{ list-style:none; margin:0; padding:8px; max-height:46vh; overflow-y:auto; }
+  .comment-item{
+    border:1px solid var(--border); border-radius:10px; padding:10px 11px; margin:6px 0;
+    background:#FCFCFD; cursor:pointer; transition:border-color .12s, background .12s;
+  }
+  .comment-item:hover{ border-color:#93C5FD; background:#F8FAFF; }
+  .ci-head{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .ci-num{ font-size:11px; font-weight:700; color:var(--engine); }
+  .ci-act{
+    display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:700;
+    font-family:inherit; background:var(--engine); color:#fff; border:none;
+    border-radius:6px; padding:4px 10px; cursor:pointer;
+  }
+  .ci-act:hover{ background:#1D4ED8; }
+  .ci-del{
+    margin-left:auto; font-size:14px; line-height:1; background:none; border:none;
+    color:var(--text-subtle); cursor:pointer; padding:2px 6px; border-radius:6px;
+  }
+  .ci-del:hover{ background:#FEE2E2; color:var(--danger); }
+  .ci-quote{
+    font-size:11.5px; color:var(--text-subtle); line-height:1.55;
+    border-left:3px solid #FCD34D; padding-left:7px; margin-bottom:6px;
+  }
+  .ci-body{ font-size:13px; line-height:1.65; color:var(--text); white-space:pre-wrap; }
+  .ci-edit{ margin-bottom:0; }
+  .ci-edit-label{ font-size:11px; font-weight:700; color:var(--engine); margin:2px 0 6px; }
+  .panel-foot{ border-top:1px solid var(--border); padding:10px; background:#F8FAFC; }
+
+  .kind-pill{ display:inline-block; font-size:10px; font-weight:700; border-radius:999px; padding:2px 7px; letter-spacing:.02em; }
+  .kind-pill.fig{ background:#EDE9FE; color:#6D28D9; }
+  .kind-pill.txt{ background:#DBEAFE; color:#1D4ED8; }
+  .composer-quote .kind-pill{ margin-right:6px; }
+
+  @media (hover:none){
+    .comment-composer{
+      position:fixed; left:50% !important; top:12px !important;
+      transform:translateX(-50%) !important; width:min(92vw,360px); max-width:92vw;
+    }
+    .composer-input{ font-size:16px; }
+  }
+  @media (max-width:640px){
+    .comment-panel{ left:12px; right:12px; bottom:calc(18px + env(safe-area-inset-bottom,0px)); }
+    .comment-panel.open{ width:auto; }
+    .panel-body{ display:flex; flex-direction:column; max-height:70vh; }
+    .comment-list{ flex:1 1 auto; min-height:0; max-height:none; }
+    .panel-foot{ flex:0 0 auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>徹底検証レビュー: 観察メモ + AI vs 3Dレポート</h1>
+  <div class="meta">
+    <span class="pill date">検証日 2026-07-27</span>
+    <span class="pill review">9本の並列調査による敵対的検証</span>
+  </div>
+</header>
+
+<main>
+
+  <p><a href="../">まとめトップに戻る</a></p>
+
+  <p>対象は2文書、『ドラマ系チャンネル50本を見て思ったこと』（観察メモ）と <code>report-2026-07-27-ai-vs-3d.md</code>（AI完パケ vs 3D完パケレポート）。アルゴリズム検証・カット割り検証・ジャンル経済圏・新規IPショートアニメ事例・レポートのデータ敵対的検証・レポートの技術敵対的検証・知識×ドラマ形式・ゲームIP×ショート動画・欠落＆盲点批評という9本の並列調査で、公式声明・リーク文書・裁判資料・査読研究などの一次情報と照合した。総合判定として、観察メモの仮説群は独立した証拠と高い精度で一致しほぼ正確、レポートの「3D完パケが正解」という結論は敵対的検証を経ても覆らなかったが、双方に修正すべき論点と欠落している盲点が複数見つかった。</p>
+
+  <section id="correction">
+    <div class="figure" data-label="本研究がmoorestechとは無関係の業務委託案件（AI動画によるIP創出研究）だったと判明し、初版検証がディレクトリ位置からmoorestech販促と誤読した前提で行われていたため、ゲーム関連の論点群が無効化され、アルゴリズム・カット割り・ジャンル等の論点は有効なまま残るという訂正の全文">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="callout">
+        <h4>訂正（2026-07-27）</h4>
+        <p>本研究は<strong>moorestechとは無関係の業務委託案件（AI動画によるIP創出の研究）</strong>である。初版の検証はディレクトリ位置からmoorestech販促と誤読した前提で行われたため、以下の読み替えが必要。</p>
+        <p style="margin:14px 0 4px;font-weight:700;color:#92400E;">無効になった論点（該当箇所: 付録の調査8はほぼ全体、調査7の4章、盲点批評の1・2・4）</p>
+        <ul>
+          <li>ゲーム開発との機会費用</li>
+          <li>ゲームプレイ動画というヌル代替案</li>
+          <li>Steamウィッシュリストファネル</li>
+          <li>moorestech世界観への適用</li>
+          <li>発売後に延期すべきという結論</li>
+        </ul>
+        <p style="margin:14px 0 4px;font-weight:700;color:#92400E;">有効なまま残る論点</p>
+        <ul>
+          <li>アルゴリズム・カット割り・ジャンルの仮説検証</li>
+          <li>レポートのデータ/技術検証</li>
+          <li>二層構造フォーマット</li>
+          <li>消去法の誤り（感動系・癒し共感キャラ系の見落とし）</li>
+          <li>ゼロからIP化した事例群</li>
+          <li>脚本律速・AIキャラデザ著作権・AI音声ラベル・言語戦略・収益モデルの盲点</li>
+        </ul>
+        <p style="margin:14px 0 0;">正しい前提での結論は「統合推奨」を参照。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="summary">
+    <h2>総合判定</h2>
+    <div class="figure" data-label="観察メモの仮説群・消去法・末尾の問い、レポートの3D結論・データ引用・技術論、両文書共通の最大欠落という7項目それぞれについて下した総合判定の一覧">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>対象</th><th>判定</th></tr></thead>
+          <tbody>
+            <tr><td>メモの「伸びる条件」仮説群</td><td>観察としてほぼ全て正確。公式声明・リーク文書・裁判資料・査読研究と独立に一致</td></tr>
+            <tr><td>メモの消去法「露悪NG→面白系しかない」</td><td>誤り。感動・泣ける系と癒し・キャラ共感系が抜けている</td></tr>
+            <tr><td>メモ末尾の問い「単話完結+一貫世界観+全体進行のフォーマットはあるか」</td><td>存在する。成功例は全て「単話量産層+不定期ストーリー層」の二層構造</td></tr>
+            <tr><td>レポートの結論「3D完パケが正解」</td><td>敵対的検証を経ても覆らず。ただし論拠に要修正箇所が複数</td></tr>
+            <tr><td>レポートのデータ引用</td><td>中核（JCR論文等）は正確。誤帰属2件・事実誤認2件・要トーンダウン数件</td></tr>
+            <tr><td>レポートの技術論</td><td>「原理的に破綻」は2024年の議論で誇張。第3案（3D制御+AIレンダリング）が未検討</td></tr>
+            <tr><td>両文書の最大の欠落</td><td>「そもそもリリース前の今やるべきか」の裁定。発売前インディーがオリジナルショートアニメでIPを先行構築した成功例はゼロ</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="hypothesis-summary">
+    <h2>メモの仮説別判定サマリ</h2>
+    <div class="figure" data-label="観察メモが立てた8個の仮説（2秒フック・完走率・カット密度・必要条件論・過去実績無関係・スカッと系の再現性・面白系の難易度・面白系しかないという消去法）それぞれの判定記号と修正点をまとめた一覧">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>仮説</th><th>判定</th><th>修正点</th></tr></thead>
+          <tbody>
+            <tr><td>最初の2秒で分かる</td><td><span class="kind-tag" style="background:#DCFCE7;color:#166534;">○</span></td><td>公式・準公式は「3秒」。フックはスキップ判定通過の必要条件で、評価は動画全体の維持カーブ</td></tr>
+            <tr><td>完走率でレコメンド（多分）</td><td><span class="kind-tag" style="background:#DCFCE7;color:#166534;">◎「多分」不要</span></td><td>公式声明+Algo 101リーク+ケンタッキー州訴訟資料+SIGIR 2025監査の4系統が一致。ただし完走単独でなく視聴時間×完走×リワッチ×視聴後エンゲージの複合。2024-25年は60-90秒の長尺優遇で短尺完走ハックは減衰</td></tr>
+            <tr><td>カットが多い（1秒1-2回）</td><td><span class="kind-tag" style="background:#DCFCE7;color:#166534;">○条件付き</span></td><td>MrBeast実測1.3-1.5秒/カットと一致。ただし本質は「情報更新率」の代理指標（ジェットカット・1人寸劇・オムオム型は別実装）。unrelated cut連打には認知的符号化の上限があり、シーン転換は間欠投入が正しい。MrBeast自身が2024年に高速編集を放棄し再生増</td></tr>
+            <tr><td>必要条件だが十分条件でない</td><td><span class="kind-tag" style="background:#DCFCE7;color:#166534;">◎</span></td><td>そのまま正しい。厳密には必要条件ですらない（無編集系Sam Sulekの台頭）</td></tr>
+            <tr><td>過去実績・クオリティは無関係</td><td><span class="kind-tag" style="background:#DCFCE7;color:#166534;">○</span></td><td>TikTok公式「過去の高パフォーマンス動画はレコメンド要因でない」と一致。ただしheating（手動ブースト、日次再生の1-2%）等の例外あり。失速はジャンル需要移動+評価関数自体の変化の複合</td></tr>
+            <tr><td>スカッと系は簡単・ドーパミン</td><td><span class="kind-tag" style="background:#DCFCE7;color:#166534;">○</span></td><td>de Quervain 2004 (Science)・Singer 2006 (Nature)の報酬系研究が直接支持。台本外注市場の成立が量産性の証拠。ただし中国短劇でも逆袭単体は投放14%で最大はロマンス46%。規制・低俗批判・IP毀損コストあり</td></tr>
+            <tr><td>面白系は圧倒的に難しい</td><td><span class="kind-tag" style="background:#FEF3C7;color:#92400E;">△半分</span></td><td>当たり判定が狭く分散大は事実（BVT理論、笑いは社会的場面で30倍）。だが天井は最大（じゅんや3,970万）。ノンバーバル+キャラ+あるあるのフォーマット化で難易度は下げられ、アニメと相性が良い</td></tr>
+            <tr><td>面白系しかない（消去法）</td><td><span class="kind-tag" style="background:#FEE2E2;color:#B91C1C;">×</span></td><td>ごっこ倶楽部は実は感動・泣ける系。ちいかわ・おぱんちゅうさぎの癒し・共感キャラ系がIP化実績最大。「カタルシスの種類×フォーマット再現性」の2軸で選ぶべき</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="report-fixes">
+    <h2>レポートの要修正箇所</h2>
+
+    <h3>データ面（検証5より）</h3>
+    <div class="figure" data-label="AI vs 3Dレポートのデータ引用のうち、C2PA統合時期・AIGCラベル本数・信頼低下調査の出典帰属・Canva調査の誤読・Sora発表日と費用・DreamWorks時系列・Kapwing/システムリサーチの標本規模という要修正8項目、および中核出典が正確と確認済みである旨の一覧">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <ol class="plain">
+        <li>TikTok C2PA統合は2024年5月（2025年1月は誤り、約8ヶ月ズレ）</li>
+        <li>AIGCラベルは公式発表13億本（30億は未確認の二次報道）</li>
+        <li>「信頼低下20%→40%」はFractl調査、「半数が非AIブランド選好」はGartner調査（現行の出典帰属は誤り）</li>
+        <li>Canva「開示が必要になると考える70%」は誤読（正: 開示なしでは見分けられなくなると考える70%）</li>
+        <li>Sora発表日は3月27日頃、費用はWSJ「1日100万ドル損失」に差し替え</li>
+        <li>DreamWorksは当初原告（「後に参加」はWarner Bros.）</li>
+        <li>Kapwing 59%はn=1新規アカウントのスナップショット、システムリサーチはn=300 — 限定を付記</li>
+        <li>JCR論文・Neuro-sama・Pew・Gallup・Attest・Thaler・Bartzは全て正確と確認済み</li>
+      </ol>
+    </div>
+
+    <h3>技術面（検証6より）</h3>
+    <div class="figure" data-label="AI vs 3Dレポートの技術的主張のうち、SfM/骨格推定の破綻論・避けるべき正しい論拠・Reallusion引用の方向・1カット1生成前提の陳腐化・単価試算の不安定さ・1本1日の未実証という要修正6項目の一覧">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <ol class="plain">
+        <li>「AI生成動画からのSfM/骨格推定は原理的に破綻」は誇張。Vidu4Dは破綻の証拠でなく解決策の提案論文（引用が逆）。PAGE-4D (ICLR 2026)・MoRe (CVPR 2026)等のrigidity前提を捨てたfeed-forward 4D再構成が主流化。人体復元はWHAM/GVHMR/TRAM/HumanMMでSfM非依存</li>
+        <li>AI動画→mocap経路を避ける正しい論拠は (a) カメラは推定でなく指定するものという工程合理性 (b) アニメ調のドメインギャップ（bizarre-pose-estimator等で文書化済み）の2点</li>
+        <li>Reallusion引用は方向が逆。Hybrid AIの実態は「3D=制御層、AI=最終レンダリング」。ツインズひなひまも同型。レポートは「3D制御+AIレンダリング」という第3案を明示的に検討・棄却する形に書き直すべき（棄却理由は技術でなく、最終画がAI生成になりAIGCラベル対象に戻るという戦略上の理由）</li>
+        <li>「1カット=1生成」は陳腐化。Kling 3.0はマルチショット（最大6カット/15秒）+Subject Binding、Seedance 2.0はShotラベル記法+参照9枚。ただし0.5秒×120カットは依然5倍以上の開きがあり結論は維持</li>
+        <li>単価試算は不安定。fal.ai公式でKling 3.0 Pro $0.112-0.224/秒、Seedance 2.0 $0.24-0.30/秒。オーダーは変わらないが計算式は検証に耐えない</li>
+        <li>「1本1日」は未実証。週2-3本を現実的上限と見るべき（プロスタジオのセルルック工程はカット単位で人日）</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="blindspots-summary">
+    <h2>両文書に欠けていた論点（盲点批評より、重要度順）</h2>
+    <div class="figure" data-label="両文書のどちらも扱っていなかった10件の盲点を重要度順に列挙した一覧。1・2・4は訂正によりゲーム関連の前提が無効化されたため参考情報として残す">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <ol class="plain">
+        <li>「リリース7ヶ月前の今やるべきか」の裁定がない。ゲームIP調査の結論（機会費用過大）とレポートPhase 0（2週間で20本）が真っ向から矛盾したまま <span class="kind-tag mod">訂正により無効</span></li>
+        <li>ヌル代替案（ゲームプレイ映像そのものを投稿）が値付けされていない。プロセスX/Primitive Technologyの工程需要+Choo-Choo Charles型の勝ちパターンに、工場ゲームの生産ライン映像はゼロ限界コストで直結する <span class="kind-tag mod">訂正により無効</span></li>
+        <li>メモの観察手法バイアス（レコメンド経由の生存者バイアス、対照群なし、いいね数は代理変数、実写→アニメのドメインジャンプ未検証）</li>
+        <li>TikTok視聴者→Steam購買者のファネル未検証（Mortal Rite: 1.2億再生→課金1,338人。TikTokは中国に届かない） <span class="kind-tag mod">訂正により無効</span></li>
+        <li>律速工程は脚本・演出であり3Dパイプラインは解決しない（週次で当たり脚本を書く職能が誰か未定義）</li>
+        <li>キャラデザをAI上流に置くとIPの核資産が著作権無保護になる自己矛盾（Thaler判決を3Dの論拠に使いながら）</li>
+        <li>AI音声とAIGCラベル義務の内部矛盾（アニメキャラ合成音声が対象か規約原文で未確認）</li>
+        <li>チャンネルの損益設計・撤退ラインの不在（Plott/GOKKOは10億円級調達をしてなお模索中）</li>
+        <li>プラットフォーム集中リスク（多面展開設計なし、Plottは新規IP100作品を公言、短劇資本が日本市場を攻略中）</li>
+        <li>言語戦略の未決定（ノンバーバル設計はアニメの天井最大の武器なのに、知識×ドラマはセリフ依存=国内市場に閉じる選択とセット）</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="recommendation">
+    <h2>統合推奨（訂正後の前提: 業務委託によるAI動画IP創出研究）</h2>
+    <div class="figure" data-label="訂正後の正しい前提（AI動画によるIP創出の業務委託研究）に立った上での8項目の最終推奨。AI開示のダメージ・二分法を三択に書き直す提案・IP出口設計・二層構造の配合比率・ジャンル選定・律速工程・権利面の設計・データ技術修正の全適用をまとめたもの">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <ol class="plain">
+        <li>研究の中核発見として報告できること: 「AIで作ったと分かる完パケ」はIP創出という目的に対して構造的に最悪の組み合わせ。JCR論文の媒介分析（AI開示→労力認識低下→パラソーシャル結合毀損）が示す通り、AI開示のダメージは一発ネタ消費ではなくキャラへの愛着=IPの核心資産に正確に入る。一方、Neuro-sama型（AIがエンジン、人間が設計した器が可視、制作者が可視）はAI×IP創出の最強の実証例</li>
+        <li>レポートは「AI完パケ vs 3D完パケ」の二分法を「AI完パケ / 3D制御+AIレンダリング / 3D完パケ」の3案比較に書き直すべき。第3案は業界の実方向（Reallusion AI Studio・PrevizWhiz・ツインズひなひま）であり、AI動画を主題とする案件では検討必須。トレードオフは最終画がAI生成となりAIGCラベル・JCRペナルティの対象に戻ること</li>
+        <li>ゼロからのIP創出は個人でも実例がある（オムオム1人制作、Skibidi Toilet個人→ハリウッド、SUMIDe）。ただし広告収益で完結した成功例は皆無で、回収は全てチャンネル外（ライセンス・グッズ・ゲーム・劇場・書籍）。IP創出研究には出口設計を最初から含めること</li>
+        <li>フォーマットの答え: 単話量産層+不定期ストーリー層の二層構造。ストーリーは「あるある期の貯金」ができてから解禁（SUMIDe・カレコレの順序）。配合目安は単話8-9:ストーリー1-2</li>
+        <li>ジャンル: 「露悪NG→面白系のみ」の消去法は誤り。感動・泣ける系（国内実績最大=ごっこ倶楽部）と癒し・共感キャラ系（IP化実績最大=ちいかわ）が候補に入る。面白系をやるならノンバーバル+キャラ+あるあるのフォーマット化（じゅんや・トムとジェリー型）で、言語非依存はグローバル天井が最大かつアニメと相性が良い</li>
+        <li>律速工程はレンダリングではなく脚本・演出。週次で当たり脚本を出す職能の確保がパイプラインより先</li>
+        <li>権利面: キャラデザをAI上流に置くとThaler判決によりIPの核資産が著作権無保護になる。デザインは人間が起こす。アニメキャラのAI音声がAIGCラベル義務の対象かを規約原文で確認する</li>
+        <li>レポートのデータ・技術面の修正リスト（前段2セクション）は前提に関係なく全て適用すべき</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="appendix-toc">
+    <h2>付録: 9調査の全文（要点圧縮版）</h2>
+    <ul class="plain">
+      <li><a href="#appendix-algo">1. アルゴリズム検証</a></li>
+      <li><a href="#appendix-cut">2. カット割り検証</a></li>
+      <li><a href="#appendix-genre">3. ジャンル経済圏</a></li>
+      <li><a href="#appendix-newip">4. 新規IPショートアニメ事例</a></li>
+      <li><a href="#appendix-data-verify">5. レポートのデータ検証</a></li>
+      <li><a href="#appendix-tech-verify">6. レポートの技術検証</a></li>
+      <li><a href="#appendix-knowledge-drama">7. 知識×ドラマ形式</a></li>
+      <li><a href="#appendix-gameip">8. ゲームIP×ショート動画（訂正により無効化）</a></li>
+      <li><a href="#appendix-blindspots">9. 欠落・盲点批評</a></li>
+    </ul>
+  </section>
+
+  <section id="appendix-algo">
+    <h2>1. アルゴリズム検証</h2>
+    <p><strong>結論サマリ:</strong> 出典を4階層（公式一次情報／リーク・裁判資料／査読付き学術研究／マーケター観測）に分けて検証。TikTok Newsroomの公式声明、NYT入手の内部文書「TikTok Algo 101」（スコア式 <code>Plike×Vlike + Pcomment×Vcomment + Eplaytime×Vplaytime + Pplay×Vplay</code>）、2024年ケンタッキー州訴訟文書、SIGIR 2025のソックパペット監査（arXiv:2504.18140）の4系統が独立に一致した。</p>
+    <div class="figure" data-label="冒頭2秒フック・維持率完走率レコメンド・チャンネル資産より動画単位という3仮説それぞれの判定と修正点をまとめた一覧">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>仮説</th><th>判定</th><th>修正点</th></tr></thead>
+          <tbody>
+            <tr><td>1. 冒頭2秒のフックが決定的</td><td><span class="kind-tag" style="background:#DCFCE7;color:#166534;">○ おおむね正しい</span></td><td>「2秒」に公式根拠はなく実態は1〜3秒のスキップ判定帯。フックは必要条件で、評価されるのは動画全体の維持率カーブ</td></tr>
+            <tr><td>2. 維持率・完走率でレコメンド（多分）</td><td><span class="kind-tag" style="background:#DCFCE7;color:#166534;">◎ 正しい（「多分」不要）</span></td><td>公式声明・リーク式・裁判資料・2025年学術監査の4系統が一致。ただし完走率単独ではなく視聴時間×完走×リワッチ×視聴後エンゲージメントの複合。2024-25年は1分超の長尺が優遇され、短尺完走ハックは減衰</td></tr>
+            <tr><td>3. チャンネル資産より動画単位</td><td><span class="kind-tag" style="background:#DCFCE7;color:#166534;">○ 方向性は正しい</span></td><td>公式声明と一致。ただしアカウント単位のペナルティ・heating（手動ブースト、日次再生の1-2%）等の例外があり、「フォロワーファーストテスト」（未確認情報）が実在すれば初期配信でフォロワー品質が効く。過去チャンネル失速はブーム終息による興味シグナル移動＋アルゴリズム自体の変化の複合</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p>YouTube Shorts比較: 「Viewed vs Swiped away」がTikTokのスキップ判定と同型の第一関門。ただしYouTubeは満足度アンケート等シグナルが多元的で、Shorts自体は動画単位評価でも登録者はチャンネル資産として通知・導線に効く。横断的留意点として、マーケティングブログの具体的数値（重み%・閾値・ペナルティ%）はほぼ出典不明であり、SIGIR研究の通りアルゴリズム監査の知見自体も数ヶ月〜1年で賞味期限が切れる。</p>
+  </section>
+
+  <section id="appendix-cut">
+    <h2>2. カット割り検証</h2>
+    <div class="figure" data-label="カット密度と視聴維持の相関・ドーパミン設計の正体・1秒1〜2カットの最適水準・必要条件だが十分条件でないという4要素の判定と根拠の強さをまとめた結論サマリ">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>仮説の要素</th><th>判定</th><th>根拠の強さ</th></tr></thead>
+          <tbody>
+            <tr><td>カット密度と視聴維持は相関する</td><td>ほぼ支持</td><td>学術+業界データ両方あり</td></tr>
+            <tr><td>メカニズムは「ドーパミンをドパドパ出す」</td><td>方向性は正しいが正確には「定位反応(orienting response)」</td><td>学術的に確立（Annie LangのLC4MP研究群）</td></tr>
+            <tr><td>1秒1〜2カットが最適水準</td><td>条件付き支持（冒頭のみ。全編は過負荷リスク）</td><td>業界通説+認知科学の上限データ</td></tr>
+            <tr><td>必要条件であって十分条件ではない</td><td>強く支持。「厳密には必要条件ですらなく、"情報更新率"の代理指標」と再定式化すべき</td><td>反例多数</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p>支持する証拠: コーネル大Cutting et al. 2010（Psychological Science）の映画平均ショット長は1930年の約12秒→現代約2.5〜4秒に短縮。MrBeast流retention editingの実測値はカット間隔1.3〜1.5秒。TVアニメ本編は平均約4秒/カットで、0.5〜1秒カットは通常本編の4〜8倍密度＝OP/PVの文法。</p>
+    <div class="figure" data-label="カット密度が高いほど伸びるという仮説への反証3点（MrBeast自身の2024年の高速編集放棄・無編集系Sam Sulekの台頭・シーン転換の認知的符号化上限）をまとめたもの">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="callout">
+        <h4>反証・揺り戻し（仮説の限界を示す証拠）</h4>
+        <ul>
+          <li><strong>MrBeast自身の方針転換（2024年3月）</strong>: 「動画を遅くし、ストーリーに集中し、シーン間に息継ぎを入れ、叫びを減らした」結果「再生数が急上昇」と公表し、超高速編集からの脱却を他クリエイターにも推奨</li>
+          <li><strong>無編集・生コンテンツの台頭</strong>: 無編集筋トレ動画のSam Sulekは2023年に史上最速級でYouTube登録者を伸ばし（350万+）、「無編集がIG/TikTok/YouTube全域で編集済み動画をアウトパフォームしている」との業界証言（Rolling Stone）。カット密度は必要条件ですらないことの証明</li>
+          <li><strong>認知的上限</strong>: Langらの実験で、別シーンへの転換（unrelated cut）は2分間に10回を超えるシーン転換で再認記憶が急落。sludge content（画面分割の刺激増量）研究でも刺激を増やすだけでは記憶・理解は改善せず。幼児では9分間の高速ペース視聴だけで実行機能が即時低下（Lillard & Peterson 2011, Pediatrics）</li>
+        </ul>
+      </div>
+    </div>
+    <p>再定式化: カット数は必要条件ですらなく「単位時間あたりの情報更新率」の代理指標。ジェットカット・1人寸劇・オムオムアニメ型（画角固定で絵が動く）はすべてカット以外の実装。破綻させない定石は、シルエット1情報への圧縮（Staging）・視線誘導の連鎖（Murchのeye trace）・180度ルールの厳守で、シーン転換は「報酬」として間欠投入するのが認知科学的に正しい。ごっこ倶楽部代表も「定量データだけでは面白さを測れない」とアルゴリズム過度依存へ不満を表明している。</p>
+  </section>
+
+  <section id="appendix-genre">
+    <h2>3. ジャンル経済圏</h2>
+    <div class="figure" data-label="スカッと系の報酬系直撃・作りやすさ・面白系の難易度・面白系しかないという消去法という4要素それぞれの判定と根拠の強さをまとめた結論サマリ">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>仮説の構成要素</th><th>判定</th><th>根拠の強さ</th></tr></thead>
+          <tbody>
+            <tr><td>スカッと系(勧善懲悪)はドーパミン/報酬系を直撃する</td><td>ほぼ裏付けあり</td><td>神経科学の一次研究(Science/Nature掲載)が複数存在</td></tr>
+            <tr><td>スカッと系は「作りやすい」(再現性・量産性が高い)</td><td>裏付けあり</td><td>テンプレ量産・台本外注市場の成立、中国短劇の題材集中が状況証拠</td></tr>
+            <tr><td>面白系はスカッと系より難しい</td><td>部分的に裏付けあり</td><td>笑いの個人差・文脈依存性は学術的に確認。ただし「当たれば天井が最も高い」という重要な反証あり</td></tr>
+            <tr><td>「露悪系を避けるなら面白系しかない」という消去法</td><td>誤り(選択肢の見落とし)</td><td>日本ショートドラマ最大手ごっこ倶楽部は「感動・泣ける系」。SNS発IP化の最成功例(ちいかわ等)は「癒し・可哀想系」</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="figure" data-label="日本No.1ショートドラマ集団ごっこ倶楽部（累計100億回再生・総フォロワー560万・動画4,000本）の実際のコアジャンルが面白系ではなく感動・泣ける系であるという事実訂正">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="callout">
+        <h4>重要な事実訂正: ごっこ倶楽部は「面白系」ではない</h4>
+        <p>日本No.1ショートドラマ集団ごっこ倶楽部（累計100億回再生・総フォロワー560万・動画4,000本）のコアジャンルは<strong>感動・泣ける系</strong>。自社アプリPOPCORNのコンセプトは「あなたの"スキマ"に、"感動"を。」、テーマは「日常で忘れがちな小さな愛」。メモではカット割りの参考としてのみ言及され、ジャンル戦略としては検討されていなかった。</p>
+      </div>
+    </div>
+    <p>中国発・縦型ショートドラマ（短劇）市場: 2024年約504億元（前年比+35.1%）、2025年634.3億元（約1.3兆円）予測で中国映画興行収入をすでに上回る。海外向け（出海）は2025年産値約40億ドル、ReelShortが4.32億ドルで首位、DramaBoxが3.7億ドルで2位。日本は収入国別2位。DataEye投放データによる2025年2月時点のジャンル分布は<strong>情感（ロマンス）46%・都市系22%・逆袭系14%</strong>で、「復讐・逆袭単体が支配的」は過大評価。日本のショートドラマ市場は2026年に約1,530億円へ到達予測。</p>
+    <p><strong>第三の選択肢:</strong> (1) 感動・泣ける系（国内実績最大=ごっこ倶楽部）、(2) 癒し・可哀想・共感キャラ系（ちいかわ・おぱんちゅうさぎ、IP化実績最大）、(3) あるある・共感系。「面白系しかない」の消去法は選択肢を2つ見落としている。心理学的裏付け: スカッと系はde Quervain 2004（Science）・Singer 2006（Nature）の報酬系研究が直接支持。面白系の再現性の低さは良性違反理論（BVT）とProvineの研究（笑いは社会的場面で30倍起きやすい）で裏付けられるが、じゅんや（フォロワー3,970万）・トムとジェリー公式（720万）が示す通り天井は最大。</p>
+  </section>
+
+  <section id="appendix-newip">
+    <h2>4. 新規IPショートアニメ事例</h2>
+    <p><strong>結論サマリ:</strong> 「単話完結＋一貫世界観＋全体進行」のsitcom型フォーマットは実在するが、実装は全て「単話量産層＋不定期ストーリー層」の二層構造。広告収益単体で完結した成功例はほぼ見つからず、回収はチャンネル外（グッズ・書籍・ゲーム・ライセンス・劇場）が本体。</p>
+    <div class="figure" data-label="日本の新規IPショートアニメ7事例（オムオムアニメ・Plott・SUMIDe・ちいかわ・ずんだもん・パペットスンスン/おぱんちゅうさぎ・しかのこ）と海外の新規IP4事例（Skibidi Toilet・The Amazing Digital Circus・Hazbin Hotel・Nobody Sausage）の規模・実績・フォーマットの一覧">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>事例</th><th>フォーマット</th><th>主要な実績・数値</th></tr></thead>
+          <tbody>
+            <tr><td>オムオムアニメ（@omom_animee）</td><td>固定キャラ＋単発コント（静止画ベース）</td><td>2023年10月開始。テムテムアニメの姉妹ch。TikTokフォロワー約17.9万。低クオリティでも伸びる勝ち筋の代表例</td></tr>
+            <tr><td>Plott社エコシステム</td><td>あるある単話＋不定期ストーリー編の二層構造</td><td>テイコウペンギン登録198万人（2022 TVアニメ化）、混血のカレコレ登録300万人（漫画化全9巻）、全力回避フラグちゃん!登録220万人超（2025年11月アプリゲーム化）。100名体制・10チャンネル運営・シリーズBで10億円調達・「2026年末までに新規IP100作品」目標。ヤルミナティー休止という失敗例も含む</td></tr>
+            <tr><td>SUMIDe（クラブあるある）</td><td>あるある単発＋章立てストーリー＋相関図更新</td><td>登録者約41.3万人、総再生約11.6億回、動画1,000本超。「セルーソ編」等の章仕立てが進行中</td></tr>
+            <tr><td>ちいかわ</td><td>1〜4コマ日常単話＋討伐等の長編アーク</td><td>2020年1月X連載開始、2025年12月フォロワー442万人。公式グッズ市場約560億円・関連市場全体約3,822億円（非公式推計）。キャラクタービジネス市場全体2兆7,773億円</td></tr>
+            <tr><td>ずんだもん</td><td>キャラと声を無料開放しUGCに量産させるモデル</td><td>東北ずん子の派生。2021年VOICEVOX収録でUGC爆発的増加。2022年「ネット流行語100」ニコニコ賞</td></tr>
+            <tr><td>パペットスンスン／おぱんちゅうさぎ</td><td>ストーリーほぼ無し、キャラ造形と情緒だけ</td><td>パペットスンスンはGU・セブンイレブン・しまむら・スシローコラボ。おぱんちゅうさぎはアニメ化・大量グッズ・企業コラボへ展開。「ストーリー進行はIP化の必要条件ではない」ことの反例</td></tr>
+            <tr><td>しかのこのこのここしたんたん</td><td>OP楽曲主導のバズ</td><td>2024年夏アニメ。OP「シカ色デイズ」がTikTokで大規模バズ（公式TikTok30万フォロワー超、OP動画27万いいね）だが円盤売上最大426枚。「バズ≠IP定着」の最重要反面教師</td></tr>
+            <tr><td>Skibidi Toilet</td><td>セリフなし・連続活劇（サーガ型）</td><td>個人アニメーター（DaFuq!?Boom!）がSource Filmmakerで制作。Michael Bay/Adam GoodmanのInvisible Narrativesが映画・TV化進行。Roblox関連ゲーム群が年間数千万ドル収益、玩具Bonkers Toysがベストセラー化</td></tr>
+            <tr><td>The Amazing Digital Circus</td><td>高品質20分エピソード（短尺量産と真逆の戦略）</td><td>Glitch Productions（豪）。2023年10月パイロット公開、1ヶ月で1億回超・累計6億回超。Hot Topic・Good Smile等ライセンス、Moose Toysグローバルマスタートイ契約。完結編は世界5,700館劇場公開、初週興収3,660万ドル</td></tr>
+            <tr><td>Hazbin Hotel／Helluva Boss</td><td>クラウドファンド型パイロットからの階段</td><td>Hazbinパイロット（2019年10月）約9,400万回再生。A24製作でAmazon Prime配信、史上最大アニメシリーズデビュー。Helluva BossはYouTube連載のまま5億回再生超</td></tr>
+            <tr><td>Nobody Sausage</td><td>キャラ人格すら薄い「動きの快感」だけの3Dキャラ</td><td>ブラジル人アニメーターKael Cabralが2020年4月開始。3,300万超フォロワー・25億回再生。Hugo Boss・Adidas・Samsung・Netflix等とブランド案件</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="figure" data-label="単話完結の量産層と不定期のストーリー進行層をどう組み合わせているかをテイコウペンギン・混血のカレコレ・SUMIDe・ちいかわ・Skibidi Toiletの5事例で比較した二層構造フォーマットの実装表">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>事例</th><th>単話完結（量産層）</th><th>ストーリー進行（深化層）</th></tr></thead>
+          <tbody>
+            <tr><td>テイコウペンギン</td><td>雑学・ブラック企業あるある短編</td><td>不定期の長編エピソード（感動・シリアス回）</td></tr>
+            <tr><td>混血のカレコレ</td><td>あるある・スカッと・社会ネタ単発</td><td>「ストーリー編」1〜6章（キャラの過去）</td></tr>
+            <tr><td>クラブあるある(SUMIDe)</td><td>クラブあるある単発</td><td>セルーソ編等の章仕立て＋相関図更新</td></tr>
+            <tr><td>ちいかわ</td><td>1〜4コマの日常単話</td><td>討伐・キメラ等の長編アーク</td></tr>
+            <tr><td>Skibidi Toilet</td><td>各話それ自体がギャグ/バトルとして完結</td><td>全体で「戦争」の戦況が進行</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p>統合分析: どの成功例も「毎話ストーリーを進める」ことはしていない。アルゴリズム向けの単話を主食に、ファン向けストーリー回を「ご褒美」として不定期投下する。実績ある配合は体感で単話8〜9:ストーリー1〜2程度（定量検証はしていない目視推定）。最大の失敗パターンは(1)バズと定着の混同（しかのこ）、(2)量産フォーマットの陳腐化・競合乱立（フェルミ研究所終了）、(3)ストーリー特化しすぎて新規流入装置を失う（ヤルミナティー休止）の3つ。AI製であることは現時点で明確な減点要因（ZIP!生成AIアニメ炎上、本好きの下剋上OP差し替え騒動）。</p>
+  </section>
+
+  <section id="appendix-data-verify">
+    <h2>5. レポートのデータ検証</h2>
+    <p>主要出典15本超をWebFetch/WebSearchで原典照合。中核データ（JCR論文・Kapwing・Pew・システムリサーチ・Neuro-sama・Gallup・Attest・Thaler）は実在し引用もほぼ正確。ただし出典の誤帰属2件、事実誤認2件、日付・数値の不正確さ3件、方法論の限界の不開示1件を発見した。JCR論文「Made With AI」（TikTok 110万投稿、視聴数統制でいいね7〜8%減、d=.21〜.63、フォロワー数に関わらず発生、代替仮説の棄却、直列媒介効果）は原典と完全一致。Kapwing「FYPの59%がAI slop」は数値は正確だが、n=1新規アカウントの2026年5月単一スナップショットという限界が未記載。Canva「開示が必要になると考える70%」は誤読で、正しくは「開示なしでは見分けられなくなると考える70%」。「信頼低下20%→40%」はFractl調査、「半数が非AIブランド選好」はGartner調査が正しい出典（レポートの帰属は誤り）。Pew数値は正確だが引用URLが数値を含まない張り違い。Sora終了の骨子（2026年4月26日Web/アプリ停止、9月24日API終了）は正確だが、発表日「3月24日」と「月800〜1200万ドルの計算コスト」は他ソースと不一致で、WSJ経由の「1日100万ドル損失」に差し替えるべき。TikTokのC2PA統合時期は「2025年1月」ではなく実際は2024年5月9日。AIGCラベル累計は「30億本」ではなく公式発表13億本。DreamWorksは「後に参加」ではなく2025年6月11日の当初提訴から原告に含まれていた（後に参加したのはWarner Bros.）。</p>
+    <div class="figure" data-label="レポートの7つの結論（AI開示のパラソーシャル毀損・供給飽和による差別化喪失・採用と信頼の乖離・日本の反発・Neuro-sama実証例・Sora依存リスク・3D優位の非対称性）それぞれについて、データ検証の結果が結論に影響するかどうかを判定した表">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>レポートの結論</th><th>影響</th></tr></thead>
+          <tbody>
+            <tr><td>AI開示はパラソーシャル結合を毀損しIP育成に最も効く(4章)</td><td>影響なし。JCR論文の引用は精査した限り全て正確</td></tr>
+            <tr><td>供給飽和により「AIで作れる」は差別化にならない(5章)</td><td>軽微。59%はn=1スナップショットであり「フィードの6割」という一般化はトーンダウンが必要。ただし10,742本のカテゴリ分析が方向性を支持</td></tr>
+            <tr><td>採用と信頼の乖離(3.3章)</td><td>影響なし。Pew数値は正確(出典URLの張り違いのみ)</td></tr>
+            <tr><td>日本の反発は隠蔽に向く(3.4章)</td><td>影響なし。ただしn=300の小規模調査である旨を付記すべき</td></tr>
+            <tr><td>Neuro-samaは3Dの器+AIの実証例(6章)</td><td>影響なし。全て確認済み</td></tr>
+            <tr><td>ツール依存リスク(9章のSora)</td><td>骨子は不変。財務数値と発表日は弱いソース由来のため差し替え推奨</td></tr>
+            <tr><td>両方の未来で3Dが正解という非対称性(9章)</td><td>影響なし。依拠するデータは全て生存</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="appendix-tech-verify">
+    <h2>6. レポートの技術検証</h2>
+    <p>「3D完パケが正解」という最終結論は覆らない。ただし論拠には誇張・引用の誤用・陳腐化した前提・数字の過小評価が複数あり、二分法（AI完パケ vs 3D完パケ）から「3Dで制御しAIでレンダリングする」第3の選択肢が抜け落ちている（レポート自身が引用したReallusionとツインズひなひまが実際に採る方向）。</p>
+    <div class="figure" data-label="AI vs 3Dレポートの技術的主張5点（SfM/骨格推定の破綻論・AI上流3D下流のベストプラクティス論・0.5秒120カット前提・単価試算・VRoidで1本1日）それぞれについての判定一覧">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>検証対象の主張</th><th>判定</th></tr></thead>
+          <tbody>
+            <tr><td>1. AI生成動画からのSfM/骨格推定は「原理的に破綻」</td><td>誇張。2026年時点では技術的に克服が進む。結論は別の理由でのみ維持可能</td></tr>
+            <tr><td>2. 「AI上流・3D下流」は業界ベストプラクティスと一致</td><td>不正確。引用したReallusionの実際の構成は「3D=制御層、AI=最終レンダリング」で逆</td></tr>
+            <tr><td>3. 「0.5秒×120カットで一貫性が保てない」前提</td><td>半壊。「1カット=1生成」はKling 3.0/Seedance 2.0で陳腐化。ただし120カット密度は依然未達</td></tr>
+            <tr><td>4. 単価試算（$0.022〜0.10/秒、60秒$24）</td><td>不安定。fal.ai公式単価はレポート記載の2〜10倍。試算モデル自体が旧世代</td></tr>
+            <tr><td>5. VRoid→Unityで「1本1日」</td><td>未実証。先行実例は確認できず。レポート自身も検証項目扱いなので致命傷ではない</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p>最終判定は3点。(1) 覆らない理由: 0.5秒×120カットという要求密度は、2026年7月の最先端マルチショット生成（Kling 3.0で6カット/15秒）でもなお5倍以上の開きがあり、決定論的な無限リテイクができるのは依然3Dだけ。Sora終了（2026-04-26 App/Web、2026-09-24 API）が示す外部モデル依存リスクも実在する。(2) ただし論拠の差し替えが必要: 「rigidity violationで原理的に破綻」は捨て、残すべきは「カメラは推定でなく指定するものという工程合理性」と「アニメ調ドメインギャップ」の2点のみ。(3) 二分法の外に本命の対抗馬がいる: 「3D制御+AIレンダリング」（Reallusion AI Studio、PrevizWhiz、ツインズひなひま型）はモーション・カメラの決定論性を保ったままAIの画の豊かさを得る構成で、量産速度では3D完パケを上回りうる。採らない理由は技術でなく、最終画がAI生成になりAIGCラベル対象に戻るという戦略上の理由のみ。</p>
+  </section>
+
+  <section id="appendix-knowledge-drama">
+    <h2>7. 知識×ドラマ形式</h2>
+    <div class="figure" data-label="ヨビノリたくみ・QuizKnock・ケビンズイングリッシュルーム・フェルミ研究所という知識系チャンネルの規模と、Dr.STONE・はたらく細胞・ケビンズ・全力回避フラグちゃん!・ずんだもん・Mark Roberという知識×ドラマ/知識系IP化事例の実績をまとめた一覧">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>チャンネル／IP</th><th>領域</th><th>規模・実績</th></tr></thead>
+          <tbody>
+            <tr><td>ヨビノリたくみ</td><td>教養（数学・物理）</td><td>登録者125万人超（2026-03時点）。現役・安定</td></tr>
+            <tr><td>QuizKnock</td><td>クイズ・教養</td><td>250万人超（2025-10）。2016年発足、10周年プロジェクト進行中。10年スケールで運用できる長寿ジャンルの実証</td></tr>
+            <tr><td>ケビンズイングリッシュルーム</td><td>英語・異文化</td><td>247万人（2025-08）、総再生21億回。3人の掛け合いコント×語学</td></tr>
+            <tr><td>フェルミ研究所</td><td>雑学漫画動画</td><td>最盛期200万人・総再生13億回→2021年7月に更新終了。顔なし雑学漫画動画フォーマットは衰退した前例</td></tr>
+            <tr><td>Dr.STONE</td><td>科学・工業技術の再建</td><td>累計1,800万部。知識がプロットを前に進める型の商業実証。天井の目安（社会現象級ではない）</td></tr>
+            <tr><td>はたらく細胞</td><td>生物学（細胞擬人化）</td><td>累計1,000万部超。「細胞の教科書」等教材展開まで拡大</td></tr>
+            <tr><td>全力回避フラグちゃん!（Plott）</td><td>「死亡フラグ」等メタ知識×ギャグ</td><td>登録者220万人超。MF文庫Jラノベ化、2025年11月アプリゲーム化</td></tr>
+            <tr><td>ずんだもん／ゆっくり解説</td><td>全ジャンル解説</td><td>キャラ2体の掛け合いが日本の解説動画の支配的フォーマット</td></tr>
+            <tr><td>Mark Rober</td><td>エンジニアリング</td><td>登録者約8,000万人、2026年TIME100 Creators選出。STEM玩具サブスクCrunchLabsまでIP化</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p>教育カテゴリのAI slop飽和度: TikTok新規アカウント表示の最初500本の59%がAI slopで、カテゴリ別ではキッズ向け57%・科学教育35%・健康34%・歴史34%に対し、フィットネス・音楽・ファッションは2%未満（Kapwing調査）。「顔のない単発雑学」はAI量産物と正面衝突するレッドオーシャンだが、一貫キャラ・連続物語・作家性はAI slopが持てない差別化資産になる。プロセスX（130万人）・THE MAKING（300本以上）・Primitive Technology（約1,100万人・累計12億回再生）が「工程・製造コンテンツの大衆需要」を実証しており、工業・自動化テーマは現実接地性・知識の物語推進力・1話1知識の分解可能性という3軸すべてで適性最上位クラス。フォーマット案としては、案A「ポンコツ×天才」1話1機械コント、案B「ゼロから工業化」プログレッション連載（メモの理想フォーマットに最も一致）、案C「工場トラブル解決劇」（スカッと系の工学的変換）の3案が検討され、案Bを背骨に案Aを基本エピソード型とするハイブリッドが推奨されている。</p>
+  </section>
+
+  <section id="appendix-gameip">
+    <h2>8. ゲームIP×ショート動画</h2>
+    <div class="figure" data-label="この調査（ゲームIP×ショート動画）が冒頭訂正によりmoorestechとの関連付けを前提としていたため無効化されたという注記">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="callout">
+        <h4>この調査は訂正により無効化されている</h4>
+        <p>本調査は初版検証時にmoorestechへの適用を前提として行われたが、冒頭の訂正の通り本研究はmoorestechとは無関係の業務委託案件である。以下の内容はゲームIPマーケティングの一般知見としては有効だが、moorestech固有の結論（機会費用・ウィッシュリストファネル・世界観適用）は前提が崩れており無効。参考情報として原文の要旨のみ残す。</p>
+      </div>
+    </div>
+    <p>直接ルート（ゲーム公式のショートアニメ）: 原神・崩壊スターレイル・ブルーアーカイブ・ウマ娘・Among Usの大手事例は例外なく「ゲームがヒットした後」の維持・拡張投資で、無名の発売前タイトルがショートアニメでゼロからファンを作った先行事例は見つからなかった。インディーの短尺成功例（Choo-Choo Charles: トレーラー2週間で85,000-90,000ウィッシュリスト、Mortal Rite: TikTok1.2億再生・64万フォロワーだがKickstarterは1,338人・$68,100）は「2秒でわかるゲームプレイのフック×低い制作価値×量」が勝ちパターンで、高工数のショートアニメとは逆。間接ルート（アニメチャンネルを育てて送客）はPlott（登録合計1,000万人・累計100億再生でも自社ゲーム「テイペンウォーズ」は30万DL規模、収益柱はIPライセンス）、GOKKO（11億円調達してなお収益モデル模索中）など、専業チーム＋年単位＋外部資本が前提で、送客ではなくライセンス/物販モデルでしか回収できていない。</p>
+    <div class="figure" data-label="発売7ヶ月前の3人チームが取りうる5つの選択肢（ショートアニメチャンネル立ち上げ・ゲームプレイ短尺・クリエイター無償営業・デモ+Next Fest・開発そのもの）の期待成果と根拠を比較した機会費用の表">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>選択肢</th><th>7ヶ月での期待成果</th><th>根拠</th></tr></thead>
+          <tbody>
+            <tr><td>ショートアニメチャンネル立ち上げ</td><td>フォロワーは付き得るが、WL変換は未実証。フォーマット開発+量産体制構築だけで数ヶ月消える</td><td>Plott/GOKKOの資本規模、Mortal Riteの変換率、間接ルート成功例ゼロ</td></tr>
+            <tr><td>ゲームプレイ短尺（低production value・週2-3本）</td><td>バイラル1本あたり1,000-2,000WL。アニメ調はTikTok適性あり</td><td>Zukowski、Choo-Choo Charles、I Just Want to be Single!!</td></tr>
+            <tr><td>TikTok/YouTubeクリエイターへの無償営業</td><td>Momento方式で75,000WLの実例。コストほぼゼロ</td><td>Momento事例</td></tr>
+            <tr><td>デモ+Next Fest+ストアページ</td><td>WL獲得の本流。自動化ジャンルはSteam内で熱心な固定客</td><td>Zukowski定説、Forge Industry教訓</td></tr>
+            <tr><td>開発そのもの（完成度65-70%→リリース品質）</td><td>自動化ゲームの死因は品質・UX・プレイテスト不足</td><td>Forge Industry事例</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="appendix-blindspots">
+    <h2>9. 欠落・盲点批評（詳細版）</h2>
+    <div class="figure" data-label="両文書のどちらにも監査されていなかった10件の盲点それぞれの詳細な論拠を重要度順に記した一覧。うち1・2・4はゲーム関連の前提であり冒頭訂正により無効化されている">
+      <button class="figure-comment-btn" data-comment-ui>コメント</button>
+      <ol class="plain">
+        <li><strong>「そもそも今やるべきか」の裁定が存在しない</strong>（訂正により無効）: ゲームIP調査は機会費用過大と結論する一方、本体レポートはPhase 0で「2週間で20本」を提示しており、矛盾したまま統合裁定の仕組みがない。</li>
+        <li><strong>ベースライン（対照戦略）が値付けされていない</strong>（訂正により無効）: 「ショートアニメを作らず、ゲームプレイ映像そのものを投稿する」ヌル代替案が一度も評価されていない。Choo-Choo Charles/Momento型の勝ちパターン（「制作価値を上げるほど成績が悪化した」との開発者証言）と、プロセスX・THE MAKING・Primitive Technologyが実証する工程コンテンツ需要から、生産ライン映像はゼロ限界コストで直結する。</li>
+        <li><strong>観察メモの手法バイアスが誰にも監査されていない</strong>: (a) レコメンド経由のサンプリングは二重の生存者バイアス、(b) FYPは個人化されており「全部見た」は検証不能、(c) いいね数はアルゴリズム調査自身が結論した「真の通貨=視聴時間・完走」とは別の代理変数、(d) 単一時点のスナップショットでアルゴリズムの経年変化と区別できない、(e) 観察対象は実写ショートドラマ50本なのに結論はアニメチャンネル運営に外挿されている（ドメインジャンプ未検証）。</li>
+        <li><strong>TikTok視聴者→Steam購買者のファネルが未検証</strong>（訂正により無効）: Mortal Riteの「1.2億再生→課金1,338人」という変換率の低さの先を誰も問うていない。TikTokショートドラマ視聴層とFactorioライク購買層の重なりは未検証で、TikTokは中国（Douyin）に届かない。</li>
+        <li><strong>律速工程は「レンダリング」ではなく「脚本・演出」</strong>: ジャンル調査は「面白系は当たり判定が狭く分散が大きい」と結論し、メモ自身も難易度爆上がりと書いている。ボトルネックは週次で当たり脚本を書く能力と0.5秒カットの演出センスであり、3Dパイプラインはどちらも解決しない。「1本1日」も未実証。</li>
+        <li><strong>キャラデザをAI上流で作ると、IPの核資産が著作権的に無保護になる自己矛盾</strong>: レポートはThaler確定判決（純AI生成物に米国著作権なし）を3Dルートの論拠に使いながら、修正ワークフローではキャラデザ案・image-to-3Dの入力をAI担当に置いている。Plottの収益柱がIPライセンス、ちいかわの本体がグッズである以上、キャラデザそのものが無保護では後段の全てが脆弱になる。</li>
+        <li><strong>AI音声とAIGCラベル義務の内部矛盾</strong>: レポートは「AI生成の顔・声はラベル開示必須」と記載しながら、実行計画では音声・リップシンクをAI担当に固定し、「アニメ表現は対象外」という未検証の解釈で処理している。対象なら全動画にAIGCラベルが付き、戦略の存在理由であるJCRのエンゲージ減ペナルティを毎回自分から食らう。</li>
+        <li><strong>チャンネル自体の収益モデルと継続コストの不在</strong>: 勝者ですら単体黒字化できていない証拠（Plottは赤字転落を経てシリーズB10億円、GOKKOは11億円調達）が並ぶのに、月何時間・月いくらかかり何で回収するのかの損益設計がない。TikTok Creator Rewardsは1分超要件がありAI生成コンテンツは対象外。</li>
+        <li><strong>プラットフォーム集中リスクと環境変化への無防備</strong>: TikTok単一プラットフォームの2026年時点観察に最適化されているが、プラットフォーム存続リスク、SIGIR研究が示す評価関数の陳腐化リスク、YouTube Shorts/Instagram Reels/Douyin/Bilibiliへの同時展開設計を誰も検討していない。Plottは「2026年末までに新規IP100作品」を公言し、中国短劇資本は日本市場を国別2位として攻めている。</li>
+        <li><strong>海外展開・言語戦略が、自前のデータ内に答えがあるのに戦略化されていない</strong>: ジャンル調査は「じゅんや(3,970万)・トムとジェリー(720万)というノンバーバル面白系が天井最大」とまで書いた。日本語ドラマ形式（市場上限が国内）で作るか、ノンバーバル/多言語字幕でグローバルに作るかの分岐を誰も検討していない。知識×ドラマ路線（セリフ依存が強い）を選ぶなら国内市場に閉じる決断とセットであるべき。</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="references">
+    <h2>References</h2>
+    <ul class="ref-list">
+      <li><code>tiktok/review-2026-07-27-deep-verification.md</code>（本文ソース）</li>
+      <li><code>tiktok/report-2026-07-27-ai-vs-3d.md</code>（検証対象: AI完パケ vs 3D完パケレポート）</li>
+      <li><code>tiktok/report-2026-07-27-ドラマ系チャンネル50本を見て思ったこと.txt</code>（観察メモ）</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>徹底検証レビュー: 観察メモ + AI vs 3Dレポート / 検証日 2026-07-27 / レビュー用ペライチ</footer>
+
+<!-- ============== comment feature (vanilla JS port) ============== -->
+<div id="comment-ui-root" data-comment-ui>
+  <button id="comment-fab" class="comment-fab" hidden>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.5A8 8 0 1 1 21 12Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+    コメントを追加
+  </button>
+
+  <div id="comment-composer" class="comment-composer" hidden>
+    <div class="composer-quote" id="composer-quote"></div>
+    <textarea id="composer-textarea" class="composer-input" placeholder="この範囲へのコメントを入力…（Cmd/Ctrl + Enter で保存）"></textarea>
+    <div class="composer-actions">
+      <button class="btn-ghost" id="composer-cancel">キャンセル</button>
+      <button class="btn-primary" id="composer-save" disabled>保存</button>
+    </div>
+  </div>
+
+  <div class="comment-panel" id="comment-panel">
+    <div class="panel-body" id="panel-body" hidden>
+      <div id="panel-list-wrap"></div>
+      <div class="panel-foot">
+        <button class="btn-primary wide" id="copy-all-btn" disabled>すべてコピー（0件）</button>
+      </div>
+    </div>
+    <button class="panel-toggle" id="panel-toggle">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.5A8 8 0 1 1 21 12Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      コメント
+      <span class="panel-count" id="panel-count">0</span>
+      <span class="panel-caret" id="panel-caret">&#9652;</span>
+    </button>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===== 設定 / このページ固有の値 =====
+  var STORAGE_KEY = 'ig-tiktok-deep-verification-comments';
+  var COPY_TITLE = '徹底検証レビュー レビューコメント';
+  var HIGHLIGHT_NAME = 'review-comment';
+
+  // ---- state ----
+  var comments = loadComments();
+  var rangeMap = new Map(); // id -> Range（テキストコメントのみ・セッション内限定）
+  var draftRange = null;
+  var pending = null; // {anchor:{x,y}, place, quote, kind, figureKey}
+  var composerOpen = false;
+  var editingId = null;
+  var editBody = '';
+
+  // ---- DOM refs ----
+  var fab = document.getElementById('comment-fab');
+  var composer = document.getElementById('comment-composer');
+  var quoteEl = document.getElementById('composer-quote');
+  var textarea = document.getElementById('composer-textarea');
+  var saveBtn = document.getElementById('composer-save');
+  var cancelBtn = document.getElementById('composer-cancel');
+  var panel = document.getElementById('comment-panel');
+  var panelBody = document.getElementById('panel-body');
+  var panelToggle = document.getElementById('panel-toggle');
+  var panelCount = document.getElementById('panel-count');
+  var panelCaret = document.getElementById('panel-caret');
+  var listWrap = document.getElementById('panel-list-wrap');
+  var copyAllBtn = document.getElementById('copy-all-btn');
+  var panelOpen = false;
+  var copiedTimer = null;
+
+  function loadComments() {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    try {
+      var parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function persist() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(comments));
+  }
+
+  function refreshHighlights() {
+    if (!window.CSS || !CSS.highlights || typeof Highlight === 'undefined') return;
+    var hl = new Highlight();
+    rangeMap.forEach(function (r) { hl.add(r); });
+    CSS.highlights.set(HIGHLIGHT_NAME, hl);
+  }
+
+  function markFigureComments() {
+    var keyed = {};
+    comments.forEach(function (c) { if (c.kind === 'figure') keyed[c.figureKey] = true; });
+    document.querySelectorAll('[data-figure-key]').forEach(function (el) {
+      var key = el.getAttribute('data-figure-key');
+      if (keyed[key]) el.setAttribute('data-has-comment', '');
+      else el.removeAttribute('data-has-comment');
+    });
+  }
+
+  // ===== figure 初期化: .figure[data-label] に figureKey を付与し、既存ボタンへ配線 =====
+  document.querySelectorAll('.figure[data-label]').forEach(function (fig) {
+    var label = fig.getAttribute('data-label');
+    fig.setAttribute('data-figure-key', label);
+    var btn = fig.querySelector('.figure-comment-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var rect = fig.getBoundingClientRect();
+      draftRange = null;
+      pending = {
+        anchor: { x: rect.left + window.scrollX + rect.width / 2, y: rect.top + window.scrollY + 44 },
+        place: 'below',
+        quote: label,
+        kind: 'figure',
+        figureKey: label
+      };
+      hideFab();
+      openComposer();
+    });
+  });
+
+  // ===== テキスト選択監視（selectionchange をデバウンス。mouseup 非依存） =====
+  var isTouch = window.matchMedia('(hover: none)').matches;
+  var selTimer = null;
+
+  document.addEventListener('selectionchange', function () {
+    if (composerOpen) return;
+    window.clearTimeout(selTimer);
+    selTimer = window.setTimeout(function () {
+      var sel = window.getSelection();
+      var text = sel ? sel.toString().trim() : '';
+      if (!sel || sel.isCollapsed || !text) {
+        hideFab();
+        return;
+      }
+      var node = sel.anchorNode;
+      var host = node instanceof Element ? node : (node ? node.parentElement : null);
+      if (host && host.closest('[data-comment-ui]')) return;
+
+      var range = sel.getRangeAt(0);
+      var rect = range.getBoundingClientRect();
+      draftRange = range.cloneRange();
+      pending = {
+        anchor: { x: rect.left + window.scrollX + rect.width / 2, y: rect.top + window.scrollY },
+        place: 'above',
+        quote: text,
+        kind: 'text'
+      };
+      if (isTouch) {
+        openComposer();
+      } else {
+        showFab();
+      }
+    }, 350);
+  });
+
+  function applyAnchor(el) {
+    el.style.left = pending.anchor.x + 'px';
+    el.style.top = pending.anchor.y + 'px';
+    el.style.transform = pending.place === 'below'
+      ? 'translate(-50%, 10px)'
+      : 'translate(-50%, calc(-100% - 9px))';
+  }
+
+  function showFab() {
+    if (!pending) return;
+    applyAnchor(fab);
+    fab.hidden = false;
+  }
+  function hideFab() { fab.hidden = true; }
+
+  fab.addEventListener('mousedown', function (e) { e.preventDefault(); });
+  fab.addEventListener('click', function () {
+    hideFab();
+    openComposer();
+  });
+
+  function openComposer() {
+    if (!pending) return;
+    composerOpen = true;
+    quoteEl.innerHTML = (pending.kind === 'figure' ? '<span class="kind-pill fig">図</span>' : '')
+      + '「' + escapeHtml(pending.quote) + '」';
+    textarea.value = '';
+    saveBtn.disabled = true;
+    applyAnchor(composer);
+    composer.hidden = false;
+    window.setTimeout(function () { textarea.focus(); }, 0);
+  }
+
+  function closeComposer() {
+    pending = null;
+    composerOpen = false;
+    composer.hidden = true;
+    textarea.value = '';
+  }
+
+  textarea.addEventListener('input', function () {
+    saveBtn.disabled = textarea.value.trim().length === 0;
+  });
+  textarea.addEventListener('keydown', function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); saveComment(); }
+    if (e.key === 'Escape') closeComposer();
+  });
+  cancelBtn.addEventListener('click', closeComposer);
+  saveBtn.addEventListener('click', saveComment);
+  composer.addEventListener('mousedown', function (e) { e.stopPropagation(); });
+
+  function genId() {
+    return 'c-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+  }
+
+  function saveComment() {
+    var body = textarea.value.trim();
+    if (!pending || !body) return;
+    var id = genId();
+    if (pending.kind === 'text' && draftRange) {
+      rangeMap.set(id, draftRange);
+      refreshHighlights();
+    }
+    comments.push({
+      id: id,
+      kind: pending.kind,
+      quote: pending.quote,
+      body: body,
+      createdAt: Date.now(),
+      figureKey: pending.figureKey
+    });
+    persist();
+    renderPanel();
+    markFigureComments();
+    closeComposer();
+    var s = window.getSelection();
+    if (s) s.removeAllRanges();
+  }
+
+  function deleteComment(id) {
+    rangeMap.delete(id);
+    refreshHighlights();
+    comments = comments.filter(function (c) { return c.id !== id; });
+    persist();
+    if (editingId === id) editingId = null;
+    renderPanel();
+    markFigureComments();
+  }
+
+  function startEdit(id, body) {
+    editingId = id;
+    editBody = body;
+    renderPanel();
+  }
+
+  function saveEdit() {
+    if (!editingId) return;
+    var body = editBody.trim();
+    if (body) {
+      comments = comments.map(function (c) {
+        return c.id === editingId ? Object.assign({}, c, { body: body }) : c;
+      });
+      persist();
+    }
+    editingId = null;
+    editBody = '';
+    renderPanel();
+  }
+
+  function jumpTo(c) {
+    if (c.kind === 'figure' && c.figureKey) {
+      var target = null;
+      document.querySelectorAll('[data-figure-key]').forEach(function (el) {
+        if (el.getAttribute('data-figure-key') === c.figureKey) target = el;
+      });
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    var r = rangeMap.get(c.id);
+    var el = r ? r.startContainer.parentElement : null;
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (ch) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+    });
+  }
+
+  function renderPanel() {
+    panelCount.textContent = comments.length;
+    copyAllBtn.disabled = comments.length === 0;
+    if (!copiedTimer) copyAllBtn.textContent = 'すべてコピー（' + comments.length + '件）';
+
+    if (comments.length === 0) {
+      listWrap.innerHTML = '<p class="panel-empty">本文中のテキストを選択すると「コメントを追加」ボタンが出ます。図は右上の「コメント」ボタンから。書いたコメントはここに集まります。</p>';
+      return;
+    }
+
+    var html = '<ul class="comment-list">';
+    comments.forEach(function (c, i) {
+      var isEditing = editingId === c.id;
+      html += '<li class="comment-item" data-id="' + c.id + '" data-idx="' + i + '">';
+      html += '<div class="ci-head">';
+      html += '<span class="ci-num">#' + (i + 1) + '</span>';
+      html += '<span class="kind-pill ' + (c.kind === 'figure' ? 'fig' : 'txt') + '">' + (c.kind === 'figure' ? '図' : '本文') + '</span>';
+      if (!isEditing) {
+        html += '<button class="ci-act" data-act="edit" data-id="' + c.id + '">編集</button>';
+      }
+      html += '<button class="ci-del" data-act="del" data-id="' + c.id + '">&times;</button>';
+      html += '</div>';
+      html += '<div class="ci-quote">「' + escapeHtml(c.quote) + '」</div>';
+      if (isEditing) {
+        html += '<div class="ci-edit-box" data-noselect>';
+        html += '<div class="ci-edit-label">コメントを編集</div>';
+        html += '<textarea class="composer-input ci-edit" data-act="edit-input">' + escapeHtml(editBody) + '</textarea>';
+        html += '<div class="composer-actions">';
+        html += '<button class="btn-ghost" data-act="edit-cancel">キャンセル</button>';
+        html += '<button class="btn-primary" data-act="edit-save"' + (editBody.trim() ? '' : ' disabled') + '>更新</button>';
+        html += '</div></div>';
+      } else {
+        html += '<div class="ci-body">' + escapeHtml(c.body) + '</div>';
+      }
+      html += '</li>';
+    });
+    html += '</ul>';
+    listWrap.innerHTML = html;
+
+    // イベント配線（再描画のたびに張り直す）
+    listWrap.querySelectorAll('.comment-item').forEach(function (li) {
+      var id = li.getAttribute('data-id');
+      li.addEventListener('click', function (e) {
+        if (editingId === id) return;
+        if (e.target.closest('[data-act]')) return;
+        var c = comments.find(function (x) { return x.id === id; });
+        if (c) jumpTo(c);
+      });
+    });
+    listWrap.querySelectorAll('[data-act="edit"]').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var id = btn.getAttribute('data-id');
+        var c = comments.find(function (x) { return x.id === id; });
+        if (c) startEdit(id, c.body);
+      });
+    });
+    listWrap.querySelectorAll('[data-act="del"]').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        deleteComment(btn.getAttribute('data-id'));
+      });
+    });
+    var editInput = listWrap.querySelector('[data-act="edit-input"]');
+    if (editInput) {
+      editInput.addEventListener('click', function (e) { e.stopPropagation(); });
+      editInput.addEventListener('input', function () {
+        editBody = editInput.value;
+        var saveBtnEl = listWrap.querySelector('[data-act="edit-save"]');
+        if (saveBtnEl) saveBtnEl.disabled = editBody.trim().length === 0;
+      });
+      editInput.addEventListener('keydown', function (e) {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); saveEdit(); }
+        if (e.key === 'Escape') { editingId = null; renderPanel(); }
+      });
+    }
+    var editCancel = listWrap.querySelector('[data-act="edit-cancel"]');
+    if (editCancel) editCancel.addEventListener('click', function (e) {
+      e.stopPropagation();
+      editingId = null;
+      renderPanel();
+    });
+    var editSave = listWrap.querySelector('[data-act="edit-save"]');
+    if (editSave) editSave.addEventListener('click', function (e) {
+      e.stopPropagation();
+      saveEdit();
+    });
+  }
+
+  panelToggle.addEventListener('click', function () {
+    panelOpen = !panelOpen;
+    panel.classList.toggle('open', panelOpen);
+    panelBody.hidden = !panelOpen;
+    panelCaret.innerHTML = panelOpen ? '&#9662;' : '&#9652;';
+  });
+
+  function fallbackCopy(text, done) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    done();
+  }
+
+  copyAllBtn.addEventListener('click', function () {
+    if (comments.length === 0) return;
+    var lines = ['# ' + COPY_TITLE + '（' + comments.length + '件）', ''];
+    comments.forEach(function (c, i) {
+      lines.push('## コメント ' + (i + 1) + '（' + (c.kind === 'figure' ? '図' : '本文') + '）');
+      lines.push('> ' + c.quote.replace(/\n+/g, ' '));
+      lines.push('');
+      lines.push(c.body);
+      lines.push('');
+    });
+    var text = lines.join('\n');
+
+    function done() {
+      window.clearTimeout(copiedTimer);
+      copyAllBtn.textContent = 'コピーしました';
+      copiedTimer = window.setTimeout(function () {
+        copiedTimer = null;
+        copyAllBtn.textContent = 'すべてコピー（' + comments.length + '件）';
+      }, 2000);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text, done); });
+    } else {
+      fallbackCopy(text, done);
+    }
+  });
+
+  // ---- 初期描画 ----
+  markFigureComments();
+  renderPanel();
+})();
+</script>
+
+</body>
+</html>
