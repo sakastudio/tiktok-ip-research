@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI動画IP創出研究 — 調査レポート図解まとめ</title>
+<style>
+  :root{
+    --surface:#FFFFFF;
+    --bg:#FFFFFF;
+    --border:#E2E8F0;
+    --text:#0F172A;
+    --text-muted:#475569;
+    --text-subtle:#64748B;
+    --engine:#2563EB;
+    --danger:#DC2626;
+    --amber:#F59E0B;
+    --amber-bg:#FFFBEB;
+    --amber-border:#FDE68A;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    width:100%;
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans",system-ui,sans-serif;
+    line-height:1.75;
+  }
+  p,li,td,th,.callout,.card-desc{ overflow-wrap:anywhere; }
+  a{ color:var(--engine); }
+  main{
+    max-width:880px;
+    margin:0 auto;
+    padding:0 20px 96px;
+  }
+  .hero{
+    background:linear-gradient(180deg,#F8FAFC 0%,#FFFFFF 100%);
+    border-bottom:1px solid var(--border);
+    padding:56px 20px 36px;
+    text-align:center;
+  }
+  .hero h1{
+    font-size:26px;
+    margin:0 0 10px;
+    letter-spacing:0.01em;
+  }
+  .hero .sub{
+    font-size:14px;
+    color:var(--text-muted);
+    margin:0 auto 14px;
+    max-width:560px;
+  }
+  .hero .meta{
+    font-size:13px;
+    color:var(--text-subtle);
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .pill{
+    display:inline-block;
+    border-radius:999px;
+    padding:3px 12px;
+    font-weight:600;
+    font-size:12px;
+  }
+  .pill.date{ background:#EEF2FF; color:#4338CA; }
+  .pill.review{ background:#FEF3C7; color:#92400E; }
+  .pill.status{ background:#DCFCE7; color:#166534; }
+
+  section{ margin-top:52px; }
+  h2{
+    font-size:20px;
+    border-left:5px solid var(--engine);
+    padding-left:12px;
+    margin:0 0 18px;
+  }
+
+  /* ---- portal cards ---- */
+  .card-grid{ display:grid; gap:16px; }
+  .card{
+    display:block;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px 22px;
+    background:var(--surface);
+    text-decoration:none;
+    color:inherit;
+    transition:border-color .12s, box-shadow .12s, transform .12s;
+  }
+  .card:hover{
+    border-color:#93C5FD;
+    box-shadow:0 10px 28px rgba(15,23,42,.10);
+    transform:translateY(-1px);
+  }
+  .card-head{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:8px;
+    flex-wrap:wrap;
+  }
+  .card-num{
+    flex:0 0 auto;
+    width:26px;height:26px;
+    border-radius:999px;
+    background:var(--engine);
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .card-title{
+    font-size:16.5px;
+    font-weight:700;
+    margin:0;
+  }
+  .card-desc{
+    font-size:14px;
+    color:var(--text-muted);
+    margin:0 0 12px;
+  }
+  .card-tags{ display:flex; gap:8px; flex-wrap:wrap; }
+  .tag{
+    display:inline-block;
+    font-size:11.5px;
+    font-weight:600;
+    border-radius:999px;
+    padding:3px 10px;
+    background:#F1F5F9;
+    color:var(--text-muted);
+  }
+  .tag.key{ background:#DBEAFE; color:#1D4ED8; }
+  .tag.warn{ background:#FEF3C7; color:#92400E; }
+  .card-go{
+    display:inline-block;
+    margin-top:12px;
+    font-size:13px;
+    font-weight:700;
+    color:var(--engine);
+  }
+
+  /* ---- callouts ---- */
+  .callout{
+    border-left:5px solid var(--amber);
+    background:var(--amber-bg);
+    border:1px solid var(--amber-border);
+    border-left-width:5px;
+    border-radius:10px;
+    padding:16px 18px;
+    font-size:14px;
+  }
+  .callout h4{
+    margin:0 0 10px;
+    font-size:14.5px;
+    color:#92400E;
+  }
+  .callout.plain{
+    border-left-color:#94A3B8;
+    background:#F8FAFC;
+    border-color:var(--border);
+  }
+  .callout.plain h4{ color:var(--text); }
+  .callout ul{ margin:6px 0; padding-left:20px; }
+  .callout li{ margin:5px 0; }
+
+  ul.plain{ padding-left:22px; margin:8px 0; }
+  ul.plain li{ margin:6px 0; font-size:14px; }
+
+  .table-wrap{ overflow-x:auto; border:1px solid var(--border); border-radius:12px; }
+  table{ border-collapse:collapse; width:100%; font-size:13px; min-width:520px; }
+  th,td{ text-align:left; padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+  thead th{ background:#F1F5F9; font-size:12.5px; color:var(--text-muted); }
+  tbody tr:last-child td{ border-bottom:none; }
+  td code, li code, p code{
+    background:#F1F5F9;
+    border-radius:5px;
+    padding:1px 6px;
+    font-size:12px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+
+  footer{
+    text-align:center;
+    font-size:12px;
+    color:var(--text-subtle);
+    padding:40px 20px 80px;
+  }
+
+  @media (max-width:640px){
+    main{ padding:0 14px 96px; }
+    .hero{ padding:40px 14px 28px; }
+    .hero h1{ font-size:21px; }
+    section{ margin-top:40px; }
+    .card{ padding:16px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>AI動画IP創出研究 — 調査レポート図解まとめ</h1>
+  <p class="sub">縦型ショート動画で新規IPをゼロから育てるための調査・検証レポート3本を、レビュー用の図解ページに起こしたものです。</p>
+  <div class="meta">
+    <span class="pill date">2026-07-27</span>
+    <span class="pill review">レビュー用</span>
+    <span class="pill status">コメント機能つき</span>
+  </div>
+</header>
+
+<main>
+
+  <p>各ページは元のMarkdownを唯一の正として図解したもので、事実の追加や改変はしていません。ページ内のテキストを選択するとコメントを追加でき、図や表は右上のボタンからコメントできます。左下のパネルに集まったコメントは「すべてコピー」でMarkdownとして書き出せます。</p>
+
+  <section id="reports">
+    <h2>レポート一覧</h2>
+    <div class="card-grid">
+
+      <a class="card" href="ai-vs-3d/">
+        <div class="card-head">
+          <span class="card-num">1</span>
+          <p class="card-title">AIを完パケにするか、3Dを完パケにするか</p>
+        </div>
+        <p class="card-desc">AIへの寛容度は将来上がるのか、そしてAI生成動画から骨格・カメラを推定して3D化するワークフローは妥当か、という2つの問いへの回答。寛容度を「見た目の軸」と「労力・出自の軸」に分解し、受容度データ・実測エンゲージメント・供給飽和・反証事例・技術評価・コスト構造まで通して検証している。</p>
+        <div class="card-tags">
+          <span class="tag key">結論: 3D完パケが正解</span>
+          <span class="tag">AIは上流・3Dは下流</span>
+          <span class="tag">全12章</span>
+        </div>
+        <span class="card-go">図解を開く</span>
+      </a>
+
+      <a class="card" href="worldview-format/">
+        <div class="card-head">
+          <span class="card-num">2</span>
+          <p class="card-title">世界観適性とフォーマットの集中調査</p>
+        </div>
+        <p class="card-desc">知識・教養×ドラマにどんな世界観が向くのか、そして「単話でも完結し、一貫した世界観を保ちつつ、ストーリーが少しずつ進行する」フォーマットは実在するのか。適性軸を3つに修正した上で、長編IP17作品のマッピング、フォーマット8類型の縦型ショートへの翻訳可否、知識領域の選定まで扱う。</p>
+        <div class="card-tags">
+          <span class="tag key">結論: フォーマットは存在する</span>
+          <span class="tag">微進行型＋カタログ拡張型</span>
+          <span class="tag">付録4調査</span>
+        </div>
+        <span class="card-go">図解を開く</span>
+      </a>
+
+      <a class="card" href="deep-verification/">
+        <div class="card-head">
+          <span class="card-num">3</span>
+          <p class="card-title">徹底検証レビュー: 観察メモ + AI vs 3Dレポート</p>
+        </div>
+        <p class="card-desc">ドラマ系チャンネル50本の観察メモと、上記レポート1を9本の並列調査で敵対的に検証したもの。仮説の判定、データ引用の誤り、技術論の誇張、両文書に欠けていた盲点を洗い出している。冒頭に、本研究がmoorestechとは無関係の案件であるという前提訂正が入っている点に注意。</p>
+        <div class="card-tags">
+          <span class="tag warn">冒頭に前提の訂正あり</span>
+          <span class="tag">9本の並列調査</span>
+          <span class="tag">最大ボリューム</span>
+        </div>
+        <span class="card-go">図解を開く</span>
+      </a>
+
+    </div>
+  </section>
+
+  <section id="context">
+    <h2>読む順番と前提</h2>
+    <div class="callout">
+      <h4>レポート3の前提訂正を先に読むこと</h4>
+      <p>レポート3の冒頭には「本研究はmoorestechとは無関係の業務委託案件（AI動画によるIP創出の研究）であり、初版の検証はディレクトリ位置からmoorestech販促と誤読した前提で行われた」という訂正が入っています。この訂正により無効になった論点と、有効なまま残る論点が分かれます。レポート3を読む際は必ず先に確認してください。</p>
+    </div>
+    <ul class="plain">
+      <li>レポート1で方針（AI完パケか3D完パケか）を決め、レポート3でその論拠の正確さを検証、レポート2でフォーマットと題材を詰める、という関係になっています。</li>
+      <li>ボリュームが大きいのはレポート3です。全体像だけ掴みたい場合は、レポート3の「総合判定」と「統合推奨」から読むのが早いです。</li>
+    </ul>
+  </section>
+
+  <section id="sources">
+    <h2>元ドキュメント</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>図解ページ</th><th>元ファイル</th><th>規模</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1. AI完パケ vs 3D完パケ</td><td><code>report-2026-07-27-ai-vs-3d.md</code></td><td>551行</td></tr>
+          <tr><td>2. 世界観適性とフォーマット</td><td><code>report-2026-07-27-worldview-format.md</code></td><td>272行</td></tr>
+          <tr><td>3. 徹底検証レビュー</td><td><code>review-2026-07-27-deep-verification.md</code></td><td>1160行</td></tr>
+          <tr><td>（検証対象の観察メモ）</td><td><code>report-2026-07-27-ドラマ系チャンネル50本を見て思ったこと.txt</code></td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="howto">
+    <h2>コメントの使い方</h2>
+    <div class="callout plain">
+      <h4>レビューコメントの付け方と戻し方</h4>
+      <ul>
+        <li>本文のテキストを選択すると「コメントを追加」ボタンが出ます。</li>
+        <li>図や表は、ブロックの右上に出る「コメント」ボタンから付けられます（タッチ端末では常時表示）。</li>
+        <li>付けたコメントは左下のパネルに集まります。クリックで該当箇所へジャンプ、編集・削除も可能です。</li>
+        <li>「すべてコピー」でMarkdownとして書き出せます。それをそのまま貼って戻してもらえれば反映できます。</li>
+        <li>コメントはブラウザのlocalStorageに保存されるため、同じ端末・同じブラウザでのみ復元されます。ページごとに別のキーで保存されるので混ざりません。</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer>AI動画IP創出研究 / 2026-07-27 / レビュー用インフォグラフィックまとめ</footer>
+
+</body>
+</html>
