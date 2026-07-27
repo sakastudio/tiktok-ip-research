@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>原文: AIを完パケにするか、3Dを完パケにするか</title>
+<style>
+  :root{
+    --accent:#4F46E5;
+    --border:#E2E8F0;
+    --text:#0F172A;
+    --text-muted:#475569;
+    --text-subtle:#64748B;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; width:100%;
+    background:#FFFFFF; color:var(--text);
+    overflow-x:hidden;
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans",system-ui,sans-serif;
+    line-height:1.9;
+  }
+  p,li,td,th,blockquote{ overflow-wrap:anywhere; }
+  a{ color:var(--accent); }
+
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    background:rgba(255,255,255,.94);
+    backdrop-filter:saturate(180%) blur(8px);
+    border-bottom:1px solid var(--border);
+    padding:11px 20px;
+  }
+  .topbar .kind{
+    font-size:11px; font-weight:700; letter-spacing:.1em;
+    color:#fff; background:var(--accent);
+    border-radius:999px; padding:3px 11px;
+  }
+  .topbar a{ font-size:13px; font-weight:600; text-decoration:none; color:var(--text-muted); }
+  .topbar a:hover{ color:var(--accent); text-decoration:underline; }
+  .topbar .sep{ color:#CBD5E1; font-size:12px; }
+  .topbar .file{
+    margin-left:auto;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:11px; color:var(--text-subtle);
+  }
+
+  .doc{
+    max-width:760px;
+    margin:0 auto;
+    padding:34px 20px 120px;
+    font-size:15px;
+  }
+  .doc h1{
+    font-size:25px; line-height:1.5;
+    margin:0 0 26px;
+    padding-bottom:14px;
+    border-bottom:3px solid var(--accent);
+  }
+  .doc h2{
+    font-size:19.5px; line-height:1.55;
+    margin:52px 0 14px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--border);
+  }
+  .doc h3{ font-size:16.5px; margin:34px 0 10px; }
+  .doc h4{ font-size:14.5px; margin:26px 0 8px; color:var(--text-muted); }
+  .doc p{ margin:14px 0; }
+  .doc ul,.doc ol{ padding-left:24px; margin:14px 0; }
+  .doc li{ margin:7px 0; }
+  .doc blockquote{
+    margin:18px 0;
+    border-left:4px solid var(--accent);
+    background:#F8FAFC;
+    border-radius:0 8px 8px 0;
+    padding:2px 18px;
+    color:var(--text-muted);
+    font-size:14px;
+  }
+  .doc hr{ border:none; border-top:1px solid var(--border); margin:44px 0; }
+  .doc table{
+    border-collapse:collapse; width:100%;
+    font-size:13px; line-height:1.7; min-width:520px;
+  }
+  .doc .table-wrap{
+    overflow-x:auto;
+    border:1px solid var(--border);
+    border-radius:10px;
+    margin:18px 0;
+  }
+  .doc th,.doc td{
+    text-align:left; padding:9px 12px;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+  }
+  .doc thead th{ background:#F1F5F9; font-size:12.5px; color:var(--text-muted); }
+  .doc tbody tr:last-child td{ border-bottom:none; }
+  .doc code{
+    background:#F1F5F9; border-radius:5px; padding:1px 6px;
+    font-size:12.5px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  .doc pre{
+    background:#0F172A; color:#E2E8F0;
+    border-radius:10px; padding:14px 16px;
+    font-size:12.5px; line-height:1.7;
+    overflow-x:auto;
+  }
+  .doc pre code{ background:none; color:inherit; padding:0; }
+  .doc img{ max-width:100%; height:auto; }
+
+  footer{
+    text-align:center; font-size:12px; color:var(--text-subtle);
+    padding:0 20px 80px;
+  }
+
+  @media (max-width:640px){
+    .topbar{ padding:10px 14px; gap:10px; }
+    .topbar .file{ width:100%; margin-left:0; }
+    .doc{ padding:26px 14px 100px; font-size:14.5px; }
+    .doc h1{ font-size:21px; }
+    .doc h2{ font-size:17.5px; margin-top:40px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <span class="kind">原文</span>
+  <a href="../">図解に戻る</a>
+  <span class="sep">/</span>
+  <a href="../../">まとめトップ</a>
+  <span class="sep">/</span>
+  <a href="../../sources/report-2026-07-27-ai-vs-3d.md">Markdown原本</a>
+  <span class="file">report-2026-07-27-ai-vs-3d.md</span>
+</nav>
+
+<article class="doc">
+<h1
+id="aiを完パケにするか3dを完パケにするか">AIを完パケにするか、3Dを完パケにするか</h1>
+<p>調査日: 2026-07-27 対象の問い:
+『tiktok-drama-research.md』末尾の2点</p>
+<ol type="1">
+<li>AIから骨格推定を行い、カメラワークも含めて3D化・レンダリングして完パケを3Dで行うワークフローは妥当か</li>
+<li>将来的にAIへの寛容度が上がり、AIでも純粋にコンテンツを好きになる未来は来るか（昔の3Dもそうだったように）</li>
+</ol>
+<hr />
+<h2 id="0-要旨">0. 要旨</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>論点</th>
+<th>結論</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>寛容度は上がるか</td>
+<td>見た目への寛容度は上がる。労力・出自への反発は上がっていない。そして見た目の寛容度が上がっても得しない（同時に希少性がゼロになるため）</td>
+</tr>
+<tr>
+<td>3Dを完パケにする判断</td>
+<td>正しい。ただし理由は「AI叩き回避」ではなく、0.5秒カット割りとIP一貫性という要求仕様に対する最適解だから</td>
+</tr>
+<tr>
+<td>提案ワークフロー</td>
+<td>修正が必要。AI生成動画からのカメラ・骨格推定は原理的に破綻する経路。AIは上流（企画〜アセット）、3Dは下流（キャラ・モーション・カメラ・レンダリング）に置く</td>
+</tr>
+<tr>
+<td>判断の決め手</td>
+<td>3Dルートは寛容度が上がる未来でも上がらない未来でも正解になる。AI完パケルートは上がらないと負け、上がっても差別化が消えて勝ちきれない</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="1-問いを2つの軸に分解する">1. 問いを2つの軸に分解する</h2>
+<p>「AIへの寛容度」を一枚岩で扱うと結論を誤ります。実際には性質の異なる2つの反発が重なっています。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>軸</th>
+<th>内容</th>
+<th>3DCG・ボカロにあったか</th>
+<th>2026年時点の状態</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>見た目の軸</td>
+<td>不気味、安っぽい、動きが変、AIっぽい</td>
+<td>あった</td>
+<td>解消に向かっている</td>
+</tr>
+<tr>
+<td>労力・出自の軸</td>
+<td>学習データの出自、労働置換、努力していない</td>
+<td>ほぼ無かった</td>
+<td>悪化している</td>
+</tr>
+</tbody>
+</table></div>
+<p>3DCGとボカロの類推が成立するのは前者だけです。後者はAI固有で、しかも技術進歩では解決しません。</p>
+<hr />
+<h2 id="2-昔の3dも同じ立ち位置だったの検証">2.
+「昔の3Dも同じ立ち位置だった」の検証</h2>
+<h3 id="21-見た目の軸は実際に3dと同じ道を辿る">2.1
+見た目の軸は、実際に3Dと同じ道を辿る</h3>
+<p>日本の3DCGアニメは長く酷評されてきました。90年代後半から導入が進んだものの、海外主流のフル3DCGではなく、3DCG映像を従来のセルアニメ風に変換して2D画像と合成する作品が多数を占めた、という経緯があります（<a
+href="https://www.sublimation.co.jp/column/works_20220311/">サブリメイション</a>）。ハイブリッド方式（メカ・背景・プロップをCG、キャラを2D作画）は高評価を得る一方、フル3DCGは酷評されがち、という非対称が長く続きました（<a
+href="https://realsound.jp/movie/2021/08/post-841121.html">Real
+Sound</a>）。</p>
+<p>重要なのは解決の仕方です。「もっとリアルにする」で解決したのではなく、セルシェーディング／セルルックという別の様式を発明し、既存の美意識に接続することで解決しました。</p>
+<p>ボカロも完全に同型です。初期のLEONやLOLAはロボット的な声で注目されず、2010年頃までは「機械の声」の違和感が強かった。それが「違和感を味として捉える」という聴き手側の意識変化を経て一般化しました（<a
+href="https://spollup.jp/column/why-vocaloid-was-accepted/">spollup</a>、<a
+href="https://utai.tech/posts/vocaloid/history">ボカロの歴史</a>）。合成音声であることが逆に作曲者の個性を前面に出す、という積極的な意味づけまで発生しています。</p>
+<p>ハリウッドのCGIも同じ構造です。スターウォーズ prequel
+以降にバックラッシュが起き、いまも「CG臭い」批判とプラクティカルエフェクト回帰の潮流がある。ただしVFX批評家は「物理と
+digital
+を両方うまく使って良い映画を作っている作品」には文句を言わない（<a
+href="https://www.denofgeek.com/movies/a-brief-history-of-practical-effects-in-cinema-in-10-movies/">Den
+of Geek</a>、<a
+href="https://www.creativebloq.com/features/defending-cgi-in-movies">Creative
+Bloq</a>）。</p>
+<p>歴史のパターンは「技術の痕跡を隠して勝った」ではなく「痕跡を様式として自立させて勝った」です。この点でAI動画も、AIっぽさを消す方向より、AIでしかできない絵を様式化する方が筋がいい。この軸に関する読みは正しいと思われます。</p>
+<h3 id="22-労力出自の軸は3dには存在しなかった">2.2
+労力・出自の軸は、3Dには存在しなかった</h3>
+<p>誰も「3DCGは他人の絵を盗んでいる」とは言わなかったし、ボカロに「歌手の仕事を奪う」という批判はほとんど立ちませんでした。AIには美的な軸に加えて、学習データの出自と労働置換という道徳・経済の軸があります。</p>
+<p>これは技術が進歩しても消えません。消えるとしたら、法とライセンスが決着したときです。</p>
+<h3 id="23-法制度の現状2026年7月時点">2.3
+法制度の現状（2026年7月時点）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>事案</th>
+<th>状況</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>訴訟件数</td>
+<td>西側主要法域だけで training-data 訴訟が35件以上係争中（2026年Q2）(<a
+href="https://presenc.ai/research/ai-training-data-lawsuit-tracker-2026">Presenc
+AI Tracker</a>)</td>
+</tr>
+<tr>
+<td>Bartz v. Anthropic</td>
+<td>15億ドルで和解（2025年8月合意、9月に予備承認）。約50万件の海賊版著作物に1件3,000ドル超の見込み。ただし将来の学習ライセンスは付与されない
+(<a href="https://www.mckoolsmith.com/newsroom-ailitigation-46">McKool
+Smith</a>)</td>
+</tr>
+<tr>
+<td>Disney / Universal / WB v. Midjourney</td>
+<td>Disney・Universalが2025年6月提訴、DreamWorks
+が後に参加、WBが2025年9月4日に提訴。初期段階で公判日未定 (<a
+href="https://techweez.com/2026/07/07/midjourney-disney-universal-warner-copyright-lawsuit/">Techweez</a>)</td>
+</tr>
+<tr>
+<td>Getty Images v. Stability AI</td>
+<td>潜在賠償額で最大級の案件のひとつ</td>
+</tr>
+<tr>
+<td>Thaler v. Perlmutter</td>
+<td>2026年3月2日に最高裁が cert
+denial。D.C.巡回区の2025年3月判決（著作権には人間の著作者性が必要）が確定
+(<a
+href="https://terms.law/2026/01/15/midjourney-commercial-use-rights-complete-2026-guide/">terms.law</a>)</td>
+</tr>
+</tbody>
+</table></div>
+<p>最後の1件は感情論ではなく実務の話です。純粋なAI生成物には米国で著作権が付かない（人間の創作的寄与部分のみ）。IPを育てるという目的に対して構造的に不利です。3Dモデル・リグ・アニメーションを自分で作れば、そこは人間の著作物として保護されます。</p>
+<hr />
+<h2 id="3-受容度データ2026年時点">3. 受容度データ（2026年時点）</h2>
+<p>寛容度が上がっている証拠は見つかりませんでした。むしろ逆方向のデータが揃います。</p>
+<h3 id="31-消費者調査">3.1 消費者調査</h3>
+<p>Canva × The Harris
+Poll（2026年、消費者3,547人・マーケティング責任者1,415人、米英豪仏独日印の7カ国）(<a
+href="https://www.canva.com/newsroom/news/marketing-ai-report-2026/">Canva
+Newsroom</a>)</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>設問</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AIの方が良い結果を出せるとしても人間が作った広告のほうがいい</td>
+<td>78%</td>
+</tr>
+<tr>
+<td>AI生成広告は「何かが足りない」と分かる</td>
+<td>70%</td>
+</tr>
+<tr>
+<td>良い広告には依然として人間の関与が必要</td>
+<td>87%</td>
+</tr>
+<tr>
+<td>AIが有用・関連性を出すなら広告でのAI利用は受け入れる</td>
+<td>68%</td>
+</tr>
+<tr>
+<td>開示が必要になると考える</td>
+<td>70%（うち56%が2〜5年以内と予想）</td>
+</tr>
+<tr>
+<td>AI利用に関する正式な社内ポリシーがあれば安心</td>
+<td>74%</td>
+</tr>
+</tbody>
+</table></div>
+<p>さらに、「AIを多用するブランドは信頼が下がる」と答えた消費者は2025年の20%から2026年に40%へ倍増。2026年には米国消費者の半数が「顧客向けコンテンツ・広告に生成AIを使わないブランドから買いたい」と回答しています。可視化されたAI生成マーケティングで「ブランドをより信頼する」は7%、「信頼が下がる」は31%（<a
+href="https://www.canva.com/newsroom/news/marketing-ai-report-2026/">Canva</a>、<a
+href="https://www.emarketer.com/content/shoppers-aren-t-impressed-by-ai-generated-marketing">eMarketer</a>、<a
+href="https://www.koinsights.com/the-authenticity-premium-why-consumers-are-rejecting-ai-generated-content/">KO
+Insights</a>）。</p>
+<p>「AI
+slop」のメディア言及量は9倍に増加、マーケティング責任者の41%が実務上の課題と認識しています。</p>
+<h3 id="32-世代差--gen-zは最も使い最も嫌っている">3.2 世代差 — Gen
+Zは最も使い、最も嫌っている</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>指標</th>
+<th>数値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI生成コンテンツを能動的に嫌う（「AI slopが品質を下げている」）</td>
+<td>41%</td>
+</tr>
+<tr>
+<td>警戒的（何が本物か分からない）</td>
+<td>31%</td>
+</tr>
+<tr>
+<td>肯定的</td>
+<td>28%</td>
+</tr>
+<tr>
+<td>ネガティブ or 警戒の合計</td>
+<td>72%</td>
+</tr>
+</tbody>
+</table></div>
+<p>（<a
+href="https://www.askattest.com/blog/research/gen-z-media-consumption">Attest
+/ Gen Z media consumption 2026</a>）</p>
+<p>しかもGen
+ZはAI利用率が最も高い世代です。感情は逆方向に振れており、excitement
+は14pt下落して22%、hopefulness は9pt下落して18%、anger
+は9pt上昇して31%（<a
+href="https://news.gallup.com/poll/708224/gen-adoption-steady-skepticism-climbs.aspx">Gallup</a>、<a
+href="https://www.adweek.com/adweek-wire/new-shift-report-gen-z-is-embracing-ai-and-sounding-the-alarm-on-it/">Adweek</a>）。</p>
+<p>ただし Canva の調査では、Gen
+Z・ミレニアルの70%が「作り方より広告のvibeを見る」、69%が「実在の人物が登場するならAI関与を受け入れる」とも答えており、単純な拒否ではありません。</p>
+<h3 id="33-採用と信頼の乖離これが一番重要な構造">3.3
+採用と信頼の乖離（これが一番重要な構造）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>指標</th>
+<th>2023</th>
+<th>2024</th>
+<th>2025</th>
+<th>2026</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>米国成人のAIチャットボット利用</td>
+<td>23%</td>
+<td>33%</td>
+<td>—</td>
+<td>49%</td>
+</tr>
+<tr>
+<td>ChatGPT利用</td>
+<td>18%</td>
+<td>—</td>
+<td>34%</td>
+<td>44%</td>
+</tr>
+<tr>
+<td>チャットボット出力を信頼</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>29%（横ばい）</td>
+</tr>
+</tbody>
+</table></div>
+<p>（<a
+href="https://www.pewresearch.org/short-reads/2026/03/12/key-findings-about-how-americans-view-artificial-intelligence/">Pew
+Research Center</a>、<a
+href="https://www.digitalapplied.com/blog/pew-americans-and-ai-2026-data-marketing-implications">Digital
+Applied</a>）</p>
+<p>採用は上がり続けるが信頼は上がらない。「使う」と「好む」は完全に別の指標です。ここを混同すると「みんな使ってるんだから寛容度は上がっている」という誤読が起きます。</p>
+<p>Stanford AI Index 2026
+も同型です。グローバルで「ベネフィットの方が大きい」は55%（2024）→59%（2025）と微増する一方、「不安を感じる」は52%に上昇。米国で「懸念より期待が上回る」はわずか10%（AI専門家は56%）。仕事への影響では専門家73%が改善を期待するのに対し一般は23%（<a
+href="https://hai.stanford.edu/ai-index/2026-ai-index-report/public-opinion">Stanford
+HAI 2026 AI Index — Public Opinion</a>、<a
+href="https://www.eweek.com/news/stanford-ai-index-2026-trust-gap-neuron/">eWeek</a>）。</p>
+<h3 id="34-日本固有のデータ--反発はaiより隠蔽に向いている">3.4
+日本固有のデータ — 反発は「AI」より「隠蔽」に向いている</h3>
+<p>株式会社システムリサーチ調査（2026年6月）(<a
+href="https://prtimes.jp/main/html/rd/p/000000215.000144334.html">PR
+TIMES</a>、<a
+href="https://mantan-web.jp/prtimes/article/20260704prt00m200000118a.html">まんたんウェブ</a>)</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>設問</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI生成だと分かった場合「少し抵抗を感じる」</td>
+<td>38.3%</td>
+</tr>
+<tr>
+<td>同「不信感を持つ」</td>
+<td>20.2%</td>
+</tr>
+<tr>
+<td>ネガティブ計</td>
+<td>58.5%</td>
+</tr>
+<tr>
+<td>AI生成だと見抜ける自信がない</td>
+<td>58.5%</td>
+</tr>
+<tr>
+<td>知らずに見ていたと思う</td>
+<td>60.1%</td>
+</tr>
+<tr>
+<td>AI生成であることを表示してほしい</td>
+<td>62.7%</td>
+</tr>
+<tr>
+<td>AIだと分からないまま使われることに抵抗</td>
+<td>66.0%</td>
+</tr>
+</tbody>
+</table></div>
+<p>同調査は「AI生成画像・動画そのものに強い拒否感を示す人は多くない」とも記録しています。日本の反発の主対象はAIそのものより隠蔽です。ここは戦略上使える差分で、制作過程を出す運用と相性がいい。</p>
+<p>pixiv
+は2026年2月18日にガイドライン改定を発表（3月18日施行）。大量投稿や、AI生成なのに「AI生成作品」ステータスを付けない虚偽申告を明確に禁止し、違反可能性の高い作品を検索非表示にする機能を追加予定（<a
+href="https://www.itmedia.co.jp/aiplus/article/2602/18/1260218132/">ITmedia</a>）。Xも2026年3月に「AIで生成」ラベルを含むコンテンツ開示機能を導入。2026年1月にはpixiv主催のAI不使用イラコンで「AI魔女狩り」騒動が発生しています（<a
+href="https://note.com/texture_lora_lab/n/nc847cb2dd546">note /
+質感LoRA研究工房</a>）。</p>
+<hr />
+<h2 id="4-実際に数字は落ちるのか最も決定的なデータ">4.
+実際に数字は落ちるのか（最も決定的なデータ）</h2>
+<h3 id="41-tiktok-110万投稿の実測">4.1 TikTok 110万投稿の実測</h3>
+<p>Journal of Consumer Research 掲載論文「Made With AI: Consumer
+Engagement With Social Media Containing AI Disclosures」（2026）(<a
+href="https://academic.oup.com/jcr/advance-article/doi/10.1093/jcr/ucag013/8672493?login=false">JCR</a>)</p>
+<ul>
+<li>TikTok投稿110万件を分析。AIGCラベル付きは、視聴数を統制した上でいいねが7〜8%減</li>
+<li>実験の効果量: 全体で Cohen's d = .21〜.26、ラベルに気づいた層では d
+= .45〜.63</li>
+<li>フォロワー数に関わらず発生（インフルエンサー特有の現象ではない）</li>
+</ul>
+<h3 id="42-メカニズムが本題">4.2 メカニズムが本題</h3>
+<p>この研究の価値は数字より因果の特定にあります。以下の代替仮説を実験で潰しています。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>代替仮説</th>
+<th>検証結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>品質が低いと思われるから</td>
+<td>開示を外すと差が消える。品質評価に有意差なし</td>
+</tr>
+<tr>
+<td>AI嫌悪があるから</td>
+<td>AI肯定派の参加者でも効果が残存</td>
+</tr>
+<tr>
+<td>唯一性が失われるから</td>
+<td>desire-for-unique-products 尺度による調整効果なし</td>
+</tr>
+<tr>
+<td>コンテンツへの警戒</td>
+<td>コメントにリスク・道徳に関する語彙の増加なし</td>
+</tr>
+</tbody>
+</table></div>
+<p>実際に効いていた経路は Study 5
+の直列媒介で確認された次の連鎖です。</p>
+<pre><code>AIGC開示 → 作者の労力が低いと認識される → パラソーシャル結合が弱まる → エンゲージメントが下がる</code></pre>
+<p>つまりAI開示のダメージは、コンテンツの出来ではなく「作者との絆」の部分に入ります。</p>
+<p>これが今回の意思決定の核心です。一発ネタの消費型コンテンツならダメージは小さい。しかし「キャラに愛着を持たせてIPを育てる」という目的に対しては、一番効く場所を正確に殴られます。そして『tiktok-drama-research.md』の方針は明確に後者です。</p>
+<p>同論文 Study 6
+は「作者の労力を強調する開示」が損失を緩和しうることを示唆しており、対策の方向も同じ場所を指しています。</p>
+<h3 id="43-プラットフォーム制度の現状">4.3
+プラットフォーム制度の現状</h3>
+<p>TikTok</p>
+<ul>
+<li>C2PA Content Credentials
+を2025年1月に統合。主要プラットフォームで初めてメタデータによるAIコンテンツの自動検出・ラベル付けを実施</li>
+<li>C2PAメタデータ / 不可視ピクセル透かし /
+自動分類モデルの3層構成。累計30億本以上にAIGCラベルを付与（<a
+href="https://newsroom.tiktok.com/tiktok-ssa-shares-more-ways-to-spot-shape-and-understand-ai-generated-content?lang=en-ZA">TikTok
+Newsroom</a>、<a
+href="https://www.techtimes.com/articles/320282/20260713/tiktok-has-labeled-3-billion-ai-videos-here-what-research-says-they-miss.htm">Tech
+Times</a>）</li>
+<li>2026年3月以降、AI生成の顔・声はアプリ内ラベルでの開示が必須</li>
+<li>公式には「AIGCラベルは開示メカニズムであり配信シグナルではない」（2025
+Transparency
+Report）。ただしラベルなしでAIと通報されたコンテンツは強くderank。Creator
+Rewards Program はそもそもAI生成コンテンツを対象外</li>
+<li>免除対象:
+AI字幕、AI説明文、AI提案ハッシュタグ、テキストオーバーレイ、脚本補助、フック文の生成</li>
+<li>ユーザーがフィード内のAI量を制御できる Manage Topics
+機能をテスト中</li>
+</ul>
+<p>（<a
+href="https://www.auditsocials.com/blog/tiktok-ai-content-disclosure-rules-2026">auditsocials</a>、<a
+href="https://storrito.com/resources/tiktoks-2026-ai-labeling-rules-and-what-they-signal-for-platform-governance/">storrito</a>）</p>
+<p>YouTube</p>
+<ul>
+<li>2025年7月15日、従来の「repetitious content」ポリシーを「inauthentic
+content」に改称・厳格化</li>
+<li>収益化不可の3類型: 反復的なAI生成動画 / 感情を煽る・不快なクリップ /
+健康・金融など機微領域の合成ペルソナ</li>
+<li>2026年7月にさらに明確化（<a
+href="https://techcrunch.com/2026/07/20/youtube-clarifies-policies-around-ai-slop-and-upsetting-videos/">TechCrunch
+2026-07-20</a>、<a
+href="https://www.androidheadlines.com/2026/07/youtube-monetization-rules-ai-slop-inauthentic-content.html">Android
+Headlines</a>）</li>
+<li>公式の線引き:
+AIツールの禁止ではなく、人間の創造性を「拡張」ではなく「置換」するAI駆動コンテンツの禁止。開示それ自体は視聴者制限や収益化剥奪の理由にならない</li>
+</ul>
+<hr />
+<h2 id="5-供給側がすでに飽和している">5. 供給側がすでに飽和している</h2>
+<p>Kapwing 調査（2026年6月報道）(<a
+href="https://media-innovation.jp/article/2026/06/24/143442.html">Media
+Innovation</a>)</p>
+<ul>
+<li>新規TikTokアカウントのFYP初期500本のうち294本、59%がAI slop。YouTube
+Shortsは21%で約3倍の差</li>
+<li>手法:
+20カテゴリ10,742本以上を人力検証。AI生成の映像・脚本・音声を目視確認</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>カテゴリ</th>
+<th>AI比率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kids</td>
+<td>57.4%（#cartoonkids 97%、#babysong 83%）</td>
+</tr>
+<tr>
+<td>education / science</td>
+<td>35.0%</td>
+</tr>
+<tr>
+<td>health</td>
+<td>33.8%</td>
+</tr>
+<tr>
+<td>history</td>
+<td>33.5%</td>
+</tr>
+<tr>
+<td>fitness</td>
+<td>1.6%</td>
+</tr>
+<tr>
+<td>music</td>
+<td>1.5%</td>
+</tr>
+<tr>
+<td>fashion</td>
+<td>1.3%</td>
+</tr>
+</tbody>
+</table></div>
+<p>ここから2点。</p>
+<p>第一に、「AIで作れる」はすでに差別化になっていません。フィードの6割です。</p>
+<p>第二に、これは『tiktok-drama-research.md』の「知識・教養系」案に直接効きます。education
+が35%でAI
+slopの密集地帯であり、クイズノック的フォーマットをAIで素直にやると、いま最も供給過剰な場所に飛び込むことになる。逆に言えば「知識・教養
+× ドラマ ×
+一貫した世界観」に向かう判断は、競争回避の意味でも正しい方向です。</p>
+<p>なお同記事はAI／人間コンテンツのエンゲージメント比較の直接データは提示していません。</p>
+<hr />
+<h2 id="6-反証-aiでもipは育つ公平に見る">6. 反証:
+AIでもIPは育つ（公平に見る）</h2>
+<p>「AIだとIPが育たない」は事実として間違いです。反証を先に置きます。</p>
+<h3 id="61-事例">6.1 事例</h3>
+<p>Neuro-sama（AI VTuber）</p>
+<ul>
+<li>2026年1月、Twitchで最も購読されているチャンネルに。2026年1月2日時点でアクティブサブ16.2万、全人間ストリーマーを上回った</li>
+<li>2025年12月末に自身のHype
+Train世界記録を更新、記録のハットトリック</li>
+<li>ファンコミュニティ「The Swarm」が形成され、2024年後半には VTuber of
+the Year にノミネート</li>
+<li>CHI 2026 に学術論文「My Favorite Streamer is an
+LLM」が採択。ファンは受動的な視聴者ではなく能動的な共同創作者であり、AIの技術的構成を理解した上で情緒的愛着と折り合いをつけ、一貫したペルソナをコミュニティ文化にまで拡張している、と分析されている</li>
+</ul>
+<p>（<a
+href="https://dotesports.com/streaming/news/neuro-most-subscribed-twitch">Dot
+Esports</a>、<a
+href="https://dl.acm.org/doi/10.1145/3772318.3790891">CHI 2026</a>、<a
+href="https://arxiv.org/html/2509.10427v1">arXiv</a>）</p>
+<p>Xania Monet（AI音楽）</p>
+<ul>
+<li>ミシシッピの詩人 Telisha "Nikki" Jones が作詞し Suno
+で制作。Billboardチャート入り</li>
+<li>2025年9月に Hallwood Media
+と数百万ドル規模の契約（入札は300万ドルに達したと報道）</li>
+<li>米国ストリーミングだけで初期カタログが5万ドル超を生成</li>
+</ul>
+<p>Breaking Rust（AI音楽）</p>
+<ul>
+<li>"Walk My Walk" が Billboard Country Digital Song Sales
+で1位。ただしBillboard自身の分析では、11月6日終了週のトラックDLは約3,000件。「チャートに乗る
+≠ 人気がある」</li>
+</ul>
+<p>（<a
+href="https://www.billboard.com/pro/ai-music-artists-charts-popular/">Billboard</a>、<a
+href="https://www.forbes.com/sites/conormurray/2025/11/05/creator-behind-billboard-charting-ai-artist-xania-monet-defends-her-music-against-backlash-from-kehlani-and-more/">Forbes</a>）</p>
+<p>ツインズひなひま（2025年3月地上波）</p>
+<ul>
+<li>KaKa Creation ×
+フロンティアワークス。本編の95%以上のカットでAI支援</li>
+<li>実態は「プロンプト一発出し」ではなく、3Dとモーションキャプチャでキャラアニメを作り、仕上げ・彩色を中心にAIで手描きセルアニメ的な絵作りに寄せる構成（サポーティブAI）</li>
+<li>視聴者評価は「思いのほか悪くなかった。びっくりするような破綻は無かった」「TVやスマホでながら観する分には文句ない」「ただし映画館のスクリーンで観たいとは思わない」</li>
+</ul>
+<p>（<a
+href="https://news.yahoo.co.jp/expert/articles/2240f963d6dd2f301fe4b9a1946b1b32934c3533">Yahoo!ニュース
+/ まつもとあつし</a>、<a
+href="https://ledge.ai/articles/twins_hinahima_2025spring">Ledge.ai</a>、<a
+href="https://www.advertimes.com/20250930/article515782/">AdverTimes</a>）</p>
+<p>Tilly Norwood（炎上側）</p>
+<ul>
+<li>Particle6（CEO: Eline Van der Velden）が制作したAI「俳優」</li>
+<li>SAG-AFTRAが公式に否定。「人間の俳優ではなく、引き出すべき人生経験を持たない」</li>
+<li>2026年7月に長編映画「Misaligned」主演が発表され、批判がさらに激化</li>
+</ul>
+<p>（<a
+href="https://www.bnnbloomberg.ca/business/artificial-intelligence/2026/07/17/creator-defends-ai-actor-tilly-norwood-after-feature-film-backlash/">BNN
+Bloomberg</a>、<a
+href="https://www.cbc.ca/lite/story/1.7647478">CBC</a>、<a
+href="https://www.forbes.com/sites/conormurray/2026/03/10/ai-actress-tilly-norwood-responds-to-backlash-in-debut-song-ais-not-the-enemy/">Forbes</a>）</p>
+<h3 id="62-パターン抽出">6.2 パターン抽出</h3>
+<p>並べると分岐点がはっきりします。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>構造</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Neuro-sama</td>
+<td>人間が設計した3Dの器・キャラ設定の中でAIが振る舞う。制作者（Vedal）が可視</td>
+<td>成功</td>
+</tr>
+<tr>
+<td>ツインズひなひま</td>
+<td>3D+モーキャプの器の上でAIが仕上げを担う</td>
+<td>実験として成立</td>
+</tr>
+<tr>
+<td>Xania Monet</td>
+<td>人間が作詞し、AIが音を作る。制作者が名乗り出ている</td>
+<td>チャート入り</td>
+</tr>
+<tr>
+<td>Tilly Norwood</td>
+<td>AIが人間の役割そのものを代替すると宣言</td>
+<td>業界団体レベルで拒絶</td>
+</tr>
+</tbody>
+</table></div>
+<p>判定軸は「AIを使ったかどうか」ではなく「作者の意図と労力が見えるかどうか」です。これはJCRの媒介分析（perceived
+effort → parasocial
+connection）と完全に一致しており、業界事例と学術データという独立した2系統が同じ結論を指しています。</p>
+<p>そして Neuro-sama
+は、今回検討している構成そのものです。AIが中身を動かし、3Dの器が完パケを担う。この方向にはすでに最強クラスの実証例があります。</p>
+<hr />
+<h2 id="7-提案ワークフローの技術評価">7. 提案ワークフローの技術評価</h2>
+<p>対象:
+「AIから骨格推定を行い、カメラワークも含めて3D化、レンダリングし完パケは3D上で行う」</p>
+<h3 id="71-骨格推定そのものは実用水準">7.1
+骨格推定そのものは実用水準</h3>
+<p>単眼動画からのmocapは2026年時点で主要関節が光学式と2〜3cm差まで来ています（<a
+href="https://www.strayspark.studio/blog/ai-mocap-indie-developers-2026-comparison">StraySpark</a>）。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>特徴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Move.ai</td>
+<td>マーカーレスの本命。Move Pro
+は2〜十数台のカメラを同期し神経ポーズ推定＋生体力学ソルブ。単眼の Move
+One もあるが、足の接地と奥行き曖昧性は Pro が明確に上</td>
+</tr>
+<tr>
+<td>Autodesk Flow Studio（旧 Wonder Studio）</td>
+<td>単眼フッテージから体・顔・手のモーションとAIカメラトラックを同時取得</td>
+</tr>
+<tr>
+<td>DeepMotion / Rokoko Video / QuickMagic</td>
+<td>Webcam〜動画ファイルからの手軽な変換</td>
+</tr>
+<tr>
+<td>EasyMocap（OSS）</td>
+<td>HRNet / MediaPipe
+等の2Dキーポイント検出＋CNN初期化で単眼動画から抽出</td>
+</tr>
+<tr>
+<td>Cascadeur / MetaHuman Animator</td>
+<td>補正・顔まわり</td>
+</tr>
+</tbody>
+</table></div>
+<p>ここは問題ありません。</p>
+<h3 id="72-ソースをai生成動画にすると壊れる">7.2
+ソースをAI生成動画にすると壊れる</h3>
+<p>これが技術的な致命点で、研究レベルで明示されている既知の限界です。</p>
+<p>生成動画はカメラ軌跡が未知であり、かつ剛体性が保たれていない。背景がソフトに変形し、色がフリッカーする。そのためCOLMAPのようなSfMが
+rigidity violation
+により収束せず、背景SfM経由でのカメラ／体のポーズ推定が成立しない（<a
+href="https://arxiv.org/pdf/2405.16822">Vidu4D,
+arXiv:2405.16822</a>）。</p>
+<p>最新のカメラ推定でも条件付きです。MegaSaM は DROID-SLAM / COLMAP /
+Fast3R を精度で上回り MonST3R
+より高速ですが、「動体が視野を支配する場合」「カメラ運動と物体運動が共線の場合」に破綻すると明記されています。VGGT
+は推論は速いが特徴点が少ない場面で弱い（<a
+href="https://arxiv.org/pdf/2605.12027">arXiv:2605.12027</a>）。</p>
+<p>縦型構図でキャラが画面を占める絵は、この破綻条件にほぼ完全に一致します。つまり一番やりたい構図が一番苦手な条件です。</p>
+<h3 id="73-そもそも情報を捨てて推定し直している">7.3
+そもそも情報を捨てて推定し直している</h3>
+<p>より根本的な問題として、3Dで作るならカメラは推定するものではなく指定するものです。Unity
+の Cinemachine + Timeline
+で直接置く方が速く、正確で、再現可能で、後から直せる。AI動画からカメラを逆算するのは、自分が持っている情報を一度捨てて推定し直す工程になっています。</p>
+<p>加えて、0.5〜1秒カットの絵作りに必要なのは実写的に正確なモーションではありません。アニメのカット割りは実写モーションをそのまま写しても気持ちよくならず、ポーズtoポーズ・タメツメ・誇張が要る。オムオムアニメ（@omom_animee）がクオリティの割に伸びているのは、まさにそこが効いているからです。</p>
+<h3 id="74-修正案--aiを上流3dを下流に固定する">7.4 修正案 —
+AIを上流、3Dを下流に固定する</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>工程</th>
+<th>担当</th>
+<th>具体</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>企画・脚本</td>
+<td>AI</td>
+<td>ネタ出し、脚本、オチの分岐案</td>
+</tr>
+<tr>
+<td>絵コンテ</td>
+<td>AI</td>
+<td>イメージボード、構図案、カット割り案</td>
+</tr>
+<tr>
+<td>キャラ・アセット</td>
+<td>AI + 人</td>
+<td>キャラデザ案、背景・プロップのコンセプト、image-to-3Dの入力、テクスチャ</td>
+</tr>
+<tr>
+<td>モーション</td>
+<td>実写mocap</td>
+<td>自分 or 演者をiPhone/webcamで撮影 → 単眼mocap →
+リターゲット。AI動画からではなく実写リファレンスから取る</td>
+</tr>
+<tr>
+<td>カメラ・カット割り</td>
+<td>3D（人）</td>
+<td>Unity Timeline + Cinemachine
+で直接指定。ここが0.5秒カットの心臓部</td>
+</tr>
+<tr>
+<td>レンダリング</td>
+<td>3D</td>
+<td>セルルック</td>
+</tr>
+<tr>
+<td>音・仕上げ</td>
+<td>AI</td>
+<td>リップシンク、音声、BGM、サムネ、投稿文</td>
+</tr>
+</tbody>
+</table></div>
+<p>AI 3Dアセット生成の2026年水準（image-to-3D の入力として使える）:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>評価</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rodin (Hyper3D) Gen-2</td>
+<td>100億パラメータ、クアッドトポロジー、T/Aポーズ強制、多画像融合。クリーンアップなしで実パイプラインに入る唯一格との評価</td>
+</tr>
+<tr>
+<td>Hunyuan3D</td>
+<td>テクスチャ・PBR品質でトップ。image-to-3D 向き</td>
+</tr>
+<tr>
+<td>Tripo</td>
+<td>Smart Mesh P1.0 で約2秒のクアッドリトポ。ゲームエンジン最適化</td>
+</tr>
+<tr>
+<td>Meshy-6</td>
+<td>低ポリ生成、クアッド／トライ選択可。バランス型</td>
+</tr>
+</tbody>
+</table></div>
+<p>ただしヒーローアセットとアニメーションするキャラは依然クリーンアップか人手レビューが必要（<a
+href="https://www.3daistudio.com/state-of-ai-3d-generation-2026">3DAI
+Studio</a>、<a
+href="https://www.indiehackers.com/post/best-ai-3d-model-generator-in-2026-i-tested-9-of-the-best-and-here-is-what-i-found-70ecab1a0a">Indie
+Hackers</a>）。</p>
+<p>先行実装:</p>
+<ul>
+<li>個人制作: VRoid Studio → UniVRM → Unity(URP + lilToon) + Cinemachine
+/
+Timeline。Timelineでカメラワークをアニメーションとして組み、複数カットをイージングで接続する運用が確立している（<a
+href="https://note.com/dlzig7/n/n85faea168133?hl=en">note /
+DEL-ZIG</a>、<a
+href="https://extra-ordinary.tv/2020/07/20/setting-the-scene-vroid-unity-for-animated-cartoons/">Extra
+Ordinary, the Series</a>）</li>
+<li>商用ツール: Reallusion が2026年に iClone 8 / Character Creator 5
+で「Hybrid AI」を正式な製品戦略として発表。previz を AI Studio
+でフォトリアル／スタイライズド化、AI Motion Capture
+で動画→モーションデータ、CC Wrap
+でAI生成3Dモデルを標準トポロジーに取り込む（<a
+href="https://magazine.reallusion.com/2026/04/08/reallusion-announces-2026-vision-redefining-3d-production-through-the-power-of-hybrid-ai/">Reallusion
+Magazine</a>、<a
+href="https://beforesandafters.com/2026/04/14/the-power-of-hybrid-ai-reallusion-announces-2026-vision/">befores
+&amp; afters</a>）</li>
+</ul>
+<p>業界の解も個人の解も同じ方向を指しています。そして moorestech で
+Unity
+を触っている以上、この工程は既存スキルの直接転用です。判断材料として最も大きい要素だと考えます。</p>
+<hr />
+<h2 id="8-05秒カットの経済性3dを選ぶ本当の理由">8.
+0.5秒カットの経済性（3Dを選ぶ本当の理由）</h2>
+<p>AI叩き回避よりこちらが本命です。</p>
+<h3 id="81-ai動画のコスト構造">8.1 AI動画のコスト構造</h3>
+<p>AI動画は「1カット =
+1生成」です。カットを増やすとコストが線形に増え、同時にカット間の一貫性が崩れるリスクも増える。</p>
+<ul>
+<li>得意なのは3〜10秒。長尺になるほどキャラ一貫性と物理法則の破綻が目立つ</li>
+<li>キャラ一貫性を保つには「参照画像 →
+Image-to-Video」の2段フローが鉄則、とされている。裏返せば放置すると崩れる</li>
+<li>アニメ調特有の破綻:
+線は綺麗でも動いた瞬間にキャラが3D的に変形する、握手や手のつなぎ方など細かい指示が反映されない、瞬きの指示が守られず目を閉じたまま固まる、カメラが変わると骨格が揺れる</li>
+</ul>
+<p>（<a href="https://note.com/ai_mitsukaru/n/n352b38c849d7">note /
+ミツカル</a>、<a
+href="https://cochi-404.hatenablog.com/entry/2026/03/04/152956">Cochi AI
+Blog</a>）</p>
+<p>2026年7月時点のAPI単価:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>モデル</th>
+<th>単価</th>
+<th>特徴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Seedance 2.0 Fast</td>
+<td>$0.022/秒</td>
+<td>2026年2月登場。最もバランス型との評価</td>
+</tr>
+<tr>
+<td>Wan 2.6</td>
+<td>$0.05〜0.07/秒</td>
+<td>生成約20秒。試行錯誤向き</td>
+</tr>
+<tr>
+<td>Kling 3.0</td>
+<td>$0.10/秒</td>
+<td>Multi-Shot Storyboard、多角度の被写体一貫性が強い。Omni
+は2キャラの会話を音素単位でリップシンク</td>
+</tr>
+</tbody>
+</table></div>
+<p>（<a
+href="https://www.buildmvpfast.com/api-costs/ai-video">buildmvpfast API
+costs</a>、<a
+href="https://www.atlascloud.ai/blog/guides/best-ai-video-generation-models-2026">Atlas
+Cloud</a>）</p>
+<p>概算（筆者試算、実運用のリテイク率で大きくブレる）:
+60秒動画を0.5秒カットで作ると120カット。各カット2秒生成として240秒分。Kling
+3.0
+なら約$24/本。ただし一発OK率が低いため実際は3〜5倍を見込む必要があり、かつ同一キャラが120カット保つ保証がない。</p>
+<h3 id="82-3dのコスト構造">8.2 3Dのコスト構造</h3>
+<p>シーンを一度組めば、カメラを増やすコストはほぼゼロ（レンダリング時間のみ）。120カットは「Timelineにカメラを120個置く」であって、追加の生成コストが発生しません。キャラは同一アセットなので、一貫性は「保証」ではなく「定義」です。</p>
+<h3 id="83-要求仕様との重なり">8.3 要求仕様との重なり</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>要求仕様</th>
+<th>AI動画</th>
+<th>3D</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1秒に1〜2カット</td>
+<td>カット数に比例してコスト増、一貫性リスク増</td>
+<td>追加コストほぼゼロ</td>
+</tr>
+<tr>
+<td>一貫した世界観・同一キャラ</td>
+<td>最も苦手。参照画像運用でも崩れる</td>
+<td>定義上保証される</td>
+</tr>
+<tr>
+<td>長期シリーズ・IP育成</td>
+<td>資産が蓄積しない</td>
+<td>キャラ・セット・モーションが資産化</td>
+</tr>
+<tr>
+<td>リテイク・後修正</td>
+<td>再生成（結果が変わる）</td>
+<td>パラメータ変更で決定論的</td>
+</tr>
+</tbody>
+</table></div>
+<p>要求仕様が、AI動画が最も苦手でかつ3Dが最も得意な領域に、ちょうど重なっています。</p>
+<hr />
+<h2 id="9-判断の決め手--両方の未来で正解になるか">9. 判断の決め手 —
+両方の未来で正解になるか</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>未来</th>
+<th>3Dルート</th>
+<th>AI完パケルート</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>寛容度が上がらない</td>
+<td>「AI叩きを受けない」が効いて勝つ</td>
+<td>負ける</td>
+</tr>
+<tr>
+<td>寛容度が上がる</td>
+<td>資産（キャラ・世界・リグ・モーションライブラリ）が残る</td>
+<td>全員が同じことをできるため差別化が消える。勝ちきれない</td>
+</tr>
+</tbody>
+</table></div>
+<p>非対称です。3Dルートはどちらの未来でも正解になり、AI完パケルートは片方で負けもう片方でも勝ちきれない。しかもフィードの59%がすでにAIである以上、後者の未来は半分到来しています。</p>
+<p>補強材料として、ツール依存のリスクがあります。OpenAIは2026年3月24日にSora終了を発表、4月26日にWeb／アプリを停止（APIは2026年9月24日終了）。アカウント関連データは期日後に完全削除。月800〜1200万ドルの計算コストに対し収益200万ドル未満だったと報じられ、2026年初頭には品質面でも計測可能なカテゴリでリーダーではなくなっていたとされます。2026年6月時点で後継の発表はありません（<a
+href="https://help.openai.com/en/articles/20001152-what-to-know-about-the-sora-discontinuation">OpenAI
+Help Center</a>、<a
+href="https://techxplore.com/news/2026-04-sora-shutdown-reveals-limits-ai.html">TechXplore</a>、<a
+href="https://miraflow.ai/blog/why-openai-shut-down-sora-2026">Miraflow</a>）。</p>
+<p>パイプラインの中核を外部モデルに置くと、それが消えたときにIPごと止まります。3Dアセットは自分のディスクにあります。</p>
+<hr />
+<h2 id="10-リスクと反論3dルートの弱点">10.
+リスクと反論（3Dルートの弱点）</h2>
+<h3 id="101-3dでもaiっぽいと言われるリスクは消えない">10.1
+3Dでも「AIっぽい」と言われるリスクは消えない</h3>
+<p>人間のAI動画識別精度は、動画のみの刺激で50.7%。統計的に当てずっぽうと区別できません（Communications
+of the ACM, 2025年9月）。別研究でも約51%。Runway の Turing Reel
+調査では9.5%しか確実に見分けられず、53%の消費者はAI改変動画を正しく識別できない（<a
+href="https://www.kapwing.com/resources/55-ai-generated-video-statistics-disclosure-detection-and-trust/">Kapwing
+統計まとめ</a>、<a
+href="https://arxiv.org/pdf/2605.24287">arXiv:2605.24287</a>）。</p>
+<p>裏返すと誤爆も同じだけ起きます。実際、100時間以上かけた人力作品がAI認定されて
+r/Art をBANされた事例（Ben
+Moran）があり、以後は匿名を希望する作家も出ています（<a
+href="https://www.howtogeek.com/before-accusing-an-artist-of-using-ai-read-this/">How-To
+Geek</a>、<a
+href="https://www.buzzfeednews.com/article/chrisstokelwalker/art-subreddit-illustrator-ai-art-controversy">BuzzFeed
+News</a>）。San Diego Comic-Con
+は2026年のアートショーでAI作品を全面禁止しています。</p>
+<p>完全な回避策は存在しません。最も効く防御は制作過程を出すこと（メイキング、タイムラプス、Unity画面、mocap撮影風景）。JCRの媒介分析で効いていたのが「労力が見えるか」である以上、理屈とも一致します。</p>
+<p>なお、上記の識別精度データはフォトリアル映像の話です。アニメ調AI動画は前述の破綻（動いた瞬間の3D的変形、指の破綻、瞬きの固着）が出やすく、実際にはもっと見抜かれやすいと考えるべきです。</p>
+<h3 id="102-初期コストが重い">10.2 初期コストが重い</h3>
+<p>パイプライン構築に数週間〜数ヶ月かかり、1本目のコストはAIより明確に高い。「まず伸びるか試したい」フェーズには不向きです。</p>
+<p>対策は、ネタの正解を探す作業とパイプラインを作る作業を分けること。</p>
+<h3 id="103-セルルックの選択は必須に近い">10.3
+セルルックの選択は必須に近い</h3>
+<p>3D受容史（2.1節）が示す通り、日本市場ではフルリアル3Dよりセルルックの方が受け入れられます。ここで手を抜くと、AI忌避を避けた先で3D忌避に当たります。</p>
+<hr />
+<h2 id="11-実行計画">11. 実行計画</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>期間の目安</th>
+<th>内容</th>
+<th>検証すること</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>〜2週間</td>
+<td>3Dは触らない。AIでも手描きでも既存素材でも可。「2秒で分かる」「最後まで見せる」「0.5〜1秒カット」の3条件だけ守ったネタを20本投げる</td>
+<td>ネタの当たり方だけ</td>
+</tr>
+<tr>
+<td>1</td>
+<td>当たりが1つ出たら</td>
+<td>そのフォーマット専用に3Dセットを組む。VRoid → UniVRM → Unity(URP +
+lilToon) + Cinemachine / Timeline。キャラ2〜3体、セット1つ</td>
+<td>1本を1日で出せるか</td>
+</tr>
+<tr>
+<td>2</td>
+<td>継続</td>
+<td>モーションライブラリ蓄積。自撮りmocap（Move One / Flow Studio /
+QuickMagic）で汎用モーション（驚く、指差す、ズッコケる、振り向く、ツッコむ）を50〜100個</td>
+<td>制作時間の逓減</td>
+</tr>
+<tr>
+<td>3</td>
+<td>定常</td>
+<td>AIを上流に固定配置（ネタ出し、絵コンテ、背景コンセプト、image-to-3D、リップシンク、音声）。下流（キャラ・モーション・カメラ・レンダリング）は3Dのまま</td>
+<td>週次の投稿本数</td>
+</tr>
+</tbody>
+</table></div>
+<p>開示方針: 最終画がAI生成でなければ、TikTok / YouTube
+のAIGCラベル義務には該当しません（対象はリアルな人物・声の合成であり、3Dレンダリングのアニメ表現ではない）。ただし日本の調査で66%が反発しているのは隠蔽なので、制作過程は積極的に見せる方が得です。「AIを使っていない」と主張するのではなく「どこで何を使ったか」を出すのが、JCRの知見とも日本の調査結果とも整合します。</p>
+<hr />
+<h2 id="12-付録-探しているフォーマットには名前がある">12. 付録:
+探しているフォーマットには名前がある</h2>
+<p>『tiktok-drama-research.md』で挙げられた条件</p>
+<ul>
+<li>単話でも完結</li>
+<li>全体として一貫した世界観</li>
+<li>全体を通してストーリーが少しずつ進行していく</li>
+</ul>
+<p>これはシチュエーション・コメディ（sitcom）の構造そのものです。固定の舞台、固定のキャラ、毎話独立、しかし通しで見ると関係が進む。「クラブあるある：すみで」が自然にそうなっていったのは、この構造に収束したからだと考えられます。</p>
+<p>そして sitcom
+は舞台を意図的に固定する形式なので、3Dの経済性と完全に噛み合います。セットを一度作れば全話で使い回せる。狙っているフォーマットと選ぼうとしている技術が、偶然ではなく構造的に一致しています。</p>
+<p>参考として、縦型ショートドラマの先行者ごっこ倶楽部（@gokko5club /
+株式会社GOKKO）は2021年結成、4年で累計100億回再生・SNS総フォロワー560万人。脚本・撮影・編集・投稿・マーケティング・視聴データ分析までワンチームで内製し、2025年2月には自社課金プラットフォームを開始してIP化を進めています（<a
+href="https://prtimes.jp/main/html/rd/p/000000054.000090916.html">PR
+TIMES</a>、<a
+href="https://xtrend.nikkei.com/atcl/contents/18/01271/00004/">日経クロストレンド</a>）。工程の内製化とIP化という方向性は、今回の3Dパイプライン内製と同じ発想です。</p>
+<hr />
+<h2 id="出典一覧">出典一覧</h2>
+<h3 id="消費者意識受容度">消費者意識・受容度</h3>
+<ul>
+<li><a
+href="https://www.canva.com/newsroom/news/marketing-ai-report-2026/">Canva
+Marketing AI Report 2026（Harris
+Poll、消費者3,547人・日本含む7カ国）</a></li>
+<li><a
+href="https://hai.stanford.edu/ai-index/2026-ai-index-report/public-opinion">Stanford
+HAI 2026 AI Index — Public Opinion</a></li>
+<li><a
+href="https://www.eweek.com/news/stanford-ai-index-2026-trust-gap-neuron/">Stanford
+AI Index 2026: The Trust Gap Hits Critical Levels（eWeek）</a></li>
+<li><a
+href="https://www.pewresearch.org/short-reads/2026/03/12/key-findings-about-how-americans-view-artificial-intelligence/">Pew
+Research Center: Key findings about how Americans view
+AI（2026-03-12）</a></li>
+<li><a
+href="https://www.digitalapplied.com/blog/pew-americans-and-ai-2026-data-marketing-implications">Pew:
+Half of Americans Now Use AI Chatbots in 2026（Digital
+Applied）</a></li>
+<li><a
+href="https://news.gallup.com/poll/708224/gen-adoption-steady-skepticism-climbs.aspx">Gallup:
+Gen Z's AI Adoption Steady, but Skepticism Climbs</a></li>
+<li><a
+href="https://www.askattest.com/blog/research/gen-z-media-consumption">Attest:
+Gen Z media consumption 2026</a></li>
+<li><a
+href="https://www.adweek.com/adweek-wire/new-shift-report-gen-z-is-embracing-ai-and-sounding-the-alarm-on-it/">Adweek:
+Gen Z Is Embracing AI and Sounding the Alarm on It</a></li>
+<li><a
+href="https://www.emarketer.com/content/shoppers-aren-t-impressed-by-ai-generated-marketing">eMarketer:
+Shoppers aren't impressed by AI-generated marketing</a></li>
+<li><a
+href="https://www.koinsights.com/the-authenticity-premium-why-consumers-are-rejecting-ai-generated-content/">KO
+Insights: The Authenticity Premium</a></li>
+<li><a href="https://www.iab.com/insights/the-ai-gap-widens/">IAB: The
+AI Ad Gap Widens</a></li>
+</ul>
+<h3 id="日本の調査プラットフォーム">日本の調査・プラットフォーム</h3>
+<ul>
+<li><a
+href="https://prtimes.jp/main/html/rd/p/000000215.000144334.html">システムリサーチ
+AI生成画像・動画に関する意識調査（2026年6月、PR TIMES）</a></li>
+<li><a
+href="https://mantan-web.jp/prtimes/article/20260704prt00m200000118a.html">同調査（まんたんウェブ）</a></li>
+<li><a
+href="https://www.itmedia.co.jp/aiplus/article/2602/18/1260218132/">pixiv
+ガイドライン改定へ（ITmedia、2026-02-18）</a></li>
+<li><a
+href="https://note.com/texture_lora_lab/n/nc847cb2dd546">AI作品の投稿でBANされないための完全チェックリスト【2026年版】</a></li>
+</ul>
+<h3 id="エンゲージメントへの実測影響">エンゲージメントへの実測影響</h3>
+<ul>
+<li><a
+href="https://academic.oup.com/jcr/advance-article/doi/10.1093/jcr/ucag013/8672493?login=false">Made
+With AI: Consumer Engagement With Social Media Containing AI
+Disclosures（Journal of Consumer Research, 2026）</a></li>
+<li><a
+href="https://www.sciencedirect.com/science/article/abs/pii/S0747563224003169">AI
+in the spotlight: The impact of AI disclosure on user engagement in
+short-form videos（Computers in Human Behavior）</a></li>
+<li><a
+href="https://link.springer.com/article/10.1007/s12525-026-00883-2">AI
+content labeling and user engagement on social media（Electronic
+Markets, 2026）</a></li>
+<li><a
+href="https://www.tandfonline.com/doi/full/10.1080/10447318.2026.2618553">How
+Users Perceive and React to Labeled AI-Generated Content（縦断研究,
+2026）</a></li>
+</ul>
+<h3 id="プラットフォームポリシー">プラットフォームポリシー</h3>
+<ul>
+<li><a
+href="https://techcrunch.com/2026/07/20/youtube-clarifies-policies-around-ai-slop-and-upsetting-videos/">TechCrunch:
+YouTube clarifies policies around AI slop and upsetting
+videos（2026-07-20）</a></li>
+<li><a
+href="https://www.androidheadlines.com/2026/07/youtube-monetization-rules-ai-slop-inauthentic-content.html">Android
+Headlines: YouTube Targets AI Slop（2026-07）</a></li>
+<li><a
+href="https://newsroom.tiktok.com/tiktok-ssa-shares-more-ways-to-spot-shape-and-understand-ai-generated-content?lang=en-ZA">TikTok
+Newsroom: More ways to spot, shape and understand AI-generated
+content</a></li>
+<li><a
+href="https://www.techtimes.com/articles/320282/20260713/tiktok-has-labeled-3-billion-ai-videos-here-what-research-says-they-miss.htm">TikTok
+Has Labeled 3 Billion AI Videos（Tech Times, 2026-07-13）</a></li>
+<li><a
+href="https://www.auditsocials.com/blog/tiktok-ai-content-disclosure-rules-2026">TikTok
+AI Content Policy 2026: 4-Tier Labels &amp; Penalties</a></li>
+<li><a
+href="https://storrito.com/resources/tiktoks-2026-ai-labeling-rules-and-what-they-signal-for-platform-governance/">TikTok's
+2026 AI labeling rules（Storrito）</a></li>
+</ul>
+<h3 id="供給飽和">供給飽和</h3>
+<ul>
+<li><a
+href="https://media-innovation.jp/article/2026/06/24/143442.html">TikTokもAI生成動画が氾濫、新規ユーザーのフィードは6割（Kapwing調査
+/ Media Innovation, 2026-06-24）</a></li>
+</ul>
+<h3 id="3dcgボカロcgiの受容史">3DCG・ボカロ・CGIの受容史</h3>
+<ul>
+<li><a
+href="https://realsound.jp/movie/2021/08/post-841121.html">日本のフル3DCGアニメはなぜ酷評されるのか（Real
+Sound）</a></li>
+<li><a
+href="https://www.sublimation.co.jp/column/works_20220311/">セルルックアニメーションっていったい何？（サブリメイション）</a></li>
+<li><a
+href="https://www.lang.nagoya-u.ac.jp/media/public/200803/sano.pdf">3DCG
+使用法の違いに起因するアニメと非アニメの境界線の考察（名古屋大学）</a></li>
+<li><a
+href="https://spollup.jp/column/why-vocaloid-was-accepted/">ボーカロイドが受け入れられた理由（スポルアップ）</a></li>
+<li><a
+href="https://utai.tech/posts/vocaloid/history">ボカロの歴史（utai.tech）</a></li>
+<li><a
+href="https://www.denofgeek.com/movies/a-brief-history-of-practical-effects-in-cinema-in-10-movies/">A
+Brief History of Practical Effects in Cinema（Den of Geek）</a></li>
+<li><a
+href="https://www.creativebloq.com/features/defending-cgi-in-movies">CGI
+in movies, what's not to like?（Creative Bloq）</a></li>
+</ul>
+<h3 id="ai-ip-の成功失敗事例">AI IP の成功・失敗事例</h3>
+<ul>
+<li><a
+href="https://dotesports.com/streaming/news/neuro-most-subscribed-twitch">AI
+VTuber Neuro-sama becomes Twitch's Most Subscribed Channel（Dot Esports,
+2026-01）</a></li>
+<li><a href="https://dl.acm.org/doi/10.1145/3772318.3790891">My Favorite
+Streamer is an LLM: Discovering, Bonding, and Co-Creating in AI VTuber
+Fandom（CHI 2026）</a></li>
+<li><a
+href="https://arxiv.org/html/2509.10427v1">同論文プレプリント（arXiv:2509.10427）</a></li>
+<li><a
+href="https://www.billboard.com/pro/ai-music-artists-charts-popular/">Billboard:
+AI Music Artists Are on the Charts, But They Aren't That Popular —
+Yet</a></li>
+<li><a
+href="https://www.forbes.com/sites/conormurray/2025/11/05/creator-behind-billboard-charting-ai-artist-xania-monet-defends-her-music-against-backlash-from-kehlani-and-more/">Forbes:
+Creator behind Billboard-charting AI artist Xania Monet defends her
+music</a></li>
+<li><a
+href="https://www.bnnbloomberg.ca/business/artificial-intelligence/2026/07/17/creator-defends-ai-actor-tilly-norwood-after-feature-film-backlash/">BNN
+Bloomberg: Creator defends AI 'actor' Tilly Norwood after feature film
+backlash（2026-07-17）</a></li>
+<li><a href="https://www.cbc.ca/lite/story/1.7647478">CBC: Meet Tilly
+Norwood, the AI 'actress' prompting backlash</a></li>
+<li><a
+href="https://news.yahoo.co.jp/expert/articles/2240f963d6dd2f301fe4b9a1946b1b32934c3533">「AIでお手軽に」じゃなかった「ツインズひなひま」（まつもとあつし
+/ Yahoo!ニュース）</a></li>
+<li><a
+href="https://ledge.ai/articles/twins_hinahima_2025spring">フロンティアワークス、AI活用で挑む新作アニメ「ツインズひなひま」（Ledge.ai）</a></li>
+<li><a
+href="https://www.advertimes.com/20250930/article515782/">本格"AIアニメ"『ツインズひなひま』は業界に変化をもたらすか（AdverTimes）</a></li>
+</ul>
+<h3 id="法制度">法制度</h3>
+<ul>
+<li><a
+href="https://presenc.ai/research/ai-training-data-lawsuit-tracker-2026">AI
+Training Data Lawsuit Tracker 2026（Presenc AI）</a></li>
+<li><a
+href="https://terms.law/2026/01/15/midjourney-commercial-use-rights-complete-2026-guide/">Midjourney
+Commercial Use Rights: 2026 Guide（Thaler cert denial 含む）</a></li>
+<li><a href="https://www.mckoolsmith.com/newsroom-ailitigation-46">AI
+Infringement Case Updates（McKool Smith）</a></li>
+<li><a
+href="https://techweez.com/2026/07/07/midjourney-disney-universal-warner-copyright-lawsuit/">Disney,
+Universal, and Warner Bros. Sue Midjourney（Techweez,
+2026-07-07）</a></li>
+</ul>
+<h3
+id="技術mocapカメラ推定3d生成ai動画">技術（mocap・カメラ推定・3D生成・AI動画）</h3>
+<ul>
+<li><a href="https://arxiv.org/pdf/2405.16822">Vidu4D: Single Generated
+Video to High-Fidelity 4D Reconstruction（arXiv:2405.16822）</a></li>
+<li><a href="https://arxiv.org/pdf/2605.12027">4DVGGT-D: 4D Visual
+Geometry Transformer（arXiv:2605.12027）</a></li>
+<li><a href="https://arxiv.org/pdf/2507.21045">Reconstructing 4D Spatial
+Intelligence: A Survey（arXiv:2507.21045）</a></li>
+<li><a
+href="https://www.strayspark.studio/blog/ai-mocap-indie-developers-2026-comparison">AI
+Motion Capture for Indie Devs in 2026（StraySpark）</a></li>
+<li><a
+href="https://www.blog.brightcoding.dev/2026/02/20/easymocap-the-revolutionary-toolbox-for-3d-motion-capture">EasyMocap:
+The Revolutionary Toolbox for 3D Motion Capture</a></li>
+<li><a href="https://www.quickmagic.ai/">QuickMagic: AI Motion Capture
+from Video &amp; Text</a></li>
+<li><a
+href="https://www.3daistudio.com/state-of-ai-3d-generation-2026">State
+of AI 3D Generation 2026（3DAI Studio）</a></li>
+<li><a
+href="https://www.indiehackers.com/post/best-ai-3d-model-generator-in-2026-i-tested-9-of-the-best-and-here-is-what-i-found-70ecab1a0a">Best
+AI 3D Model Generator in 2026: I Tested 9（Indie Hackers）</a></li>
+<li><a
+href="https://magazine.reallusion.com/2026/04/08/reallusion-announces-2026-vision-redefining-3d-production-through-the-power-of-hybrid-ai/">Reallusion
+Announces 2026 Vision: Redefining 3D Production through Hybrid
+AI</a></li>
+<li><a
+href="https://beforesandafters.com/2026/04/14/the-power-of-hybrid-ai-reallusion-announces-2026-vision/">The
+Power of Hybrid AI: Reallusion 2026 Vision（befores &amp;
+afters）</a></li>
+<li><a href="https://note.com/dlzig7/n/n85faea168133?hl=en">How to
+Create an Environment for Filming VRoid/VRM in Unity（note /
+DEL-ZIG）</a></li>
+<li><a
+href="https://extra-ordinary.tv/2020/07/20/setting-the-scene-vroid-unity-for-animated-cartoons/">Setting
+the scene: VRoid + Unity for animated cartoons（Extra Ordinary, the
+Series）</a></li>
+<li><a href="https://www.buildmvpfast.com/api-costs/ai-video">AI Video
+Generation API Pricing（July 2026, buildmvpfast）</a></li>
+<li><a
+href="https://www.atlascloud.ai/blog/guides/best-ai-video-generation-models-2026">Best
+AI Video Generation Models in 2026（Atlas Cloud）</a></li>
+<li><a href="https://note.com/ai_mitsukaru/n/n352b38c849d7">動画生成AI
+アニメ編 おすすめランキング 2026（note / ミツカル）</a></li>
+<li><a
+href="https://cochi-404.hatenablog.com/entry/2026/03/04/152956">2026年最新
+アニメ風AIモデルの未来はどう進化するのか（Cochi AI Blog）</a></li>
+<li><a
+href="https://help.openai.com/en/articles/20001152-what-to-know-about-the-sora-discontinuation">What
+to know about the Sora discontinuation（OpenAI Help Center）</a></li>
+<li><a
+href="https://techxplore.com/news/2026-04-sora-shutdown-reveals-limits-ai.html">Sora
+shutdown reveals costly limits of AI video generation（TechXplore,
+2026-04）</a></li>
+<li><a
+href="https://miraflow.ai/blog/why-openai-shut-down-sora-2026">Why
+OpenAI Killed Sora（Miraflow）</a></li>
+</ul>
+<h3 id="ai検出精度誤爆">AI検出精度・誤爆</h3>
+<ul>
+<li><a
+href="https://www.kapwing.com/resources/55-ai-generated-video-statistics-disclosure-detection-and-trust/">55
+AI-Generated Video Statistics: Disclosure, Detection, and
+Trust（Kapwing）</a></li>
+<li><a href="https://arxiv.org/pdf/2605.24287">Humans Cannot Detect
+AI-Generated Media But Communities May（arXiv:2605.24287）</a></li>
+<li><a
+href="https://www.howtogeek.com/before-accusing-an-artist-of-using-ai-read-this/">Before
+Accusing an Artist of Using AI, Read This（How-To Geek）</a></li>
+<li><a
+href="https://www.buzzfeednews.com/article/chrisstokelwalker/art-subreddit-illustrator-ai-art-controversy">A
+Huge Subreddit Suspended A User For Posting AI Art, But The Work Is 100%
+Human-Made（BuzzFeed News）</a></li>
+<li><a
+href="https://www.aol.com/articles/san-diego-comic-con-draws-003900609.html">San
+Diego Comic-Con Draws a Line: No AI Art Allowed at 2026 Event</a></li>
+</ul>
+<h3 id="縦型ショートドラマ市場">縦型ショートドラマ市場</h3>
+<ul>
+<li><a
+href="https://prtimes.jp/main/html/rd/p/000000054.000090916.html">ごっこ倶楽部、100億回再生を樹立（株式会社GOKKO
+/ PR TIMES）</a></li>
+<li><a
+href="https://xtrend.nikkei.com/atcl/contents/18/01271/00004/">ごっこ倶楽部は課金型ドラマを年50本以上制作（日経クロストレンド）</a></li>
+<li><a
+href="https://holytech.jp/column/short-movie-case-study-global-latest-tiktok-2026-guide/">ショート動画のシリーズ化｜日本企業の成功事例3選（HolyTech）</a></li>
+<li><a
+href="https://nightension.com/shortdramalab/blog38">AIキャラクター連続投稿型ショートドラマ
+新フォーマット事例15選 2026年版</a></li>
+</ul>
+
+</article>
+
+<footer>AIを完パケにするか、3Dを完パケにするか / 原文Markdownをそのまま整形表示したページ</footer>
+
+</body>
+</html>

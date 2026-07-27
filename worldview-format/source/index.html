@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>原文: 世界観適性とフォーマットの集中調査</title>
+<style>
+  :root{
+    --accent:#0D9488;
+    --border:#E2E8F0;
+    --text:#0F172A;
+    --text-muted:#475569;
+    --text-subtle:#64748B;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; width:100%;
+    background:#FFFFFF; color:var(--text);
+    overflow-x:hidden;
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans",system-ui,sans-serif;
+    line-height:1.9;
+  }
+  p,li,td,th,blockquote{ overflow-wrap:anywhere; }
+  a{ color:var(--accent); }
+
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    background:rgba(255,255,255,.94);
+    backdrop-filter:saturate(180%) blur(8px);
+    border-bottom:1px solid var(--border);
+    padding:11px 20px;
+  }
+  .topbar .kind{
+    font-size:11px; font-weight:700; letter-spacing:.1em;
+    color:#fff; background:var(--accent);
+    border-radius:999px; padding:3px 11px;
+  }
+  .topbar a{ font-size:13px; font-weight:600; text-decoration:none; color:var(--text-muted); }
+  .topbar a:hover{ color:var(--accent); text-decoration:underline; }
+  .topbar .sep{ color:#CBD5E1; font-size:12px; }
+  .topbar .file{
+    margin-left:auto;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:11px; color:var(--text-subtle);
+  }
+
+  .doc{
+    max-width:760px;
+    margin:0 auto;
+    padding:34px 20px 120px;
+    font-size:15px;
+  }
+  .doc h1{
+    font-size:25px; line-height:1.5;
+    margin:0 0 26px;
+    padding-bottom:14px;
+    border-bottom:3px solid var(--accent);
+  }
+  .doc h2{
+    font-size:19.5px; line-height:1.55;
+    margin:52px 0 14px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--border);
+  }
+  .doc h3{ font-size:16.5px; margin:34px 0 10px; }
+  .doc h4{ font-size:14.5px; margin:26px 0 8px; color:var(--text-muted); }
+  .doc p{ margin:14px 0; }
+  .doc ul,.doc ol{ padding-left:24px; margin:14px 0; }
+  .doc li{ margin:7px 0; }
+  .doc blockquote{
+    margin:18px 0;
+    border-left:4px solid var(--accent);
+    background:#F8FAFC;
+    border-radius:0 8px 8px 0;
+    padding:2px 18px;
+    color:var(--text-muted);
+    font-size:14px;
+  }
+  .doc hr{ border:none; border-top:1px solid var(--border); margin:44px 0; }
+  .doc table{
+    border-collapse:collapse; width:100%;
+    font-size:13px; line-height:1.7; min-width:520px;
+  }
+  .doc .table-wrap{
+    overflow-x:auto;
+    border:1px solid var(--border);
+    border-radius:10px;
+    margin:18px 0;
+  }
+  .doc th,.doc td{
+    text-align:left; padding:9px 12px;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+  }
+  .doc thead th{ background:#F1F5F9; font-size:12.5px; color:var(--text-muted); }
+  .doc tbody tr:last-child td{ border-bottom:none; }
+  .doc code{
+    background:#F1F5F9; border-radius:5px; padding:1px 6px;
+    font-size:12.5px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  .doc pre{
+    background:#0F172A; color:#E2E8F0;
+    border-radius:10px; padding:14px 16px;
+    font-size:12.5px; line-height:1.7;
+    overflow-x:auto;
+  }
+  .doc pre code{ background:none; color:inherit; padding:0; }
+  .doc img{ max-width:100%; height:auto; }
+
+  footer{
+    text-align:center; font-size:12px; color:var(--text-subtle);
+    padding:0 20px 80px;
+  }
+
+  @media (max-width:640px){
+    .topbar{ padding:10px 14px; gap:10px; }
+    .topbar .file{ width:100%; margin-left:0; }
+    .doc{ padding:26px 14px 100px; font-size:14.5px; }
+    .doc h1{ font-size:21px; }
+    .doc h2{ font-size:17.5px; margin-top:40px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <span class="kind">原文</span>
+  <a href="../">図解に戻る</a>
+  <span class="sep">/</span>
+  <a href="../../">まとめトップ</a>
+  <span class="sep">/</span>
+  <a href="../../sources/report-2026-07-27-worldview-format.md">Markdown原本</a>
+  <span class="file">report-2026-07-27-worldview-format.md</span>
+</nav>
+
+<article class="doc">
+<h1
+id="世界観適性とフォーマットの集中調査--そんなフォーマットはあるのかへの回答">世界観適性とフォーマットの集中調査
+— 「そんなフォーマットはあるのか？」への回答</h1>
+<p>調査日: 2026-07-27 対象の問い:
+観察メモ末尾の「知識・教養×ドラマの世界観適性（よりもい○/ごちうさ△/転スラ×）」と「単話でも完結+一貫した世界観+ストーリーが少しずつ進行するフォーマットはあるのか」
+前提: 業務委託によるAI動画IP創出研究。新規IPをショートアニメで育てる文脈
+調査体制: Sonnet 4本並列（長編IPの世界観マッピング / 動画ネイティブ事例
+/ フォーマット類型学 / 知識領域の選定）。各調査の全文は付録</p>
+<hr />
+<h2 id="0-統合結論">0. 統合結論</h2>
+<ol type="1">
+<li>「転スラは無理」の直感は正しい。ただし理由はメモの想定（現実接地性の欠如）より一段深い。真の軸は「知識の現実転写可能性」—
+作中の知識ロジックが現実の法則の翻案になっているか。ダンジョン飯（架空世界×現実の調理科学・生物学）と天地創造デザイン部（架空の神様設定×現実の進化生物学）が成立している以上、世界観が架空であること自体は失格要因ではない。転スラが知識ものとして機能しないのは、スキル・魔法体系が作者のオリジナルルールで、視聴者が「学べた」ものを現実に持ち帰れないから。</li>
+<li>これは新規IP設計にとって朗報。差別化しやすい架空世界を採用してよい。条件は、内部ロジックに現実の科学法則を最低1つアンカーとして通すこと（ダンジョン飯ライセンス）。</li>
+<li>「そんなフォーマットはあるのか」への回答:
+ある。ただしショート縦型に最適な実装は、前回調査の二層構造（単話量産+ご褒美ストーリー回）そのままではなく、その修正版。進行を「ストーリーの因果」ではなく「世界のカタログ的拡張（新キャラ・新要素の追加）+キャラ関係の点描的な不可逆微変化」で表現する。X-Files型の「神話回への隔離」は一気見前提の設計で、刹那消費のフィードとは相性が落ちる。ストーリーアーク解禁はSUMIDe式に「ファンダム形成後のマイルストーンイベント」として温存する。</li>
+<li>動画ネイティブ側の重要な負の発見:
+知識系で最大規模のチャンネル（Kurzgesagt
+2,300万、ケビンズ、无穷小亮）はいずれも「知識×パーソナリティ/ブランド」であって「知識×ドラマ」ではない。世界観+知識+ストーリー進行の三立を高い教養密度でやっている実例はほぼ空白。＝メモの狙いは未占有だが、実証も未了（ハイリスク・ハイリターン）。</li>
+<li>知識領域は「職業もの・業界もの」がメタ領域として最有力。舞台=知識装置になり、二層構造と1話1知識を自然に満たし、業界別に見れば飽和が薄い。医療・金融はYMYLリスクで立ち上げ期は回避。</li>
+</ol>
+<h2 id="1-世界観適性--修正された3軸">1. 世界観適性 — 修正された3軸</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>軸</th>
+<th>定義</th>
+<th>メモからの変更</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>①知識の現実転写可能性</td>
+<td>作中の知識ロジックが現実の法則（生物・化学・物理・進化論等）の翻案か。視聴者が現実に持ち帰れるか</td>
+<td>旧「現実接地性」を置換。世界が架空でもよい</td>
+</tr>
+<tr>
+<td>②知識の物語推進力</td>
+<td>知識が背景トリビアでなく、謎解き・生存・対立解決の直接手段か</td>
+<td>維持</td>
+</tr>
+<tr>
+<td>③1話1知識の分解可能性</td>
+<td>単話1トピックで完結し、全体ストーリーが並走できる粒度か</td>
+<td>維持</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>検証17作品のマッピングは付録1参照。要点:
+Dr.STONE/チ。/JIN=3軸すべて極高で成功。ダンジョン飯・はたらく細胞・天地創造デザイン部=架空世界だが①が高く成功。ごちうさ=①②が低く「知識もの」としてはギリギリ（雰囲気で成立）。転スラ=①が低く知識ものとして弱い（既存IPの世界観解説番組なら可、というメモの区別も正しい）。</li>
+<li>フリーレンは境界例として別枠:
+オリジナル魔法体系だが主題が「喪失・時間」という人文テーマ。知識×ドラマの成功基準で評価しない（企画時にこの中間ジャンルと混同しないこと）。</li>
+</ul>
+<h2 id="2-フォーマット類型--8型と縦型ショートへの翻訳可否">2.
+フォーマット類型 — 8型と縦型ショートへの翻訳可否</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>類型</th>
+<th>代表</th>
+<th>進行の仕掛け</th>
+<th>縦型可否</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>②微進行型</td>
+<td>こち亀・サザエさん時空</td>
+<td>キャラ不変、進行は時代背景に負わせる</td>
+<td>◎ 最有力</td>
+</tr>
+<tr>
+<td>⑤カタログ拡張型</td>
+<td>SCP・Backrooms</td>
+<td>進行=新項目の追加（図鑑的拡張、因果なし）</td>
+<td>◎ 最有力</td>
+</tr>
+<tr>
+<td>⑥無言サーガ型</td>
+<td>Skibidi Toilet</td>
+<td>絵だけで勢力・技術の不可逆拡大を示す</td>
+<td>○</td>
+</tr>
+<tr>
+<td>⑧連作短編型</td>
+<td>ホームズ</td>
+<td>関係性の点描的変化のみ、世界は静止</td>
+<td>○</td>
+</tr>
+<tr>
+<td>①MOTW+神話回</td>
+<td>X-Files(62:38)・House</td>
+<td>進行をご褒美回に隔離</td>
+<td>△ 一気見前提</td>
+</tr>
+<tr>
+<td>⑦UGCロア型</td>
+<td>ホロライブ</td>
+<td>進行の解釈権をコミュニティに委譲</td>
+<td>△ ファンダム形成後</td>
+</tr>
+<tr>
+<td>③モード分離型</td>
+<td>銀魂</td>
+<td>ギャグ単話とシリアス長編を別モード並存</td>
+<td>× フィードのブランド一貫性が崩れる</td>
+</tr>
+<tr>
+<td>④学年進行型</td>
+<td>けいおん・ごちうさ</td>
+<td>超低速の不可逆時間軸+卒業で回収</td>
+<td>× 半年以上の継続コミット前提</td>
+</tr>
+</tbody>
+</table></div>
+<p>推奨配合: ベース②（世界観・キャラ完全固定、知識トピックのみ回転）+
+⑤（毎N話ごとに新キャラ・新要素を1つ追加=「世界が育ってる感」を因果なしで演出）+
+⑧（キャラ関係だけ不可逆かつ超低速に変化）。トーンは常に一定。神話回・卒業回のような一気見前提の山場は作らない。</p>
+<p>この配合の最大の利点は「難易度爆上がり」問題の直接解決:
+毎話ストーリーを進める脚本力が不要になり、進行は追加的な世界拡張が担う。①知識の物語推進力が弱い題材でも②+⑤の力で補える。さらにカタログ拡張=定期的な新アセット1個の追加であり、3D制作パイプライン（セット・キャラの資産再利用）と経済的に完全に噛み合う。</p>
+<p>前回調査の二層構造との整合:
+テイペン/カレコレ/SUMIDeの「ご褒美ストーリー回」はYouTube中心（登録・通知が効く環境）の実装。純フィード消費のTikTokではカタログ拡張を主、ストーリーアークはSUMIDe式のマイルストーン解禁（例:「後半は40万人達成後」）として運用するのが整合的。</p>
+<h2 id="3-動画ネイティブの実装6型付録2詳細">3.
+動画ネイティブの実装6型（付録2詳細）</h2>
+<p>①素キャラ掛け合い解説（ケビンズ/ゆっくり:
+低コスト高再現、世界観なし）②本人実演（无穷小亮:
+属人的）③個人ペルソナ寸劇（TikTok歴史寸劇:
+枯渇早い）④世界観ブランド（Kurzgesagt/OverSimplified:
+教養密度高いがドラマなし）⑤あるある寸劇+雑学埋込（テイコウペンギン）⑥キャラ主導ドラマ+メタ知識（フラグちゃん:
+量産の型化が困難）。</p>
+<p>判定:
+新規ショートアニメIPは⑤を量産エンジンに⑥のキャラ関係緩進行を薄く重ねるハイブリッド。ただしフラグちゃん・テイペンとも「知識」は舞台装置であって教養密度は低い点が要注意
+—
+教養密度を上げた三立の実例は空白であり、狙う場合は①軸（現実転写可能性）の高い題材選定で難易度を下げるべき。</p>
+<h2 id="4-知識領域の選定付録3詳細">4. 知識領域の選定（付録3詳細）</h2>
+<ul>
+<li>メタ領域として職業もの・業界ものが最有力:
+舞台=知識装置、あるある単話+キャリア/謎の通底ストーリーの二層を自然に持て、業界単位では未開拓が無数（テイペン=ブラック企業一般職、SUMIDe=クラブ、アパレる=アパレルが既占有）。</li>
+<li>回避:
+医療・金融（YMYL、監修コスト極大）。雑学・語学（最飽和、知識が飾りになる）。</li>
+<li>エージェント提案の未占有候補（推測ベース、鵜呑みにしない）:
+特殊清掃（事件完結性は高いがブランドのダークさに注意）、損保事故調査員（1話1事故のミステリー構造、知識の物語推進力が高い）、動物園・水族館飼育員（1話1種、家族層、炎上低）、気象・防災、司法通訳。</li>
+<li>選定基準: 二層構造の再現性 / 知識の物語推進力 / 1話1知識分解性 /
+監修コスト対飽和度 / YMYL回避。</li>
+</ul>
+<h2 id="5-新規ip設計レシピ統合">5. 新規IP設計レシピ（統合）</h2>
+<ol type="1">
+<li>世界観:
+架空でよい。ただし現実法則のアンカーを最低1つ通す（ダンジョン飯ライセンス）。「舞台=業界・専門領域」にすると知識装置とセット経済性を同時に得る</li>
+<li>単話: あるある寸劇 or 1事案解決 +
+1知識で完結（②型）。知識は謎解き・解決の手段に置く（背景トリビア禁止）</li>
+<li>進行: 毎N話の新キャラ・新要素追加（⑤型カタログ拡張）+
+キャラ関係の超低速不可逆変化（⑧型）。トーン一定</li>
+<li>ストーリーアーク:
+ファンダム形成後にマイルストーン解禁（SUMIDe式）。立ち上げ期には作らない</li>
+<li>3D資産との整合:
+固定セット+固定キャラ+定期的な新アセット1個、はセルルック3Dパイプラインの資産再利用と構造的に一致</li>
+</ol>
+<h2 id="6-本調査の限界">6. 本調査の限界</h2>
+<ul>
+<li>Sonnet中心の軽量パス。Sam
+O'Nellaの規模等一部数値は未確認、未占有領域ランキングは推測ベース</li>
+<li>「教養密度の高い三立IP」の空白は「未開拓の機会」とも「需要が存在しない」とも読める。Phase
+0的なネタ検証（低コスト単話で題材別の維持率を測る）で判定するのが先</li>
+</ul>
+<hr />
+<h1 id="付録-各調査の全文">付録: 各調査の全文</h1>
+<hr />
+<h1 id="長編ipの世界観マッピング">長編IPの世界観マッピング</h1>
+<h1
+id="知識ドラマipマッピングと適性軸の検証">知識×ドラマIPマッピングと適性軸の検証</h1>
+<h2 id="マッピング表">マッピング表</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>作品</th>
+<th>知識領域</th>
+<th>世界観</th>
+<th>現実転写可能性</th>
+<th>知識の物語推進力</th>
+<th>成否</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dr.STONE</td>
+<td>化学・物理・科学史</td>
+<td>現実(文明ゼロから再建)</td>
+<td>極高(現実科学そのもの)</td>
+<td>極高(発明=生存の鍵)</td>
+<td>成功</td>
+</tr>
+<tr>
+<td>はたらく細胞</td>
+<td>免疫学</td>
+<td>架空(擬人化ミクロ世界)</td>
+<td>高(細胞機能は科学的事実の翻案)</td>
+<td>高(病原体=敵として機能)</td>
+<td>成功</td>
+</tr>
+<tr>
+<td>ダンジョン飯</td>
+<td>料理科学・生物学</td>
+<td>架空(ファンタジー)</td>
+<td>高(調理の論理=現実の生物・化学法則)</td>
+<td>高(下処理知識=生存戦略)</td>
+<td>成功(最重要反例)</td>
+</tr>
+<tr>
+<td>チ。</td>
+<td>天文学・科学史</td>
+<td>半架空(史実弾圧をモデル化)</td>
+<td>極高(地動説の論証構造そのもの)</td>
+<td>極高(知識探求=命題)</td>
+<td>成功</td>
+</tr>
+<tr>
+<td>ゴールデンカムイ</td>
+<td>民俗学・サバイバル術</td>
+<td>現実(明治期史実)</td>
+<td>極高</td>
+<td>高</td>
+<td>成功</td>
+</tr>
+<tr>
+<td>もやしもん</td>
+<td>微生物学</td>
+<td>現実+擬人化菌</td>
+<td>高</td>
+<td>中</td>
+<td>成功(ニッチ安定)</td>
+</tr>
+<tr>
+<td>銀の匙</td>
+<td>農業・畜産</td>
+<td>現実</td>
+<td>極高</td>
+<td>中</td>
+<td>成功</td>
+</tr>
+<tr>
+<td>宇宙兄弟</td>
+<td>宇宙工学</td>
+<td>現実</td>
+<td>極高</td>
+<td>高</td>
+<td>成功</td>
+</tr>
+<tr>
+<td>JIN-仁-</td>
+<td>医学史</td>
+<td>現実(タイムスリップ)</td>
+<td>極高</td>
+<td>極高</td>
+<td>成功</td>
+</tr>
+<tr>
+<td>美味しんぼ</td>
+<td>料理</td>
+<td>現実</td>
+<td>極高</td>
+<td>高</td>
+<td>成功(長寿・近年論争あり)</td>
+</tr>
+<tr>
+<td>天地創造デザイン部</td>
+<td>進化生物学</td>
+<td>架空(神の設計部)</td>
+<td>高(進化的制約=現実物理法則)</td>
+<td>高(お題解決=進化ロジック)</td>
+<td>成功(重要反例)</td>
+</tr>
+<tr>
+<td>映像研には手を出すな!</td>
+<td>アニメ制作・メカ設定</td>
+<td>現実+空想メカ</td>
+<td>高</td>
+<td>高</td>
+<td>成功</td>
+</tr>
+<tr>
+<td>宇宙よりも遠い場所</td>
+<td>南極観測</td>
+<td>現実</td>
+<td>極高</td>
+<td>中</td>
+<td>成功(メモの基準例)</td>
+</tr>
+<tr>
+<td>ちはやふる</td>
+<td>競技かるた・和歌</td>
+<td>現実</td>
+<td>極高</td>
+<td>高</td>
+<td>成功</td>
+</tr>
+<tr>
+<td>ごちうさ</td>
+<td>喫茶・日常</td>
+<td>現実(空気系)</td>
+<td>低〜中</td>
+<td>低</td>
+<td>ギリギリ成立(知識より雰囲気)</td>
+</tr>
+<tr>
+<td>フリーレン</td>
+<td>魔法体系・時間論</td>
+<td>架空</td>
+<td>低〜中(オリジナル体系だが人文テーマが中心)</td>
+<td>中(知識より喪失の物語)</td>
+<td>成功だが「知識もの」としては境界例</td>
+</tr>
+<tr>
+<td>転スラ</td>
+<td>スキル・魔物生態・国家運営</td>
+<td>架空(異世界)</td>
+<td>低(作者オリジナルルール、現実法則の翻訳でない)</td>
+<td>中(ゲーム的パワーアップが主)</td>
+<td>知識ものとしては弱い(世界観解説番組としてなら可)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="修正された適性軸">修正された適性軸</h2>
+<p>メモの直感（現実接地性）は<strong>部分的に誤り</strong>。ダンジョン飯・天地創造デザイン部という「架空世界だが知識は現実原理」の成功例が存在するため、真の軸は以下の3つに再定義できる。</p>
+<ol type="1">
+<li><strong>知識の現実転写可能性</strong>（旧・現実接地性の代替）：世界観そのものが現実か架空かではなく、作中の知識ロジックが現実の科学的法則（生物学・化学・物理・進化論など）を参照・転写しているか。ダンジョン飯の「毒抜き」「タンパク質変性」、天地創造デザイン部の「進化のコスト制約」は架空生物に現実法則を適用している。転スラのスキル・魔法体系は作者が自由に設計したオリジナルルールで現実法則の翻訳ではないため、視聴者に「学べた」実感を与えにくい＝知識ものとして機能しない。</li>
+<li><strong>知識の物語推進力</strong>（維持）：知識が背景設定にとどまらず、謎解き・生存・対立解決の直接手段になっているか。</li>
+<li><strong>1話1知識の分解可能性</strong>（維持、修正なし）：単話で1トピックが完結し、かつ全体ストーリーが並走できる粒度に知識を割れるか。</li>
+</ol>
+<p>フリーレンは境界例として別枠が必要：魔法体系はオリジナルルールだが、扱うテーマが「知識」ではなく「喪失・時間」という人文的主題であるため、知識ものというより人間ドラマに知識系の考証（魔族生態・魔法史）が部分的に付随する構造。知識ものと人間ドラマの中間ジャンルとして分けて扱うべき。</p>
+<h2 id="新規ip世界観設計への含意">新規IP世界観設計への含意</h2>
+<ol type="1">
+<li>架空世界を選んでもよいが、内部ロジックに現実の科学法則を最低1つ「アンカー」として組み込むこと（料理科学・進化論・物理法則など）。これがないと転スラ型の失敗（ゲーム的パワーアップに閉じる）に陥る。</li>
+<li>スキル・魔法などの完全オリジナル体系「だけ」で知識コンテンツを名乗らない。オリジナル体系の「解説」自体はコンテンツになり得るが、それは教養ドラマではなく世界観解説番組である。</li>
+<li>知識は謎解き・生存・対立解決の直接手段として設計し、背景トリビアで終わらせない（ダンジョン飯型）。</li>
+<li>単話完結の知識ユニット＋不定期の長期ストーリー層という二層構造を維持しつつ、単話の知識ユニットは「現実転写可能性」でスクリーニングする。</li>
+<li>フリーレン型（人文テーマ＋部分的知識考証）は知識ものとは別ジャンルとして企画し、「知識×ドラマ」の成功基準では評価しない。</li>
+</ol>
+<p>Sources:</p>
+<ul>
+<li><a
+href="https://ja.wikipedia.org/wiki/%E3%83%80%E3%83%B3%E3%82%B8%E3%83%A7%E3%83%B3%E9%A3%AF">ダンジョン飯
+- Wikipedia</a></li>
+<li><a
+href="https://square.unext.jp/article/delicious-in-dungeon-review-2024-01">ただの"グルメもの"じゃない。骨太な『ダンジョン飯』の魅力を紐解く</a></li>
+<li><a
+href="https://morning.kodansha.co.jp/c/tendebu.html">天地創造デザイン部
+- モーニング公式サイト</a></li>
+<li><a
+href="https://dic.pixiv.net/a/%E5%A4%A9%E5%9C%B0%E5%89%B5%E9%80%A0%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%E9%83%A8">天地創造デザイン部
+- ピクシブ百科事典</a></li>
+<li><a
+href="https://ja.wikipedia.org/wiki/%E8%91%AC%E9%80%81%E3%81%AE%E3%83%95%E3%83%AA%E3%83%BC%E3%83%AC%E3%83%B3">葬送のフリーレン
+- Wikipedia</a></li>
+<li><a
+href="https://ja.wikipedia.org/wiki/%E8%BB%A2%E7%94%9F%E3%81%97%E3%81%9F%E3%82%89%E3%82%B9%E3%83%A9%E3%82%A4%E3%83%A0%E3%81%A0%E3%81%A3%E3%81%9F%E4%BB%B6">転生したらスライムだった件
+- Wikipedia</a></li>
+</ul>
+<hr />
+<h1 id="動画ネイティブ事例">動画ネイティブ事例</h1>
+<h1 id="知識ドラマキャラ-フォーマット調査日中英">知識×ドラマ/キャラ
+フォーマット調査（日中英）</h1>
+<h2 id="事例表">事例表</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>事例</th>
+<th>知識粒度</th>
+<th>キャラ/世界観の厚み</th>
+<th>単話完結性</th>
+<th>ストーリー進行</th>
+<th>規模</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kevin's English Room（日）</td>
+<td>英語表現・異文化ネタ、断片的</td>
+<td>薄い。3人の素キャラ（ケビン/やま/かけ）が固定役割を演じるのみ、フィクション世界観なし</td>
+<td>高（1本完結）</td>
+<td>なし（キャラ関係の変化のみ）</td>
+<td>登録者200万+ <a
+href="https://nishinomiya-city.jp/kebin/">nishinomiya-city.jp</a></td>
+</tr>
+<tr>
+<td>全力回避フラグちゃん（日/Plott）</td>
+<td>「フラグ」概念の反復学習、雑学は薄い</td>
+<td>厚い。死神No.269×モブ男の恋愛ラノベ的世界観、ラノベ・漫画・アプリまで展開</td>
+<td>中（1話でギャグは完結、関係性は積み上がる）</td>
+<td>あり（ラブコメとして進行）</td>
+<td>ラノベ7巻・アプリ化まで拡大 <a
+href="https://ja.wikipedia.org/wiki/%E5%85%A8%E5%8A%9B%E5%9B%9E%E9%81%BF%E3%83%95%E3%83%A9%E3%82%B0%E3%81%A1%E3%82%83%E3%82%93!">Wikipedia</a></td>
+</tr>
+<tr>
+<td>テイコウペンギン（日/Plott）</td>
+<td>「ブラック企業あるある」雑学、初期は軽め</td>
+<td>中〜厚。ペンギン/パンダ職場ユニバース。後期はSF〜鬱回まで拡張</td>
+<td>高（1話完結が基本）</td>
+<td>緩やか（ユニバース設定は固定、話数間の連続ストーリーは薄い）</td>
+<td>登録者196万（2025/11時点）<a
+href="https://prtimes.jp/main/html/rd/p/000000168.000047837.html">プレスリリース</a></td>
+</tr>
+<tr>
+<td>ゆっくり解説（日）</td>
+<td>知識ジャンル自由（歴史/経済/オカルト等）、粒度は動画依存</td>
+<td>薄い。霊夢=素直な聞き役／魔理沙=物知り役という<strong>役割の記号</strong>のみ流用、東方の世界観自体は使わない</td>
+<td>高（1本完結が原則）</td>
+<td>なし</td>
+<td>個人〜中堅規模が乱立、業界全体としては巨大クラスタ <a
+href="https://dic.pixiv.net/a/%E3%82%86%E3%81%A3%E3%81%8F%E3%82%8A%E8%A7%A3%E8%AA%AC">pixiv百科事典</a></td>
+</tr>
+<tr>
+<td>Sam O'Nella Academy（英）</td>
+<td>歴史・雑学トリビア、粒度は濃いめ（皮肉混じり）</td>
+<td>中。スティックフィギュアの「先生」キャラ一人が狂言回し、固有世界観は薄い</td>
+<td>高（1本完結）</td>
+<td>なし</td>
+<td>情報不十分（既存知識では登録者500万規模） <a
+href="https://tvtropes.org/pmwiki/pmwiki.php/WebVideo/SamONellaAcademy">TV
+Tropes</a></td>
+</tr>
+<tr>
+<td>OverSimplified（英）</td>
+<td>歴史（戦争史）、1本に長い時系列を圧縮</td>
+<td>厚い。ナレーターの丸キャラ＋ナポレオン等「OverSimplifiedユニバース」の再登場人物</td>
+<td>高（テーマ単位で完結、Part分割あり）</td>
+<td>部分的（同一人物が別動画に再登場、世界観の連続性はあるが話をまたぐプロットはない）</td>
+<td>登録者950万+ <a
+href="https://www.networthspot.com/oversimplified/net-worth/">networthspot</a></td>
+</tr>
+<tr>
+<td>Kurzgesagt（独/英）</td>
+<td>科学・哲学、粒度は深い（1テーマ精密解説）</td>
+<td>世界観＝ビジュアルブランドそのもの。バードキャラが解説補助、固有ストーリーはなし</td>
+<td>高（1本完結）</td>
+<td>なし</td>
+<td>登録者2300万+、チーム70人 <a
+href="https://grokipedia.com/page/Kurzgesagt">Grokipedia等</a></td>
+</tr>
+<tr>
+<td>TikTok歴史寸劇型（英, 例: Gen Z Teaches History / Brooke
+Pavek）</td>
+<td>歴史トリビア、15秒〜1分の短粒度</td>
+<td>中。「未来から来たGen
+Z教師」等ワンアイデアのペルソナ、深い世界観はなし</td>
+<td>高（1本完結）</td>
+<td>なし</td>
+<td>3000万再生規模（Cella）、7.8万フォロワー（Pavek）<a
+href="https://www.edsurge.com/news/2023-10-24-gen-z-teaches-history-is-a-viral-tiktok-series-that-mixes-learning-and-humor">EdSurge</a>,
+<a
+href="https://time.com/5721116/teen-tik-tok-history-lessons-videos/">TIME</a></td>
+</tr>
+<tr>
+<td>无穷小亮的科普日常（中/B站）</td>
+<td>生物同定・鑑定、粒度は濃い実演型</td>
+<td>薄〜中。本人キャラ（「狐主任」ミーム化）が実演するのみ、フィクション世界観なし</td>
+<td>高（1本完結）</td>
+<td>なし</td>
+<td>B站650万+フォロワー <a
+href="https://www.zhihu.com/question/452041501">知乎</a></td>
+</tr>
+<tr>
+<td>B站知識区（半佛仙人/巫师财经等, 中）</td>
+<td>財経・社会論評、粒度は濃い評論型</td>
+<td>薄い。個人の語り口・キャラクター性はあるがフィクション世界観は持たない</td>
+<td>高（1本完結）</td>
+<td>なし</td>
+<td>百大UP主クラス（数百万フォロワー規模）<a
+href="http://www.woshipm.com/operate/3988478.html">woshipm.com</a></td>
+</tr>
+</tbody>
+</table></div>
+<p>反例: ケビンズイングリッシュルーム・无穷小亮・B站知識区・Sam O'Nella
+はいずれも「本人（実写/簡易キャラ）が知識を語る」だけで、フィクション世界観・ストーリー進行は持たない。これらは規模が大きくても「知識×ドラマ」ではなく「知識×パーソナリティ」型であり、依頼主の問い（世界観×知識×ストーリー進行の三立）には該当しない、という反証データ。</p>
+<h2 id="フォーマット類型6型">フォーマット類型（6型）</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>型</th>
+<th>定義</th>
+<th>代表例</th>
+<th>制作コスト</th>
+<th>再現性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>①素キャラ掛け合い解説型</td>
+<td>実写/簡易キャラの本人が役割を演じ分けて解説。世界観なし</td>
+<td>Kevin's English Room、ゆっくり解説</td>
+<td>低</td>
+<td>高（台本のみで量産可）</td>
+</tr>
+<tr>
+<td>②本人実演型</td>
+<td>専門家本人が現物・実演で知識を見せる</td>
+<td>无穷小亮</td>
+<td>中（専門性が壁）</td>
+<td>低（属人性が高い）</td>
+</tr>
+<tr>
+<td>③個人ペルソナ寸劇型</td>
+<td>一人がワンアイデアのキャラを短時間演じる</td>
+<td>TikTok歴史寸劇、Sam O'Nellaの先生役</td>
+<td>低〜中</td>
+<td>中（アイデア枯渇が早い）</td>
+</tr>
+<tr>
+<td>④世界観ブランド型</td>
+<td>フィクション世界観なしだが、ビジュアル/マスコットが「教材のブランド」化</td>
+<td>Kurzgesagtの鳥、OverSimplifiedの丸キャラ・再登場人物</td>
+<td>高（初期投資大、アニメーション精度必要）</td>
+<td>中（ブランドが確立すれば量産効率化）</td>
+</tr>
+<tr>
+<td>⑤あるある寸劇＋雑学埋込型</td>
+<td>職場等の「あるある」コントの中に雑学を混ぜる。世界観は緩やかで話数間の連続性は薄い</td>
+<td>テイコウペンギン</td>
+<td>中</td>
+<td>高（あるあるネタは無限に見つかる）</td>
+</tr>
+<tr>
+<td>⑥キャラ主導ドラマ型（ラブコメ/物語）＋メタ知識</td>
+<td>フィクション主人公のドラマそのものが主軸、知識はテーマ装置（「フラグ」概念など）として機能。単話ギャグ+関係性の進行が両立</td>
+<td>全力回避フラグちゃん</td>
+<td>高（脚本・キャラ設計・声優等総合力が必要）</td>
+<td>低（成立要因が世界観適性に強く依存、量産の型化が難しい）</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="判定-新規ショートアニメipにどの型が向くか">判定:
+新規ショートアニメIPにどの型が向くか</h2>
+<ul>
+<li>依頼主の要件（単話完結＋一貫世界観＋緩やかなストーリー進行＋教養要素）に最も近い実例は⑥フラグちゃんと⑤テイコウペンギンのハイブリッド。ただし両者とも**「知識」は主目的でなく舞台装置**（フラグ＝概念のみ、あるある＝業界知識が中心で「教養」ではない）である点は反例として重要。</li>
+<li>「教養密度」を上げつつ⑥⑤の構造を保つ場合、前回知見(a)の「単話量産層+不定期ストーリー層」の二層構造と合致するのはテイコウペンギン型（あるある雑学の単話量産＋設定の緩い拡張）。フラグちゃん型は物語駆動が強すぎて教養密度を上げると破綻しやすい。</li>
+<li>④世界観ブランド型（Kurzgesagt/OverSimplified）は教養密度・世界観の厚みは高いが、フィクションのキャラドラマ・ストーリー進行が原理的に存在しない＝依頼の要件を満たさない。</li>
+<li>結論:
+新規IPは「⑤あるある型の単話量産エンジン」を主軸に、「⑥のキャラ関係の緩進行」を薄く重ねるハイブリッドが最も現実的。教養テーマは「1話1知識の分解可能性」が高い領域（前回仮説の第3軸）に絞り、世界観は現実接地性の高い設定（職場・学校等）を選ぶと適性が上がる。純粋な「転スラ的異世界教養もの」は④型の厚い世界観コストと⑥型の物語コストが両方乗るため、最もハイリスク。</li>
+</ul>
+<h2
+id="sources-nishinomiya-cityjp-wikipedia-全力回避フラグちゃん-wikipedia-テイコウペンギン-pr-times-pixiv百科事典-ゆっくり解説-tv-tropes-sam-onella-networthspot-oversimplified-grokipedia-kurzgesagt-edsurge-gen-z-teaches-history-time-tiktok-history-知乎-无穷小亮-woshipm-b站知識区">Sources:
+<a href="https://nishinomiya-city.jp/kebin/">nishinomiya-city.jp</a>, <a
+href="https://ja.wikipedia.org/wiki/%E5%85%A8%E5%8A%9B%E5%9B%9E%E9%81%BF%E3%83%95%E3%83%A9%E3%82%B0%E3%81%A1%E3%82%83%E3%82%93!">Wikipedia
+全力回避フラグちゃん</a>, <a
+href="https://ja.wikipedia.org/wiki/%E3%83%86%E3%82%A4%E3%82%B3%E3%82%A6%E3%83%9A%E3%83%B3%E3%82%AE%E3%83%B3">Wikipedia
+テイコウペンギン</a>, <a
+href="https://prtimes.jp/main/html/rd/p/000000168.000047837.html">PR
+TIMES</a>, <a
+href="https://dic.pixiv.net/a/%E3%82%86%E3%81%A3%E3%81%8F%E3%82%8A%E8%A7%A3%E8%AA%AC">pixiv百科事典
+ゆっくり解説</a>, <a
+href="https://tvtropes.org/pmwiki/pmwiki.php/WebVideo/SamONellaAcademy">TV
+Tropes Sam O'Nella</a>, <a
+href="https://www.networthspot.com/oversimplified/net-worth/">networthspot
+OverSimplified</a>, <a
+href="https://grokipedia.com/page/Kurzgesagt">Grokipedia Kurzgesagt</a>,
+<a
+href="https://www.edsurge.com/news/2023-10-24-gen-z-teaches-history-is-a-viral-tiktok-series-that-mixes-learning-and-humor">EdSurge
+Gen Z Teaches History</a>, <a
+href="https://time.com/5721116/teen-tik-tok-history-lessons-videos/">TIME
+TikTok history</a>, <a
+href="https://www.zhihu.com/question/452041501">知乎 无穷小亮</a>, <a
+href="http://www.woshipm.com/operate/3988478.html">woshipm
+B站知識区</a></h2>
+<h1 id="フォーマット類型学">フォーマット類型学</h1>
+<h1
+id="単話完結一貫世界観漸進ストーリー類型体系化">単話完結×一貫世界観×漸進ストーリー：類型体系化</h1>
+<h2 id="類型表">類型表</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>類型</th>
+<th>代表作</th>
+<th>進行を壊さない仕掛け</th>
+<th>進行速度</th>
+<th>途中参入コスト</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>①MOTW+神話回</td>
+<td>X-Files(62:38)、Buffy、House</td>
+<td>進行を「ご褒美回」に隔離。通常回はキャラ固定・謎が話内完結</td>
+<td>遅い（神話回のみ）</td>
+<td>低（通常回）/高（神話回）</td>
+</tr>
+<tr>
+<td>②微進行型</td>
+<td>こち亀、サザエさん時空</td>
+<td>進行を<strong>時代背景</strong>に負わせ、キャラは不変のまま社会・技術だけ動く</td>
+<td>極小</td>
+<td>最低</td>
+</tr>
+<tr>
+<td>③モード分離型</td>
+<td>銀魂</td>
+<td>ギャグ単話とシリアス長編を完全に別モードとして並存させ混ぜない</td>
+<td>長編時のみ速いが頻度低</td>
+<td>長編は要文脈</td>
+</tr>
+<tr>
+<td>④学年進行型</td>
+<td>けいおん、ごちうさ</td>
+<td>日常回の連続の下に<strong>学年</strong>という不可逆だが超低速の時間軸を敷き、卒業で一度だけ回収</td>
+<td>学期単位・極めて遅い</td>
+<td>低</td>
+</tr>
+<tr>
+<td>⑤カタログ拡張型</td>
+<td>SCP Foundation、Backrooms</td>
+<td>進行＝<strong>新項目の追加</strong>（時系列でなく空間的・図鑑的拡張）。各項目は独立完結</td>
+<td>追加ごとに蓄積、直線的でない</td>
+<td>最低（どこからでも読める）</td>
+</tr>
+<tr>
+<td>⑥無言サーガ型</td>
+<td>Skibidi Toilet(80話・26season)</td>
+<td>セリフなしで勢力・技術の<strong>不可逆な拡大</strong>を絵だけで示す。1話は小競合として完結</td>
+<td>話ごとは小さいが蓄積が速い</td>
+<td>中（大筋は絵で分かるが深層は蓄積依存）</td>
+</tr>
+<tr>
+<td>⑦UGCロア型</td>
+<td>Hololive等VTuber</td>
+<td>進行の権限を運営でなく<strong>コミュニティ解釈</strong>に委譲。公式は正史を固定しない</td>
+<td>不定形</td>
+<td>低（単発配信は独立可）</td>
+</tr>
+<tr>
+<td>⑧連作短編型</td>
+<td>Sherlock Holmes</td>
+<td>各編は独立事件で完結。進行は探偵と宿敵の<strong>関係の点描的変化</strong>のみ、世界観は静止</td>
+<td>極小</td>
+<td>最低</td>
+</tr>
+</tbody>
+</table></div>
+<p>出典: X-Files比率 <a
+href="https://github.com/atomaszewicz/X-Files">GitHub分析</a>、Buffy/House
+hybrid <a
+href="https://www.masterclass.com/articles/procedurals">MasterClass</a>、SCP構造
+<a href="https://fanlore.org/wiki/SCP_Foundation">Fanlore</a>、Backrooms
+<a
+href="https://backrooms.fandom.com/wiki/Level_List">Fandom</a>、Skibidi
+Toilet構造 <a
+href="https://grokipedia.com/page/Skibidi_Toilet">Grokipedia</a>、Hololive
+canon <a
+href="https://tvtropes.org/pmwiki/pmwiki.php/CanonFodder/Hololive">TV
+Tropes</a>、サザエさん時空 <a
+href="https://dic.nicovideo.jp/a/%E3%82%B5%E3%82%B6%E3%82%A8%E3%81%95%E3%82%93%E6%99%82%E7%A9%BA">ニコニコ大百科</a>、Sherlock短編集構成
+<a
+href="https://en.wikipedia.org/wiki/The_Adventures_of_Sherlock_Holmes">Wikipedia</a>、けいおん卒業構成
+<a
+href="https://ciatr.jp/topics/317586">ciatr</a>。銀魂のギャグ:シリアス比率は数値化した一次資料が見つからず（推測にとどまる、<a
+href="https://renote.net/articles/20716">RENOTE</a>は定性記述のみ）。</p>
+<h2
+id="ショートアニメ60秒縦型への翻訳可否">ショートアニメ（60秒縦型）への翻訳可否</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>類型</th>
+<th>可否</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>②微進行型</td>
+<td>◎ 最有力</td>
+<td>ナレーション世界観・キャラ配置を完全固定し、話ごとに知識トピックだけ差し替えられる。1話1知識との相性が最良</td>
+</tr>
+<tr>
+<td>⑤カタログ拡張型</td>
+<td>◎ 最有力</td>
+<td>進行＝新キャラ/新項目の追加。因果ストーリーの整合を取らずに「世界が育ってる感」を出せる＝教養×ドラマの難易度を下げる</td>
+</tr>
+<tr>
+<td>⑥無言サーガ型</td>
+<td>○ 有効</td>
+<td>縦型は説明台詞を載せる尺がない。視覚要素（新キャラ登場・新装備）だけで進行を示す手法は転用しやすい</td>
+</tr>
+<tr>
+<td>⑧連作短編型</td>
+<td>○ 有効</td>
+<td>関係性の点描的・不可逆な微変化だけを進行に許し、知識パートとは独立させられる。制作難易度が低い</td>
+</tr>
+<tr>
+<td>①MOTW+神話回</td>
+<td>△ 部分的</td>
+<td>「ご褒美回への隔離」は一気見前提の設計。縦型は刹那消費・非連続視聴が主で、神話回だけ見て脱落する構造は不利</td>
+</tr>
+<tr>
+<td>③モード分離型</td>
+<td>× 不向き</td>
+<td>ギャグ/シリアスでトーンを切替えるとフィード上のブランド一貫性が崩れ、レコメンドアルゴリズムに乗りにくい</td>
+</tr>
+<tr>
+<td>④学年進行型</td>
+<td>× 不向き</td>
+<td>「卒業」相当のカタルシスには半年〜1年の継続コミットが必要。週次更新の制作サイクルと不整合（象徴的短期イベントに圧縮すれば流用余地あり）</td>
+</tr>
+<tr>
+<td>⑦UGCロア型</td>
+<td>△ 条件付き</td>
+<td>公式が正史を固定しない運用は、量産初期のIPには不確実性が高すぎる。ファンダム形成後の追加施策としてなら有効</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="推奨の配合">推奨の配合</h2>
+<p>ベースは<strong>②微進行</strong>（世界観・キャラ完全固定、知識トピックのみ回転）に<strong>⑤カタログ拡張</strong>（新キャラ/新知識アイテムの追加＝世界拡張）を重ね、進行は<strong>⑧連作短編型</strong>の「キャラ関係の点描的不可逆変化」に限定して背景に忍ばせる。</p>
+<ul>
+<li>単話＝知識1つ＋キャラの掛け合いで完結（②のフォーマット）</li>
+<li>「進行」は毎N話ごとに新キャラ・新設定を1つ追加する形で表現（⑤の図鑑的拡張。因果ドラマを背負わせない分、知識の物語推進力が弱い題材でも成立しやすい）</li>
+<li>キャラ同士の関係性だけ、不可逆かつ超低速に変化させる（⑧）。世界観の大改変や神話回・卒業回のような「一気見前提の山場」は作らない（①④は縦型と相性が悪いため排除）</li>
+<li>トーン（ギャグ/シリアス）は③のように分離せず常に一定に保つ</li>
+</ul>
+<h2
+id="これにより単話完結性を壊さず全体を進行させるをストーリーの因果ではなく世界のカタログ的拡張関係性の微差分で担保する設計になる世界観適性3軸仮説との接続ではこの配合は知識の物語推進力が弱い題材ごちうさ的な世界観でも②⑤の力で補完できる一方転スラ的な設定説明過多の題材には④③同様に不向きと推測される要検証">これにより「単話完結性を壊さず全体を進行させる」を、ストーリーの因果ではなく<strong>世界のカタログ的拡張＋関係性の微差分</strong>で担保する設計になる。世界観適性3軸仮説との接続では、この配合は「知識の物語推進力」が弱い題材（ごちうさ的な世界観）でも②⑤の力で補完できる一方、「転スラ的」な設定説明過多の題材には④③同様に不向きと推測される（要検証）。</h2>
+<h1 id="知識領域の選定">知識領域の選定</h1>
+<h1
+id="ショートアニメ新規ip知識領域選定評価">ショートアニメ新規IP：知識領域選定評価</h1>
+<h2 id="1-知識領域別評価表需要飽和ドラマ適性リスク">1.
+知識領域別評価表（需要/飽和/ドラマ適性/リスク）</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>領域</th>
+<th>需要規模（事実）</th>
+<th>AI slop飽和度</th>
+<th>ドラマ適性（寸劇化/1話1知識）</th>
+<th>監修コスト</th>
+<th>YMYLリスク</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>料理</td>
+<td>高。個人TikTokerで数十万フォロワー規模が複数存在（例:
+イマケン♪ズボラ飯 約42.2万人〔2022時点〕）[find-model]</td>
+<td>中〜高（作れる系は量産しやすくAI生成も氾濫）</td>
+<td>◎。1話1レシピに自然分解可、寸劇との相性も良い</td>
+<td>低</td>
+<td>低（アレルギー表示程度）</td>
+</tr>
+<tr>
+<td>歴史</td>
+<td>高。TikTok/YouTubeで解説系が定番ジャンルとして定着[buzzlist]</td>
+<td>高（AI音声+スライドの量産型が飽和）</td>
+<td>○。1話1事件/人物に分解可だが「面白いストーリー」は史実に引っ張られ難易度中</td>
+<td>中（史実監修）</td>
+<td>低〜中（歴史修正主義批判リスク）</td>
+</tr>
+<tr>
+<td>雑学</td>
+<td>高。ジャンル横断で最も量産しやすいカテゴリ</td>
+<td>最高（型が完全に確立済み、差別化困難）</td>
+<td>◎分解容易だが「ドラマ」化は弱く単話止まりになりやすい</td>
+<td>低</td>
+<td>低</td>
+</tr>
+<tr>
+<td>心理学</td>
+<td>中〜高（自己啓発系との親和性が高い）</td>
+<td>高</td>
+<td>○。対人関係の寸劇に落としやすい</td>
+<td>中</td>
+<td>中（疑似科学化しやすい）</td>
+</tr>
+<tr>
+<td>医療</td>
+<td>高（健康不安ニーズは恒常的）</td>
+<td>中</td>
+<td>△。誤情報が生命に関わり誇張しにくい</td>
+<td>高（医師監修必須）</td>
+<td>高（Google定義のYMYL中核領域、E-E-A-T必須）[searchengineland]</td>
+</tr>
+<tr>
+<td>宇宙</td>
+<td>中（コアなファン層は厚いがマス訴求は限定的）</td>
+<td>中</td>
+<td>△。1話1知識は可能だがストーリー推進力が弱い（前回仮説の「知識の物語推進力」軸で低評価）</td>
+<td>中</td>
+<td>低</td>
+</tr>
+<tr>
+<td>生物</td>
+<td>中。動物系は再生されやすい定番</td>
+<td>中</td>
+<td>○。生態=キャラの行動原理にでき「宇宙よりも遠い場所」型の探検要素と親和</td>
+<td>中</td>
+<td>低</td>
+</tr>
+<tr>
+<td>金融</td>
+<td>高（資産形成ニーズの高まり）</td>
+<td>中〜高</td>
+<td>△。数字が中心でドラマ化しにくい、誤解が実損に直結</td>
+<td>高（金商法・断定表現規制）</td>
+<td>高（YMYL）[workshopdigital]</td>
+</tr>
+<tr>
+<td>法律</td>
+<td>中。トラブル解決系は需要あり</td>
+<td>低〜中（専門性が壁になり量産が進んでいない＝飽和が薄い）</td>
+<td>○。「相談→解決」の型が寸劇と相性良く1話1条文に分解可</td>
+<td>高（弁護士監修）</td>
+<td>中（個別事案の誤指南リスク）</td>
+</tr>
+<tr>
+<td>語学</td>
+<td>高（英会話系は定番）</td>
+<td>高</td>
+<td>○だが差別化困難（レッドオーシャン）</td>
+<td>低</td>
+<td>低</td>
+</tr>
+<tr>
+<td>職業もの（業界あるある）</td>
+<td>実証済み高需要（テイコウペンギンYouTube登録者65万人超〔ブラック企業〕[mezamashi/pixiv]、アパレる〔アパレル業界〕[find-model]など）</td>
+<td>低（業界別に見れば個々の業界は無数に未開拓）</td>
+<td>◎。「舞台＝業界」自体が知識装置になり、単話（あるある寸劇）＋通底ストーリー（キャリア成長）の二層構造を自然に持てる＝前回仮説の二層構造と1話1知識分解性の双方を満たす</td>
+<td>業界による（現場取材中心、専門資格監修は不要な業界も多い）</td>
+<td>業界依存（一般事務系は低、医療/金融系業界ものは高）</td>
+</tr>
+</tbody>
+</table></div>
+<p>事実の出典: AI slop密度「Science and
+Education」カテゴリ35.0%[kapwing]（※サブジャンル別内訳データは検索で確認できず、推測不可として明記）。反例:
+法律・生物・宇宙は雑学ほど量産されておらず「教育カテゴリ35%」を一律適用すべきでない。</p>
+<h2 id="2-未占有で有望な領域トップ5推測を含む選定">2.
+未占有で有望な領域トップ5（推測を含む選定）</h2>
+<p>既存の職業ものIP（テイコウペンギン=ブラック企業一般職、SUMIDe=クラブ、アパレる=アパレル）が押さえた領域を除外し、「現実接地性が高い」「1話1知識に切れる専門作業がある」「事件性があり単話でも起承転結が作れる」業界を推測ベースで選定。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>順位</th>
+<th>領域</th>
+<th>選定理由（推測）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>特殊清掃・孤独死現場整理</td>
+<td>1件＝1エピソードの完結性が極めて高く、法医学的知識（死後経過時間の推定等）が自然に物語推進力を持つ。既存は実録系ドキュメンタリーYouTubeが中心でショートアニメIPは未占有</td>
+</tr>
+<tr>
+<td>2</td>
+<td>損害保険調査員（事故鑑定）</td>
+<td>「1話1事故」＝ミステリー的謎解き構造にでき、保険・法律知識が謎解きの鍵になる（知識の物語推進力が高い）。金融ほどYMYL規制が強くない</td>
+</tr>
+<tr>
+<td>3</td>
+<td>動物園・水族館の飼育員</td>
+<td>生物知識が1話1種で分解可能、家族層に強く炎上リスクが低い。「宇宙よりも遠い場所」型の観察・探究ドラマと相性良好</td>
+</tr>
+</tbody>
+</table></div>
+</br>
+| 4 | 気象予報士・防災現場 | 科学知識＋災害という時事性の高いドラマ推進力を両立。宇宙より現実接地性が高く、社会的意義も訴求できる |
+| 5 | 通訳・翻訳（同時通訳/司法通訳） | 語学という飽和ジャンルを「現場の緊張感」でドラマ化し直す切り口。言語知識が謎解き・誤解ドラマの核になる |
+
+<p>反例として、物流・倉庫業は経済合理性の知識はあるが「1話完結の事件性」に乏しく、寸劇化難易度が高いため上位から除外した（推測）。</p>
+<h2 id="3-選定基準の要約">3. 選定基準の要約</h2>
+<ol type="1">
+<li><strong>二層構造の再現性</strong>:
+単話（あるある寸劇/1事案）で笑い・驚きを完結させつつ、キャリア成長や謎の連続性で通底ストーリーを持てるか。</li>
+<li><strong>知識の物語推進力</strong>:
+知識そのものが謎解き・意思決定・葛藤の核になっているか（雑学・語学は知識が飾りになりやすく弱い）。</li>
+<li><strong>1話1知識の分解可能性</strong>:
+専門作業や事案が自然に独立した単位に切れるか。</li>
+<li><strong>監修コスト対飽和度</strong>:
+飽和度が高い領域（雑学・料理・語学）ほど差別化コストが上がる一方、専門性ゆえに未参入の職業ものは監修コストは中程度でも競合が薄い。</li>
+<li><strong>YMYLリスクの回避</strong>:
+医療・金融は需要が高くても誤情報の実害リスクが致命的（Google定義のYMYL）であり、新規IPの立ち上げ期には避け、法律・保険のような「専門知識はあるがYMYL規制ほど厳格でない」周辺領域を優先すべき。</li>
+</ol>
+<p>Sources:</p>
+<ul>
+<li><a
+href="https://andthen.co.jp/blog/tiktok-algorithm/">TikTokアルゴリズム完全攻略（2026年最新版）</a></li>
+<li><a
+href="https://buzzlist.co.jp/column/06">TikTokでバズるジャンル12選</a></li>
+<li><a
+href="https://www.kapwing.com/resources/the-tiktok-ai-slop-report/">The
+TikTok AI Slop Report</a></li>
+<li><a href="https://www.clearscope.io/blog/what-is-YMYL">What is YMYL
+Content? - Clearscope</a></li>
+<li><a
+href="https://www.workshopdigital.com/blog/why-ymyl-content-is-important/">Why
+YMYL Content is Important for Financial &amp; Healthcare
+Industries</a></li>
+<li><a href="https://mezamashi.media/articles/-/19516">テイコウペンギン
+- めざましmedia</a></li>
+<li><a
+href="https://dic.pixiv.net/a/%E3%83%86%E3%82%A4%E3%82%B3%E3%82%A6%E3%83%9A%E3%83%B3%E3%82%AE%E3%83%B3(%E3%82%A2%E3%83%8B%E3%83%A1)">テイコウペンギン
+- ピクシブ百科事典</a></li>
+<li><a
+href="https://find-model.jp/insta-lab/sns-influencer-manga-illustration/">SNSで人気の漫画・イラストインフルエンサー</a></li>
+<li><a
+href="https://find-model.jp/insta-lab/tiktok-corporation-collaboration-case-study-cooking/">人気の料理系TikTokインフルエンサー</a></li>
+</ul>
+
+</article>
+
+<footer>世界観適性とフォーマットの集中調査 / 原文Markdownをそのまま整形表示したページ</footer>
+
+</body>
+</html>

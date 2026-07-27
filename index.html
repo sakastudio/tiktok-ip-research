@@ -187,6 +187,17 @@
     margin:0 0 8px;
     line-height:1.5;
   }
+  .card-title a{
+    color:inherit;
+    text-decoration:none;
+  }
+  /* カード全体をクリック可能にしつつ、原文リンクを入れ子にせず共存させる */
+  .card-title a::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:0;
+  }
   .card-desc{
     font-size:13.5px;
     color:var(--text-muted);
@@ -228,6 +239,22 @@
     font-weight:700;
     color:var(--accent,#0F172A);
   }
+  .card-links{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    white-space:nowrap;
+  }
+  .link-src{
+    position:relative;
+    z-index:1;
+    font-size:12px;
+    font-weight:600;
+    color:var(--text-subtle);
+    text-decoration:none;
+    border-bottom:1px solid var(--border);
+  }
+  .link-src:hover{ color:var(--accent,#2563EB); border-bottom-color:currentColor; }
   .card-go{
     font-size:12.5px;
     font-weight:700;
@@ -326,16 +353,16 @@
       <h2>図解一覧</h2>
       <span class="sec-count">3件</span>
     </div>
-    <p class="sec-note">各ページは元のMarkdownを唯一の正として図解したもので、事実の追加や改変はしていません。カードをクリックすると図解が開きます。</p>
+    <p class="sec-note">各ページは元のMarkdownを唯一の正として図解したもので、事実の追加や改変はしていません。カードをクリックすると図解が開きます。「原文」からは元のMarkdownをそのまま整形表示したページに移動できます。</p>
 
     <div class="card-grid">
 
-      <a class="card" id="card-ai-vs-3d" href="ai-vs-3d/" style="--accent:#4F46E5; --accent-bg:#EEF2FF;">
+      <div class="card" id="card-ai-vs-3d" style="--accent:#4F46E5; --accent-bg:#EEF2FF;">
         <div class="card-head">
           <span class="card-num">1</span>
           <span class="card-kind">方針判断</span>
         </div>
-        <p class="card-title">AIを完パケにするか、3Dを完パケにするか</p>
+        <p class="card-title"><a href="ai-vs-3d/">AIを完パケにするか、3Dを完パケにするか</a></p>
         <p class="card-desc">AIへの寛容度は将来上がるのか、AI生成動画から骨格・カメラを推定して3D化するワークフローは妥当か。寛容度を「見た目の軸」と「労力・出自の軸」に分解し、受容度データ・実測エンゲージメント・供給飽和・反証事例・技術評価・コスト構造まで通して検証。</p>
         <div class="card-meta">
           <span class="chip">全12章</span>
@@ -345,16 +372,19 @@
         </div>
         <div class="card-foot">
           <span class="card-key">結論: 3D完パケが正解</span>
-          <span class="card-go">開く &rarr;</span>
+          <span class="card-links">
+            <a class="link-src" href="ai-vs-3d/source/">原文</a>
+            <span class="card-go">開く &rarr;</span>
+          </span>
         </div>
-      </a>
+      </div>
 
-      <a class="card" id="card-worldview-format" href="worldview-format/" style="--accent:#0D9488; --accent-bg:#F0FDFA;">
+      <div class="card" id="card-worldview-format" style="--accent:#0D9488; --accent-bg:#F0FDFA;">
         <div class="card-head">
           <span class="card-num">2</span>
           <span class="card-kind">企画設計</span>
         </div>
-        <p class="card-title">世界観適性とフォーマットの集中調査</p>
+        <p class="card-title"><a href="worldview-format/">世界観適性とフォーマットの集中調査</a></p>
         <p class="card-desc">知識・教養×ドラマにどんな世界観が向くのか、「単話でも完結し、一貫した世界観を保ちつつストーリーが少しずつ進行する」フォーマットは実在するのか。適性軸を3つに修正した上で、長編IP17作品のマッピング、フォーマット8類型の縦型ショートへの翻訳可否、知識領域の選定まで。</p>
         <div class="card-meta">
           <span class="chip">本編6章＋付録4調査</span>
@@ -364,16 +394,19 @@
         </div>
         <div class="card-foot">
           <span class="card-key">結論: フォーマットは存在する</span>
-          <span class="card-go">開く &rarr;</span>
+          <span class="card-links">
+            <a class="link-src" href="worldview-format/source/">原文</a>
+            <span class="card-go">開く &rarr;</span>
+          </span>
         </div>
-      </a>
+      </div>
 
-      <a class="card" id="card-deep-verification" href="deep-verification/" style="--accent:#D97706; --accent-bg:#FFFBEB;">
+      <div class="card" id="card-deep-verification" style="--accent:#D97706; --accent-bg:#FFFBEB;">
         <div class="card-head">
           <span class="card-num">3</span>
           <span class="card-kind">敵対的検証</span>
         </div>
-        <p class="card-title">徹底検証レビュー: 観察メモ + AI vs 3Dレポート</p>
+        <p class="card-title"><a href="deep-verification/">徹底検証レビュー: 観察メモ + AI vs 3Dレポート</a></p>
         <p class="card-desc">ドラマ系チャンネル50本の観察メモと、レポート1を9本の並列調査で敵対的に検証。仮説の判定、データ引用の誤り、技術論の誇張、両文書に欠けていた盲点を洗い出している。冒頭に、本研究がmoorestechとは無関係の案件であるという前提訂正が入っている点に注意。</p>
         <div class="card-meta">
           <span class="chip">本編5節＋付録9調査</span>
@@ -383,9 +416,12 @@
         </div>
         <div class="card-foot">
           <span class="card-key">冒頭に前提の訂正あり</span>
-          <span class="card-go">開く &rarr;</span>
+          <span class="card-links">
+            <a class="link-src" href="deep-verification/source/">原文</a>
+            <span class="card-go">開く &rarr;</span>
+          </span>
         </div>
-      </a>
+      </div>
 
     </div>
   </section>
